@@ -26,7 +26,13 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -117,6 +123,7 @@ fun SettingsScreen(
     var showClearDialog by remember { mutableStateOf(false) }
     var showPromoDialog by remember { mutableStateOf(false) }
     var promoCodeInput by remember { mutableStateOf("") }
+    var showPremiumBackupDialog by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
 
     LaunchedEffect(event) {
@@ -530,11 +537,29 @@ fun SettingsScreen(
                 }
 
                 item {
-                    SectionCard(title = stringResource(R.string.settings_promo_dialog_title)) {
+                    val isPremium = settings.isPremiumActive
+                    SectionCard(
+                        title = if (isPremium) {
+                            stringResource(R.string.premium_title)
+                        } else {
+                            stringResource(R.string.settings_promo_dialog_title)
+                        }
+                    ) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Card(
-                                onClick = { showPromoDialog = true },
+                                onClick = {
+                                    if (!isPremium) {
+                                        showPromoDialog = true
+                                    }
+                                },
                                 modifier = Modifier.fillMaxWidth(),
+                                colors = if (isPremium) {
+                                    CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
+                                    )
+                                } else {
+                                    CardDefaults.cardColors()
+                                }
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -544,18 +569,45 @@ fun SettingsScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        ) {
+                                            Text(
+                                                text = if (isPremium) {
+                                                    stringResource(R.string.premium_status_active)
+                                                } else {
+                                                    stringResource(R.string.settings_redeem_promo)
+                                                },
+                                                style = MaterialTheme.typography.titleSmall,
+                                            )
+                                            if (isPremium) {
+                                                Surface(
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    shape = MaterialTheme.shapes.extraSmall,
+                                                ) {
+                                                    Text(
+                                                        text = stringResource(R.string.premium_badge),
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = MaterialTheme.colorScheme.onPrimary,
+                                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                                    )
+                                                }
+                                            }
+                                        }
                                         Text(
-                                            text = stringResource(R.string.settings_redeem_promo),
-                                            style = MaterialTheme.typography.titleSmall,
-                                        )
-                                        Text(
-                                            text = stringResource(R.string.settings_promo_dialog_desc),
+                                            text = if (isPremium) {
+                                                stringResource(R.string.premium_status_active_desc)
+                                            } else {
+                                                stringResource(R.string.settings_promo_dialog_desc)
+                                            },
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(top = 2.dp),
                                         )
                                     }
                                     Icon(
-                                        imageVector = Icons.Default.Star,
+                                        imageVector = if (isPremium) Icons.Default.CheckCircle else Icons.Default.Star,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.padding(start = 8.dp),
@@ -567,44 +619,117 @@ fun SettingsScreen(
                 }
 
                 item {
+                    val isPremium = settings.isPremiumActive
                     SectionCard(title = stringResource(R.string.settings_section_data)) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Card(
                                 onClick = {
-                                    val filename = "cargenome_backup_${LocalDate.now()}.json"
-                                    exportLauncher.launch(filename)
+                                    if (isPremium) {
+                                        val filename = "cargenome_backup_${LocalDate.now()}.json"
+                                        exportLauncher.launch(filename)
+                                    } else {
+                                        showPremiumBackupDialog = true
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Column(Modifier.padding(14.dp)) {
-                                    Text(
-                                        text = stringResource(R.string.settings_backup_export),
-                                        style = MaterialTheme.typography.titleSmall,
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.settings_backup_export_desc),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(14.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Column(Modifier.weight(1f)) {
+                                        Text(
+                                            text = stringResource(R.string.settings_backup_export),
+                                            style = MaterialTheme.typography.titleSmall,
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.settings_backup_export_desc),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                    if (!isPremium) {
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.surfaceVariant,
+                                            shape = MaterialTheme.shapes.extraSmall,
+                                        ) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Lock,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(12.dp),
+                                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                )
+                                                Spacer(Modifier.width(4.dp))
+                                                Text(
+                                                    text = stringResource(R.string.premium_badge),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
                             Card(
                                 onClick = {
-                                    importLauncher.launch(arrayOf("application/json", "*/*"))
+                                    if (isPremium) {
+                                        importLauncher.launch(arrayOf("application/json", "*/*"))
+                                    } else {
+                                        showPremiumBackupDialog = true
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Column(Modifier.padding(14.dp)) {
-                                    Text(
-                                        text = stringResource(R.string.settings_backup_import),
-                                        style = MaterialTheme.typography.titleSmall,
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.settings_backup_import_desc),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(14.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Column(Modifier.weight(1f)) {
+                                        Text(
+                                            text = stringResource(R.string.settings_backup_import),
+                                            style = MaterialTheme.typography.titleSmall,
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.settings_backup_import_desc),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                    if (!isPremium) {
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.surfaceVariant,
+                                            shape = MaterialTheme.shapes.extraSmall,
+                                        ) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Lock,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(12.dp),
+                                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                )
+                                                Spacer(Modifier.width(4.dp))
+                                                Text(
+                                                    text = stringResource(R.string.premium_badge),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -670,7 +795,21 @@ fun SettingsScreen(
         )
     }
 
-    if (showPromoDialog) {
+    if (showPremiumBackupDialog) {
+        AlertDialog(
+            onDismissRequest = { showPremiumBackupDialog = false },
+            icon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            title = { Text(stringResource(R.string.premium_locked_title)) },
+            text = { Text(stringResource(R.string.premium_locked_backup_desc)) },
+            confirmButton = {
+                TextButton(onClick = { showPremiumBackupDialog = false }) {
+                    Text(stringResource(R.string.action_ok))
+                }
+            },
+        )
+    }
+
+    if (showPromoDialog && !settings.isPremiumActive) {
         AlertDialog(
             onDismissRequest = {
                 showPromoDialog = false

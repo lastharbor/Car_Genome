@@ -237,6 +237,14 @@
     <string name="settings_promo_invalid">Código de activación no válido o dañado</string>
     <string name="settings_promo_expired">El código de activación ha caducado</string>
     <string name="settings_promo_success">¡CarGenome Premium activado con éxito!</string>
+    <string name="premium_status_active">CarGenome Premium activo</string>
+    <string name="premium_status_active_desc">Todas las funciones desbloqueadas. Licencia de por vida.</string>
+    <string name="premium_locked_title">CarGenome Premium requerido</string>
+    <string name="premium_locked_backup_desc">La copia de seguridad y exportación están disponibles en CarGenome Premium. Introduce tu código arriba.</string>
+    <string name="premium_locked_ocr_desc">El autorrelleno de recibos está disponible en CarGenome Premium.</string>
+    <string name="premium_locked_camera_desc">El escaneo de VIN con la cámara está disponible en CarGenome Premium. Activa tu código en Ajustes.</string>
+    <string name="premium_btn_to_settings">Ir a Ajustes</string>
+    <string name="premium_locked_btn">Premium requerido</string>
 
     <string name="presets_label">Selección rápida</string>
     <string name="presets_stations">Gasolineras habituales</string>

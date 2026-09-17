@@ -32,7 +32,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PhotoCamera
+import com.cargenome.app.domain.premium.LocalIsPremium
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -105,6 +107,7 @@ fun ReceiptAttachmentSection(
     onApplyOcr: ((ReceiptScanResult) -> Unit)? = null,
 ) {
     val context = LocalContext.current
+    val isPremium = LocalIsPremium.current
     val coroutineScope = rememberCoroutineScope()
     var isScanning by remember { mutableStateOf(false) }
     var detectedResult by remember { mutableStateOf<ReceiptScanResult?>(null) }
@@ -274,19 +277,47 @@ fun ReceiptAttachmentSection(
                             )
                         }
 
+                        if (!isPremium) {
+                            Text(
+                                text = stringResource(R.string.premium_locked_ocr_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f),
+                            )
+                        }
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             TextButton(onClick = { detectedResult = null }) {
                                 Text(stringResource(R.string.action_cancel))
                             }
                             Spacer(Modifier.width(8.dp))
-                            Button(onClick = {
-                                onApplyOcr?.invoke(res)
-                                detectedResult = null
-                            }) {
-                                Text(stringResource(R.string.receipt_ocr_apply))
+                            Button(
+                                onClick = {
+                                    if (isPremium) {
+                                        onApplyOcr?.invoke(res)
+                                        detectedResult = null
+                                    }
+                                },
+                                enabled = isPremium,
+                            ) {
+                                if (!isPremium) {
+                                    Icon(
+                                        imageVector = Icons.Default.Lock,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp),
+                                    )
+                                    Spacer(Modifier.width(6.dp))
+                                }
+                                Text(
+                                    if (isPremium) {
+                                        stringResource(R.string.receipt_ocr_apply)
+                                    } else {
+                                        stringResource(R.string.premium_locked_btn)
+                                    }
+                                )
                             }
                         }
                     }

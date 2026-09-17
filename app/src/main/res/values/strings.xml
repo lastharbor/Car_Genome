@@ -240,6 +240,14 @@
     <string name="settings_promo_invalid">Invalid or tampered activation code</string>
     <string name="settings_promo_expired">This activation code has expired</string>
     <string name="settings_promo_success">CarGenome Premium activated successfully!</string>
+    <string name="premium_status_active">CarGenome Premium Active</string>
+    <string name="premium_status_active_desc">All features are unlocked. Lifetime license.</string>
+    <string name="premium_locked_title">CarGenome Premium Required</string>
+    <string name="premium_locked_backup_desc">Backup and database export are available in CarGenome Premium. Enter your activation code above.</string>
+    <string name="premium_locked_ocr_desc">Receipt data autofill is available in CarGenome Premium.</string>
+    <string name="premium_locked_camera_desc">VIN camera scanning is available in CarGenome Premium. Activate code in Settings.</string>
+    <string name="premium_btn_to_settings">Go to Settings</string>
+    <string name="premium_locked_btn">Premium Required</string>
 
     <string name="presets_label">Quick select</string>
     <string name="presets_stations">Popular gas stations</string>

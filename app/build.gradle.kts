@@ -31,7 +31,7 @@ android {
 
         testInstrumentationRunner = "com.cargenome.app.CarGenomeTestRunner"
 
-        buildConfigField("boolean", "IS_PREMIUM", "true")
+        buildConfigField("boolean", "IS_PREMIUM", "false")
     }
 
     androidResources {

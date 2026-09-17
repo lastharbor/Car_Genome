@@ -237,6 +237,9 @@ class SettingsViewModel @Inject constructor(
 
     fun redeemPromoCode(code: String) {
         viewModelScope.launch {
+            if (settings.value.isPremiumActive) {
+                return@launch
+            }
             when (premiumManager.redeemCode(code)) {
                 is com.cargenome.app.domain.premium.RedeemResult.Success -> {
                     _event.value = SettingsEvent.Success(R.string.settings_promo_success)

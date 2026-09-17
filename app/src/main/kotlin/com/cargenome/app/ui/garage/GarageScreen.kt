@@ -21,7 +21,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +34,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import com.cargenome.app.domain.premium.LocalIsPremium
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -66,6 +70,16 @@ fun GarageScreen(
     viewModel: GarageViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isPremium = LocalIsPremium.current
+    var showVehicleLimitDialog by remember { mutableStateOf(false) }
+
+    val handleAddVehicle = {
+        if (!isPremium && state.vehicles.isNotEmpty()) {
+            showVehicleLimitDialog = true
+        } else {
+            onAddVehicle()
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -91,7 +105,7 @@ fun GarageScreen(
         floatingActionButton = {
             if (state.vehicles.isNotEmpty()) {
                 ExtendedFloatingActionButton(
-                    onClick = onAddVehicle,
+                    onClick = handleAddVehicle,
                     text = { Text(stringResource(R.string.garage_add)) },
                     icon = { Icon(Icons.Default.Add, contentDescription = null) },
                 )
@@ -131,6 +145,34 @@ fun GarageScreen(
                 }
             }
         }
+    }
+
+    if (showVehicleLimitDialog) {
+        AlertDialog(
+            onDismissRequest = { showVehicleLimitDialog = false },
+            icon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            title = { Text(stringResource(R.string.premium_limit_vehicle_title)) },
+            text = { Text(stringResource(R.string.premium_limit_vehicle_desc)) },
+            confirmButton = {
+                if (onOpenSettings != null) {
+                    Button(onClick = {
+                        showVehicleLimitDialog = false
+                        onOpenSettings()
+                    }) {
+                        Text(stringResource(R.string.premium_btn_to_settings))
+                    }
+                } else {
+                    TextButton(onClick = { showVehicleLimitDialog = false }) {
+                        Text(stringResource(R.string.action_ok))
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showVehicleLimitDialog = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
     }
 }
 

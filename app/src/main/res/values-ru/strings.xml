@@ -242,6 +242,14 @@
     <string name="settings_promo_invalid">Недействительный или повреждённый код активации</string>
     <string name="settings_promo_expired">Срок действия кода активации истёк</string>
     <string name="settings_promo_success">CarGenome Premium успешно активирован!</string>
+    <string name="premium_status_active">CarGenome Premium активен</string>
+    <string name="premium_status_active_desc">Все функции разблокированы. Бессрочная лицензия.</string>
+    <string name="premium_locked_title">Требуется CarGenome Premium</string>
+    <string name="premium_locked_backup_desc">Резервное копирование и экспорт базы данных доступны в CarGenome Premium. Активируйте ключ в разделе CarGenome Premium выше.</string>
+    <string name="premium_locked_ocr_desc">Автозаполнение данных по чекам доступно в CarGenome Premium.</string>
+    <string name="premium_locked_camera_desc">Сканирование VIN-номеров через камеру доступно в CarGenome Premium. Активируйте ключ в Настройках.</string>
+    <string name="premium_btn_to_settings">В настройки</string>
+    <string name="premium_locked_btn">Требуется Premium</string>
 
     <string name="presets_label">Быстрый выбор</string>
     <string name="presets_stations">Популярные АЗС</string>

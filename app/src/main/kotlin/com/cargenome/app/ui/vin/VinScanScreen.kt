@@ -36,7 +36,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PhotoCamera
+import com.cargenome.app.domain.premium.LocalIsPremium
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -88,6 +90,12 @@ fun VinScanScreen(
     modifier: Modifier = Modifier,
     viewModel: VinScanViewModel = hiltViewModel(),
 ) {
+    val isPremium = LocalIsPremium.current
+    if (!isPremium) {
+        VinScanPremiumLockedScreen(onBack = onBack)
+        return
+    }
+
     val context = LocalContext.current
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -116,6 +124,74 @@ fun VinScanScreen(
             viewModel = viewModel,
             modifier = modifier,
         )
+    }
+}
+
+@kotlin.OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun VinScanPremiumLockedScreen(
+    onBack: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.vin_scan_title)) },
+                navigationIcon = {
+                    val label = stringResource(R.string.action_back)
+                    IconButton(onBack, Modifier.semantics { contentDescription = label }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = label,
+                        )
+                    }
+                },
+            )
+        },
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(24.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        modifier = Modifier.size(56.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = stringResource(R.string.premium_feat_vin_camera),
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                    Text(
+                        text = stringResource(R.string.premium_locked_camera_desc),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                    Button(
+                        onClick = onBack,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(stringResource(R.string.action_back))
+                    }
+                }
+            }
+        }
     }
 }
 
