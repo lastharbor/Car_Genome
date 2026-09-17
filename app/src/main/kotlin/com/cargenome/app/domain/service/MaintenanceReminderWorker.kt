@@ -64,7 +64,9 @@ class MaintenanceReminderWorker @AssistedInject constructor(
 
             for (event in events) {
                 if (event.isCompleted || event.remindAdvanceDays < 0) continue
-                if (event.scheduledDate.isBefore(today)) continue
+
+                val isOverdue = event.scheduledDate.isBefore(today)
+                val isToday = event.scheduledDate == today
 
                 val reminderDate = if (event.remindAdvanceDays > 0) {
                     event.scheduledDate.minusDays(event.remindAdvanceDays.toLong())
@@ -72,10 +74,7 @@ class MaintenanceReminderWorker @AssistedInject constructor(
                     event.scheduledDate
                 }
 
-                // If reminder date is in the future, exact AlarmManager alarm is scheduled for it
-                if (today.isBefore(reminderDate)) continue
-
-                val reminderTimeMinutes = if (event.remindAdvanceDays == 0 && event.scheduledTimeMinutes != null) {
+                val reminderTimeMinutes = if (isToday && event.scheduledTimeMinutes != null) {
                     event.scheduledTimeMinutes
                 } else {
                     startMinutes
@@ -88,46 +87,42 @@ class MaintenanceReminderWorker @AssistedInject constructor(
                     ),
                 )
                 val reminderEpochMillis = reminderDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
+                val nowMillis = System.currentTimeMillis()
 
                 // Check if user explicitly recorded this event today with an exact time in the past
-                val wasExplicitlyCreatedInPastToday = event.scheduledDate == today &&
+                val wasExplicitlyCreatedInPastToday = isToday &&
                     event.remindAdvanceDays == 0 &&
                     event.scheduledTimeMinutes != null &&
                     reminderEpochMillis <= event.createdAt.toEpochMilli()
 
-                if (wasExplicitlyCreatedInPastToday) continue
+                if (wasExplicitlyCreatedInPastToday && !isPersistent) continue
 
-                // If scheduled for an exact minute later today, exact AlarmManager will trigger at that exact minute
-                val isFutureTimeToday = reminderDate == today &&
-                    event.remindAdvanceDays == 0 &&
-                    event.scheduledTimeMinutes != null &&
-                    reminderTimeMinutes > nowMinutes
+                // Should this event's notification be displayed / kept active?
+                // 1) It is overdue (incomplete maintenance whose date has passed)
+                // 2) It is today AND persistent notifications are enabled
+                // 3) Reminder date/time has already arrived (in advance or today)
+                val shouldShow = isOverdue ||
+                    (isToday && isPersistent) ||
+                    (!today.isBefore(reminderDate) && reminderEpochMillis <= nowMillis)
 
-                if (isFutureTimeToday) continue
-
-                // If today is the reminder date and morning reminder start time has not arrived yet
-                val isBeforeStartTimeToday = reminderDate == today &&
-                    (event.remindAdvanceDays > 0 || event.scheduledTimeMinutes == null) &&
-                    nowMinutes < startMinutes
-
-                if (isBeforeStartTimeToday) continue
-
-                val notificationId = (100_000 + event.id).toInt()
-                validNotificationIds.add(notificationId)
-                val vehicleName = vehicle.nickname?.takeIf { it.isNotBlank() }
-                    ?: listOf(vehicle.make, vehicle.model).filter { it.isNotBlank() }.joinToString(" ")
-                MaintenanceNotificationHelper.showEventReminder(
-                    context = appContext,
-                    eventId = event.id,
-                    vehicleId = event.vehicleId,
-                    title = event.title,
-                    vehicleName = vehicleName,
-                    scheduledDate = event.scheduledDate,
-                    scheduledTimeMinutes = event.scheduledTimeMinutes,
-                    shop = event.shop,
-                    notes = event.notes,
-                    isPersistent = isPersistent,
-                )
+                if (shouldShow) {
+                    val notificationId = (100_000 + event.id).toInt()
+                    validNotificationIds.add(notificationId)
+                    val vehicleName = vehicle.nickname?.takeIf { it.isNotBlank() }
+                        ?: listOf(vehicle.make, vehicle.model).filter { it.isNotBlank() }.joinToString(" ")
+                    MaintenanceNotificationHelper.showEventReminder(
+                        context = appContext,
+                        eventId = event.id,
+                        vehicleId = event.vehicleId,
+                        title = event.title,
+                        vehicleName = vehicleName,
+                        scheduledDate = event.scheduledDate,
+                        scheduledTimeMinutes = event.scheduledTimeMinutes,
+                        shop = event.shop,
+                        notes = event.notes,
+                        isPersistent = isPersistent,
+                    )
+                }
             }
         }
 

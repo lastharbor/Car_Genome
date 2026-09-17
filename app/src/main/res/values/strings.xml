@@ -519,5 +519,9 @@
     <string name="settings_reminder_start_time_custom">Pick custom time…</string>
     <string name="event_default_time_hint">Triggers at the reminder start time from settings</string>
     <string name="insurance_pdf_replace_hint">Tap to replace file</string>
+    <string name="settings_action_save_apply">Save settings</string>
+    <string name="settings_saved_applied">Settings saved and applied</string>
+    <string name="settings_notifications_permission_disabled">Notifications are disabled. Grant permission to receive maintenance reminders.</string>
+    <string name="settings_action_enable_notifications">Enable notifications</string>
 </resources>
 

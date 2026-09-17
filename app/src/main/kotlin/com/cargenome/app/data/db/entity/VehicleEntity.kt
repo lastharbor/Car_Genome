@@ -56,3 +56,10 @@ data class VehicleEntity(
     val createdAt: Instant = Instant.EPOCH,
     val isArchived: Boolean = false,
 )
+
+fun VehicleEntity.displayName(): String =
+    nickname?.takeIf { it.isNotBlank() }
+        ?: listOfNotNull(make, model).joinToString(" ").takeIf { it.isNotBlank() }
+        ?: vin?.take(8)
+        ?: "Автомобиль"
+

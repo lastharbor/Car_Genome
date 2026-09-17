@@ -55,31 +55,30 @@ class MaintenanceDismissReceiver : BroadcastReceiver() {
                     // User disabled persistent notifications, respect the dismissal
                     return@launch
                 }
-
                 val intervalMinutes = settings.maintenanceReminderIntervalMinutes
 
-                if (intervalMinutes <= 0) {
-                    // Immediate re-post (undismissable ongoing reminder)
-                    val vehicle = vehicleRepo.find(event.vehicleId)
-                    val vehicleName = vehicle?.let { v ->
-                        v.nickname?.takeIf { it.isNotBlank() }
-                            ?: listOf(v.make, v.model).filter { it.isNotBlank() }.joinToString(" ")
-                    }.orEmpty()
+                // When persistent notification is enabled, keep it pinned in the tray:
+                // immediately re-post so it cannot be dismissed until marked as complete.
+                val vehicle = vehicleRepo.find(event.vehicleId)
+                val vehicleName = vehicle?.let { v ->
+                    v.nickname?.takeIf { it.isNotBlank() }
+                        ?: listOf(v.make, v.model).filter { it.isNotBlank() }.joinToString(" ")
+                }.orEmpty()
 
-                    MaintenanceNotificationHelper.showEventReminder(
-                        context = context,
-                        eventId = event.id,
-                        vehicleId = event.vehicleId,
-                        title = event.title,
-                        vehicleName = vehicleName,
-                        scheduledDate = event.scheduledDate,
-                        scheduledTimeMinutes = event.scheduledTimeMinutes,
-                        shop = event.shop,
-                        notes = event.notes,
-                        isPersistent = true,
-                    )
-                } else {
-                    // Reschedule alarm for the user-configured reminder interval
+                MaintenanceNotificationHelper.showEventReminder(
+                    context = context,
+                    eventId = event.id,
+                    vehicleId = event.vehicleId,
+                    title = event.title,
+                    vehicleName = vehicleName,
+                    scheduledDate = event.scheduledDate,
+                    scheduledTimeMinutes = event.scheduledTimeMinutes,
+                    shop = event.shop,
+                    notes = event.notes,
+                    isPersistent = true,
+                )
+
+                if (intervalMinutes > 0) {
                     alarmScheduler.scheduleRepeatAlarm(event.id, intervalMinutes)
                 }
             } finally {

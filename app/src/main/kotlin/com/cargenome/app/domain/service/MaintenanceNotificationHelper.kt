@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.cargenome.app.MainActivity
 import com.cargenome.app.R
 import com.cargenome.app.data.db.entity.VehicleEntity
+import com.cargenome.app.data.db.entity.displayName
 import com.cargenome.app.ui.common.Format
 import com.cargenome.app.ui.common.shortRes
 import java.util.Locale
@@ -117,7 +118,11 @@ object MaintenanceNotificationHelper {
             .setContentIntent(pendingIntent)
             .setOngoing(makeOngoing)
             .setAutoCancel(!makeOngoing)
-            .build()
+            .build().apply {
+                if (makeOngoing) {
+                    flags = flags or android.app.Notification.FLAG_ONGOING_EVENT or android.app.Notification.FLAG_NO_CLEAR
+                }
+            }
 
         try {
             NotificationManagerCompat.from(context).notify(schedule.id.toInt(), notification)
@@ -143,10 +148,15 @@ object MaintenanceNotificationHelper {
         ensureChannel(context)
 
         val today = java.time.LocalDate.now()
+        val isOverdue = scheduledDate != null && scheduledDate.isBefore(today)
         val isTodayOrOverdue = scheduledDate != null && !scheduledDate.isAfter(today)
         val makeOngoing = isTodayOrOverdue && isPersistent
 
-        val notificationTitle = context.getString(R.string.notification_event_title, title)
+        val notificationTitle = if (isOverdue) {
+            context.getString(R.string.notification_overdue_title, title)
+        } else {
+            context.getString(R.string.notification_event_title, title)
+        }
 
         val details = mutableListOf<String>()
         if (vehicleName.isNotBlank()) {
@@ -154,7 +164,11 @@ object MaintenanceNotificationHelper {
         }
 
         if (scheduledDate != null) {
-            val dateStr = Format.date(scheduledDate, java.util.Locale.getDefault())
+            val dateStr = if (scheduledDate == today) {
+                context.getString(R.string.calendar_today)
+            } else {
+                Format.date(scheduledDate, java.util.Locale.getDefault())
+            }
             val timeStr = if (scheduledTimeMinutes != null) {
                 val h = scheduledTimeMinutes / 60
                 val m = scheduledTimeMinutes % 60
@@ -220,7 +234,11 @@ object MaintenanceNotificationHelper {
                 context.getString(R.string.event_action_complete),
                 completePendingIntent,
             )
-            .build()
+            .build().apply {
+                if (makeOngoing) {
+                    flags = flags or android.app.Notification.FLAG_ONGOING_EVENT or android.app.Notification.FLAG_NO_CLEAR
+                }
+            }
 
         try {
             NotificationManagerCompat.from(context).notify((100_000 + eventId).toInt(), notification)
@@ -250,7 +268,5 @@ object MaintenanceNotificationHelper {
             // Ignored
         }
     }
-
-    private fun VehicleEntity.displayName(): String =
-        nickname?.takeIf { it.isNotBlank() } ?: listOf(make, model).filter { it.isNotBlank() }.joinToString(" ")
 }
+

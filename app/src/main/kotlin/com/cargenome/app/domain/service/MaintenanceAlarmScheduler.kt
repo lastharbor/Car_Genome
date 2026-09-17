@@ -34,16 +34,13 @@ class MaintenanceAlarmScheduler @Inject constructor(
         }
 
         val today = LocalDate.now()
-        if (event.scheduledDate.isBefore(today)) {
-            // Event date has completely passed (historical record)
-            cancelAlarm(event.id)
-            return
-        }
-
         val settings = appSettings.settings.first()
         val startMinutes = settings.maintenanceReminderStartTimeMinutes
         val isPersistent = settings.persistentMaintenanceNotification
         val repeatInterval = settings.maintenanceReminderIntervalMinutes
+
+        val isOverdue = event.scheduledDate.isBefore(today)
+        val isToday = event.scheduledDate == today
 
         val reminderDate = if (event.remindAdvanceDays > 0) {
             event.scheduledDate.minusDays(event.remindAdvanceDays.toLong())
@@ -51,7 +48,7 @@ class MaintenanceAlarmScheduler @Inject constructor(
             event.scheduledDate
         }
 
-        val reminderTimeMinutes = if (event.remindAdvanceDays == 0 && event.scheduledTimeMinutes != null) {
+        val reminderTimeMinutes = if (isToday && event.scheduledTimeMinutes != null) {
             event.scheduledTimeMinutes
         } else {
             startMinutes
@@ -64,19 +61,27 @@ class MaintenanceAlarmScheduler @Inject constructor(
         val epochMillis = targetDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val nowMillis = System.currentTimeMillis()
 
-        // Check if event was intentionally created for a specific past time earlier today
-        val wasExplicitlyCreatedInPastToday = event.scheduledDate == today &&
+        // Check if event was intentionally created for a specific past time earlier today without persistent notification
+        val wasExplicitlyCreatedInPastToday = isToday &&
             event.remindAdvanceDays == 0 &&
             event.scheduledTimeMinutes != null &&
             epochMillis <= event.createdAt.toEpochMilli()
 
-        if (wasExplicitlyCreatedInPastToday) {
+        if (wasExplicitlyCreatedInPastToday && !isPersistent) {
             cancelAlarm(event.id)
             return
         }
 
-        if (epochMillis <= nowMillis) {
-            // The reminder date/time has already arrived today. Post notification immediately!
+        // 1. Should we post/update the notification right now?
+        // Post immediately if:
+        // - It is overdue
+        // - It is today AND persistent notifications are enabled ("Неудаляемое уведомление в день ТО")
+        // - Or the reminder time has already arrived today or in advance
+        val shouldShowImmediately = isOverdue ||
+            (isToday && isPersistent) ||
+            (!today.isBefore(reminderDate) && epochMillis <= nowMillis)
+
+        if (shouldShowImmediately) {
             MaintenanceNotificationHelper.showEventReminder(
                 context = context,
                 eventId = event.id,
@@ -90,44 +95,45 @@ class MaintenanceAlarmScheduler @Inject constructor(
                 isPersistent = isPersistent,
             )
 
-            // If persistent notifications are enabled and repeat interval > 0, schedule recurring alarm
             if (isPersistent && repeatInterval > 0) {
                 scheduleRepeatAlarm(event.id, repeatInterval)
             }
-            return
         }
 
-        val intent = Intent(context, MaintenanceAlarmReceiver::class.java).apply {
-            putExtra(EXTRA_EVENT_ID, event.id)
-            putExtra(EXTRA_VEHICLE_ID, event.vehicleId)
-            putExtra(EXTRA_TITLE, event.title)
-            putExtra(EXTRA_VEHICLE_NAME, vehicleName)
-            putExtra(EXTRA_DATE_EPOCH_DAY, event.scheduledDate.toEpochDay())
-            putExtra(EXTRA_TIME_MINUTES, event.scheduledTimeMinutes ?: -1)
-            putExtra(EXTRA_SHOP, event.shop ?: "")
-            putExtra(EXTRA_NOTES, event.notes ?: "")
-        }
+        // 2. If the reminder date/time is in the future, schedule AlarmManager to alert at that time!
+        if (epochMillis > nowMillis) {
+            val intent = Intent(context, MaintenanceAlarmReceiver::class.java).apply {
+                putExtra(EXTRA_EVENT_ID, event.id)
+                putExtra(EXTRA_VEHICLE_ID, event.vehicleId)
+                putExtra(EXTRA_TITLE, event.title)
+                putExtra(EXTRA_VEHICLE_NAME, vehicleName)
+                putExtra(EXTRA_DATE_EPOCH_DAY, event.scheduledDate.toEpochDay())
+                putExtra(EXTRA_TIME_MINUTES, event.scheduledTimeMinutes ?: -1)
+                putExtra(EXTRA_SHOP, event.shop ?: "")
+                putExtra(EXTRA_NOTES, event.notes ?: "")
+            }
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            event.id.toInt(),
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                event.id.toInt(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
 
-        alarmManager?.let { am ->
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    if (am.canScheduleExactAlarms()) {
-                        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
+            alarmManager?.let { am ->
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (am.canScheduleExactAlarms()) {
+                            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
+                        } else {
+                            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
+                        }
                     } else {
-                        am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
+                        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
                     }
-                } else {
-                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
+                } catch (_: SecurityException) {
+                    am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
                 }
-            } catch (_: SecurityException) {
-                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, epochMillis, pendingIntent)
             }
         }
     }

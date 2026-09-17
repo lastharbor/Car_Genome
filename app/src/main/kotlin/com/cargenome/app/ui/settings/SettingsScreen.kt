@@ -22,10 +22,12 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
+import android.content.Intent
 import androidx.compose.material3.AssistChip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
@@ -33,6 +35,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.DisposableEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.cargenome.app.domain.service.MaintenanceNotificationHelper
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -126,6 +133,21 @@ fun SettingsScreen(
     var showPremiumBackupDialog by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
 
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var notificationsAllowed by remember { mutableStateOf(MaintenanceNotificationHelper.canSendNotifications(context)) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, lifecycleEvent ->
+            if (lifecycleEvent == Lifecycle.Event.ON_RESUME) {
+                notificationsAllowed = MaintenanceNotificationHelper.canSendNotifications(context)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     LaunchedEffect(event) {
         when (val e = event) {
             is SettingsEvent.Success -> {
@@ -176,6 +198,19 @@ fun SettingsScreen(
                                 contentDescription = label,
                             )
                         }
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { viewModel.saveAndApplySettings() },
+                        modifier = Modifier.semantics {
+                            contentDescription = context.getString(R.string.settings_action_save_apply)
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = stringResource(R.string.settings_action_save_apply),
+                        )
                     }
                 },
             )
@@ -369,6 +404,43 @@ fun SettingsScreen(
                 item {
                     SectionCard(title = stringResource(R.string.notification_channel_maintenance)) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            if (!notificationsAllowed) {
+                                Card(
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f),
+                                    ),
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(12.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.settings_notifications_permission_disabled),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onErrorContainer,
+                                        )
+                                        Button(
+                                            onClick = {
+                                                val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                                        putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                                    }
+                                                } else {
+                                                    Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                                        data = android.net.Uri.fromParts("package", context.packageName, null)
+                                                    }
+                                                }
+                                                context.startActivity(intent)
+                                            },
+                                            modifier = Modifier.fillMaxWidth(),
+                                        ) {
+                                            Text(stringResource(R.string.settings_action_enable_notifications))
+                                        }
+                                    }
+                                }
+                            }
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -531,6 +603,21 @@ fun SettingsScreen(
                                         },
                                     )
                                 }
+                            }
+
+                            Button(
+                                onClick = { viewModel.saveAndApplySettings() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(stringResource(R.string.settings_action_save_apply))
                             }
                         }
                     }

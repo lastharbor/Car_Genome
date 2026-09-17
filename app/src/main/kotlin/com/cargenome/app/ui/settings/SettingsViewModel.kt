@@ -71,6 +71,7 @@ class SettingsViewModel @Inject constructor(
             settingsRepo.setPersistentMaintenanceNotification(enabled)
             alarmScheduler.rescheduleAllAlarms()
             reminderScheduler.runImmediately()
+            _event.value = SettingsEvent.Success(R.string.settings_saved_applied)
         }
     }
 
@@ -79,6 +80,7 @@ class SettingsViewModel @Inject constructor(
             settingsRepo.setMaintenanceReminderIntervalMinutes(minutes)
             alarmScheduler.rescheduleAllAlarms()
             reminderScheduler.runImmediately()
+            _event.value = SettingsEvent.Success(R.string.settings_saved_applied)
         }
     }
 
@@ -87,6 +89,15 @@ class SettingsViewModel @Inject constructor(
             settingsRepo.setMaintenanceReminderStartTimeMinutes(minutes)
             alarmScheduler.rescheduleAllAlarms()
             reminderScheduler.runImmediately()
+            _event.value = SettingsEvent.Success(R.string.settings_saved_applied)
+        }
+    }
+
+    fun saveAndApplySettings() {
+        viewModelScope.launch {
+            alarmScheduler.rescheduleAllAlarms()
+            reminderScheduler.runImmediately()
+            _event.value = SettingsEvent.Success(R.string.settings_saved_applied)
         }
     }
 

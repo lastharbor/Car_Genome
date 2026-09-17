@@ -521,5 +521,9 @@
     <string name="settings_reminder_start_time_custom">Выбрать другое время…</string>
     <string name="event_default_time_hint">Сработает во время начала напоминаний из настроек</string>
     <string name="insurance_pdf_replace_hint">Нажмите, чтобы заменить файл</string>
+    <string name="settings_action_save_apply">Сохранить настройки</string>
+    <string name="settings_saved_applied">Настройки успешно сохранены и применены</string>
+    <string name="settings_notifications_permission_disabled">Уведомления отключены в системе. Разрешите их, чтобы получать напоминания о ТО.</string>
+    <string name="settings_action_enable_notifications">Включить уведомления</string>
 </resources>
 
