@@ -38,8 +38,17 @@ android {
         localeFilters += setOf("ru", "en", "de", "es")
     }
 
-    if (hasReleaseKeystore) {
-        signingConfigs {
+    signingConfigs {
+        getByName("debug") {
+            val keystoreFile = rootProject.file("debug.keystore")
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+        if (hasReleaseKeystore) {
             create("release") {
                 storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
                 storePassword = keystoreProperties.getProperty("storePassword")
