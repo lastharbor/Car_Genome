@@ -201,15 +201,16 @@ fun SettingsScreen(
                     }
                 },
                 actions = {
+                    val saveLabel = stringResource(R.string.settings_action_save_apply)
                     IconButton(
                         onClick = { viewModel.saveAndApplySettings() },
                         modifier = Modifier.semantics {
-                            contentDescription = context.getString(R.string.settings_action_save_apply)
+                            contentDescription = saveLabel
                         },
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = stringResource(R.string.settings_action_save_apply),
+                            contentDescription = saveLabel,
                         )
                     }
                 },
