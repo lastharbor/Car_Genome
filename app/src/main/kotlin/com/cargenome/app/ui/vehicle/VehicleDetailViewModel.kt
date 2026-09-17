@@ -44,6 +44,7 @@ class VehicleDetailViewModel @Inject constructor(
     private val service: ServiceRepository,
     private val attachmentManager: AttachmentManager,
     private val settingsRepo: AppSettingsRepository,
+    private val reminderScheduler: com.cargenome.app.domain.service.MaintenanceReminderScheduler,
 ) : ViewModel() {
 
     val vehicleId: Long = savedStateHandle.toRoute<VehicleDetailRoute>().vehicleId
@@ -86,12 +87,16 @@ class VehicleDetailViewModel @Inject constructor(
                 settingsRepo.setSelectedVehicleId(null)
             }
             vehicles.delete(vehicleId)
+            reminderScheduler.runImmediately()
             _deleted.value = true
         }
     }
 
     fun archive(archived: Boolean) {
-        viewModelScope.launch { vehicles.setArchived(vehicleId, archived) }
+        viewModelScope.launch {
+            vehicles.setArchived(vehicleId, archived)
+            reminderScheduler.runImmediately()
+        }
     }
 
     fun attachInsurancePdf(uri: Uri, displayName: String?) {

@@ -267,6 +267,14 @@ object MaintenanceNotificationHelper {
         }
     }
 
+    fun cancelScheduleNotification(context: Context, scheduleId: Long) {
+        try {
+            NotificationManagerCompat.from(context).cancel(scheduleId.toInt())
+        } catch (_: Exception) {
+            // Ignored
+        }
+    }
+
     fun cancelStaleNotifications(context: Context, validIds: Set<Int>) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager ?: return
         try {
