@@ -113,10 +113,12 @@ fun FuelLogScreen(
         floatingActionButton = {
             val currentVehicle = state.vehicle
             if (currentVehicle != null) {
+                val label = stringResource(R.string.fuel_add)
                 ExtendedFloatingActionButton(
                     onClick = { onAddRecord(currentVehicle.id) },
-                    text = { Text(stringResource(R.string.fuel_add)) },
-                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                    modifier = Modifier.semantics { contentDescription = label },
+                    text = { Text(label) },
+                    icon = { Icon(Icons.Default.Add, contentDescription = label) },
                 )
             }
         },

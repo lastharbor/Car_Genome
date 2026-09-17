@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,8 +34,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -43,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cargenome.app.R
+import com.cargenome.app.ui.common.Format
 import com.cargenome.app.data.db.entity.ExpenseCategory
 import com.cargenome.app.ui.common.ChipSelector
 import com.cargenome.app.ui.common.DateField
@@ -74,6 +80,8 @@ fun ExpenseEditorScreen(
     viewModel: ExpenseEditorViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val locale = LocalConfiguration.current.locales[0]
+    var confirmDelete by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) onSaved()
@@ -112,7 +120,7 @@ fun ExpenseEditorScreen(
                     start = 16.dp + sides.calculateStartPadding(androidx.compose.ui.platform.LocalLayoutDirection.current),
                     end = 16.dp + sides.calculateEndPadding(androidx.compose.ui.platform.LocalLayoutDirection.current),
                     top = padding.calculateTopPadding() + 8.dp,
-                    bottom = padding.calculateBottomPadding() + 32.dp,
+                    bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -168,12 +176,24 @@ fun ExpenseEditorScreen(
                 }
 
                 item {
+                    val isError = state.isOdometerInvalid || state.odometerGoesBackwards
+                    val supportingText = when {
+                        state.isOdometerInvalid -> stringResource(R.string.expense_odometer_invalid)
+                        state.odometerGoesBackwards -> stringResource(R.string.fuel_odometer_backwards)
+                        state.lastOdometerKm != null -> stringResource(
+                            R.string.fuel_odometer_last,
+                            Format.distance(state.lastOdometerKm!!, state.distanceUnit, locale),
+                        )
+                        else -> null
+                    }
                     DecimalField(
                         value = state.odometer,
                         onValueChange = viewModel::onOdometerChanged,
                         label = stringResource(R.string.expense_odometer),
                         modifier = Modifier.fillMaxWidth(),
                         suffix = distanceSuffix,
+                        isError = isError,
+                        supportingText = supportingText,
                     )
                 }
 
@@ -212,7 +232,7 @@ fun ExpenseEditorScreen(
                 if (state.isEditing) {
                     item {
                         OutlinedButton(
-                            onClick = viewModel::delete,
+                            onClick = { confirmDelete = true },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(
@@ -224,5 +244,31 @@ fun ExpenseEditorScreen(
                 }
             }
         }
+    }
+
+    if (confirmDelete) {
+        AlertDialog(
+            onDismissRequest = { confirmDelete = false },
+            title = { Text(stringResource(R.string.expense_delete_confirm_title)) },
+            text = { Text(stringResource(R.string.expense_delete_confirm_body)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        confirmDelete = false
+                        viewModel.delete()
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.action_delete),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmDelete = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
     }
 }

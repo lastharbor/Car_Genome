@@ -133,7 +133,7 @@ fun VehicleEditorScreen(
                     start = 16.dp + sides.calculateStartPadding(direction),
                     end = 16.dp + sides.calculateEndPadding(direction),
                     top = padding.calculateTopPadding() + 8.dp,
-                    bottom = padding.calculateBottomPadding() + 32.dp,
+                    bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -181,6 +181,10 @@ fun VehicleEditorScreen(
                             onValueChange = viewModel::onModelYearChanged,
                             modifier = Modifier.weight(1f),
                             label = { Text(stringResource(R.string.field_year)) },
+                            isError = !state.isModelYearValid,
+                            supportingText = if (!state.isModelYearValid) {
+                                { Text(stringResource(R.string.field_year_invalid, java.time.LocalDate.now().year + 1)) }
+                            } else null,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
                         )
@@ -395,7 +399,7 @@ private fun VinStatus(state: VehicleEditorUiState) {
         }
     } ?: return
 
-    val isBusy = state.vinLookup.let { it == null || (it as? VinLookupState.Ready)?.isEnriching == true }
+    val isBusy = (state.vinLookup as? VinLookupState.Ready)?.isEnriching == true
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),

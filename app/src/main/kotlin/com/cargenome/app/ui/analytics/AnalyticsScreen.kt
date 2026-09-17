@@ -43,7 +43,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
@@ -146,7 +149,7 @@ fun AnalyticsScreen(
                     start = 16.dp + sides.calculateStartPadding(direction),
                     end = 16.dp + sides.calculateEndPadding(direction),
                     top = padding.calculateTopPadding() + 8.dp,
-                    bottom = padding.calculateBottomPadding() + 32.dp,
+                    bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -311,6 +314,10 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
     val locale = LocalConfiguration.current.locales[0]
     val maxSpend = remember(monthlySpends) { monthlySpends.maxOf { it.amountMinor }.coerceAtLeast(1L) }
     val barColor = MaterialTheme.colorScheme.primary
+    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val textColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val textMeasurer = rememberTextMeasurer()
+    val textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, color = textColor)
 
     SectionCard(stringResource(R.string.analytics_monthly_spend)) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -320,14 +327,42 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                     .height(150.dp)
                     .padding(top = 12.dp, bottom = 4.dp),
             ) {
+                val yAxisWidth = 60.dp.toPx()
+                val chartWidth = size.width - yAxisWidth
+                val chartHeight = size.height - 12.dp.toPx()
+                val dashEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 6f))
+
+                // Y-axis ticks (top, mid, bottom)
+                val ticks = listOf(
+                    0f to maxSpend,
+                    chartHeight / 2f to maxSpend / 2L,
+                    chartHeight to 0L,
+                )
+
+                ticks.forEach { (y, amount) ->
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(yAxisWidth, y),
+                        end = Offset(size.width, y),
+                        strokeWidth = 1.dp.toPx(),
+                        pathEffect = dashEffect,
+                    )
+                    val label = Format.money(amount, vehicle.currencyCode, locale)
+                    val measured = textMeasurer.measure(label, textStyle)
+                    drawText(
+                        textLayoutResult = measured,
+                        topLeft = Offset((yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f), (y - measured.size.height / 2f).coerceAtLeast(0f)),
+                    )
+                }
+
                 val barCount = monthlySpends.size
-                val spacing = (size.width / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
-                val barWidth = ((size.width - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
+                val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
+                val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
 
                 monthlySpends.forEachIndexed { index, item ->
-                    val x = spacing + index * (barWidth + spacing)
-                    val barHeight = (item.amountMinor.toDouble() / maxSpend * size.height).toFloat().coerceIn(0f, size.height)
-                    val y = size.height - barHeight
+                    val x = yAxisWidth + spacing + index * (barWidth + spacing)
+                    val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
+                    val y = chartHeight - barHeight
 
                     if (barHeight > 0f) {
                         drawRoundRect(
@@ -341,7 +376,9 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 60.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 val first = monthlySpends.first().yearMonth
@@ -371,6 +408,10 @@ private fun ConsumptionTrendCard(
     val unit = vehicle.consumptionUnit()
     val lineColor = MaterialTheme.colorScheme.primary
     val avgLineColor = MaterialTheme.colorScheme.error
+    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val textColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val textMeasurer = rememberTextMeasurer()
+    val textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, color = textColor)
 
     SectionCard(stringResource(R.string.analytics_consumption_trend)) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -389,17 +430,39 @@ private fun ConsumptionTrendCard(
                     .height(150.dp)
                     .padding(8.dp),
             ) {
-                val w = size.width
-                val h = size.height
+                val yAxisWidth = 44.dp.toPx()
                 val pad = 12f
-                val chartW = w - pad * 2
-                val chartH = h - pad * 2
+                val chartW = size.width - yAxisWidth - pad * 2
+                val chartH = size.height - pad * 2
+
+                val midVal = (minVal + maxVal) / 2.0
+                val ticks = listOf(
+                    pad to maxVal,
+                    pad + chartH / 2f to midVal,
+                    pad + chartH to minVal,
+                )
+
+                ticks.forEach { (y, valNum) ->
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(yAxisWidth, y),
+                        end = Offset(size.width, y),
+                        strokeWidth = 1.dp.toPx(),
+                        pathEffect = dashEffect,
+                    )
+                    val label = Format.consumption(valNum, locale)
+                    val measured = textMeasurer.measure(label, textStyle)
+                    drawText(
+                        textLayoutResult = measured,
+                        topLeft = Offset((yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f), (y - measured.size.height / 2f).coerceAtLeast(0f)),
+                    )
+                }
 
                 val points = history.mapIndexed { i, point ->
                     val x = if (history.size <= 1) {
-                        pad + chartW / 2f
+                        yAxisWidth + pad + chartW / 2f
                     } else {
-                        pad + (i.toFloat() / (history.size - 1) * chartW)
+                        yAxisWidth + pad + (i.toFloat() / (history.size - 1) * chartW)
                     }
                     val y = (pad + chartH - ((point.consumptionValue - minVal) / range * chartH).toFloat())
                         .coerceIn(pad, pad + chartH)
@@ -412,8 +475,8 @@ private fun ConsumptionTrendCard(
                         .coerceIn(pad, pad + chartH)
                     drawLine(
                         color = avgLineColor.copy(alpha = 0.6f),
-                        start = Offset(pad, avgY),
-                        end = Offset(pad + chartW, avgY),
+                        start = Offset(yAxisWidth + pad, avgY),
+                        end = Offset(yAxisWidth + pad + chartW, avgY),
                         strokeWidth = 2.dp.toPx(),
                         pathEffect = dashEffect,
                     )
@@ -440,22 +503,17 @@ private fun ConsumptionTrendCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "${Format.consumption(minVal, locale)} ${stringResource(unit.shortRes())}",
+                    text = "${stringResource(R.string.analytics_consumption_trend)} (${stringResource(unit.shortRes())})",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 average?.let {
                     Text(
-                        text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(it, locale)}",
+                        text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(it, locale)} ${stringResource(unit.shortRes())}",
                         style = MaterialTheme.typography.bodySmall,
                         color = avgLineColor,
                     )
                 }
-                Text(
-                    text = "${Format.consumption(maxVal, locale)} ${stringResource(unit.shortRes())}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
             }
         }
     }

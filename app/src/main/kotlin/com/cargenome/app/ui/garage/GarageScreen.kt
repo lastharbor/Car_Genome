@@ -104,10 +104,12 @@ fun GarageScreen(
         },
         floatingActionButton = {
             if (state.vehicles.isNotEmpty()) {
+                val addLabel = stringResource(R.string.garage_add)
                 ExtendedFloatingActionButton(
                     onClick = handleAddVehicle,
-                    text = { Text(stringResource(R.string.garage_add)) },
-                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                    modifier = Modifier.semantics { contentDescription = addLabel },
+                    text = { Text(addLabel) },
+                    icon = { Icon(Icons.Default.Add, contentDescription = addLabel) },
                 )
             }
         },
@@ -156,8 +158,8 @@ fun GarageScreen(
             confirmButton = {
                 if (onOpenSettings != null) {
                     Button(onClick = {
-                        showVehicleLimitDialog = false
                         onOpenSettings()
+                        showVehicleLimitDialog = false
                     }) {
                         Text(stringResource(R.string.premium_btn_to_settings))
                     }

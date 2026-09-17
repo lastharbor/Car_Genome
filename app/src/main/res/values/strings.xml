@@ -51,6 +51,7 @@
     <string name="field_make">Make</string>
     <string name="field_model">Model</string>
     <string name="field_year">Year</string>
+    <string name="field_year_invalid">Enter year between 1886 and %d</string>
     <string name="field_trim">Trim</string>
     <string name="field_engine">Engine</string>
     <string name="field_body">Body</string>
@@ -183,6 +184,7 @@
     <string name="settings_dynamic_color_desc">Use colors derived from your wallpaper (Android 12+)</string>
     <string name="settings_amoled">AMOLED theme</string>
     <string name="settings_amoled_desc">Pure black background (saves battery on OLED/AMOLED)</string>
+    <string name="settings_amoled_dark_only">Dark theme only</string>
     <string name="settings_section_defaults">Default units &amp; currency</string>
     <string name="settings_section_data">Data &amp; Backup</string>
     <string name="settings_backup_export">Export full backup (JSON)</string>
@@ -387,7 +389,7 @@
     <string name="vin_source_cached">NHTSA, saved earlier</string>
     <string name="vin_source_online">NHTSA</string>
     <string name="vin_source_checking">Checking NHTSA…</string>
-    <string name="vin_source_failed">NHTSA could not be reached, showing what the number itself says.</string>
+    <string name="vin_source_failed">Could not fetch online VIN data. Please fill in the fields manually.</string>
 
     <string name="vin_empty_title">Enter a VIN</string>
     <string name="vin_empty_body">Everything is decoded on the device. A connection only adds detail that the number itself does not carry.</string>
@@ -523,5 +525,14 @@
     <string name="settings_saved_applied">Settings saved and applied</string>
     <string name="settings_notifications_permission_disabled">Notifications are disabled. Grant permission to receive maintenance reminders.</string>
     <string name="settings_action_enable_notifications">Enable notifications</string>
+    <string name="fuel_delete_confirm_title">Delete Fuel Record?</string>
+    <string name="fuel_delete_confirm_body">This fuel record will be permanently deleted.</string>
+    <string name="expense_delete_confirm_title">Delete Expense?</string>
+    <string name="expense_delete_confirm_body">This expense will be permanently deleted.</string>
+    <string name="expense_odometer_invalid">Mileage must be greater than 0</string>
+    <string name="schedule_delete_confirm_title">Delete Schedule?</string>
+    <string name="schedule_delete_confirm_body">This maintenance schedule will be deleted.</string>
+    <string name="record_delete_confirm_title">Delete Record?</string>
+    <string name="record_delete_confirm_body">This service record will be deleted.</string>
 </resources>
 

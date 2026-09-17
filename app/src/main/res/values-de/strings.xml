@@ -49,6 +49,7 @@
     <string name="field_make">Marke</string>
     <string name="field_model">Modell</string>
     <string name="field_year">Baujahr</string>
+    <string name="field_year_invalid">Jahr zwischen 1886 und %d eingeben</string>
     <string name="field_trim">Ausstattung</string>
     <string name="field_engine">Motor</string>
     <string name="field_body">Karosserie</string>
@@ -181,6 +182,7 @@
     <string name="settings_dynamic_color_desc">Farben an das Hintergrundbild anpassen (Android 12+)</string>
     <string name="settings_amoled">AMOLED-Modus</string>
     <string name="settings_amoled_desc">Tiefschwarzer Hintergrund (spart Akku bei OLED)</string>
+    <string name="settings_amoled_dark_only">Nur im dunklen Design</string>
     <string name="settings_section_defaults">Standardeinheiten &amp; Währung</string>
     <string name="settings_section_data">Daten &amp; Sicherung</string>
     <string name="settings_backup_export">Vollständiges Backup exportieren (JSON)</string>
@@ -385,7 +387,7 @@
     <string name="vin_source_cached">NHTSA, zwischengespeichert</string>
     <string name="vin_source_online">NHTSA</string>
     <string name="vin_source_checking">NHTSA-Abfrage läuft…</string>
-    <string name="vin_source_failed">NHTSA nicht erreichbar; zeige lokale Dekodierung.</string>
+    <string name="vin_source_failed">Online-VIN-Daten konnten nicht geladen werden. Bitte manuell ausfüllen.</string>
 
     <string name="vin_empty_title">FIN eingeben</string>
     <string name="vin_empty_body">Die FIN wird direkt auf dem Gerät dekodiert. Eine Online-Verbindung liefert zusätzliche Details.</string>
@@ -521,4 +523,13 @@
     <string name="settings_saved_applied">Einstellungen gespeichert und angewendet</string>
     <string name="settings_notifications_permission_disabled">Benachrichtigungen sind deaktiviert. Bitte Berechtigung erteilen, um Wartungserinnerungen zu erhalten.</string>
     <string name="settings_action_enable_notifications">Benachrichtigungen aktivieren</string>
+    <string name="fuel_delete_confirm_title">Tankbeleg löschen?</string>
+    <string name="fuel_delete_confirm_body">Dieser Tankeintrag wird dauerhaft gelöscht.</string>
+    <string name="expense_delete_confirm_title">Ausgabe löschen?</string>
+    <string name="expense_delete_confirm_body">Diese Ausgabe wird unwiderruflich gelöscht.</string>
+    <string name="expense_odometer_invalid">Kilometerstand muss größer als 0 sein</string>
+    <string name="schedule_delete_confirm_title">Wartungsplan löschen?</string>
+    <string name="schedule_delete_confirm_body">Dieser Wartungsplan wird gelöscht.</string>
+    <string name="record_delete_confirm_title">Eintrag löschen?</string>
+    <string name="record_delete_confirm_body">Dieser Serviceeintrag wird gelöscht.</string>
 </resources>

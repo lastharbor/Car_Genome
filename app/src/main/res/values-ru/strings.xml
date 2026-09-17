@@ -53,6 +53,7 @@
     <string name="field_make">Марка</string>
     <string name="field_model">Модель</string>
     <string name="field_year">Год</string>
+    <string name="field_year_invalid">Укажите год от 1886 до %d</string>
     <string name="field_trim">Комплектация</string>
     <string name="field_engine">Двигатель</string>
     <string name="field_body">Кузов</string>
@@ -185,6 +186,7 @@
     <string name="settings_dynamic_color_desc">Использовать цвета из обоев (Android 12+)</string>
     <string name="settings_amoled">AMOLED тема</string>
     <string name="settings_amoled_desc">Глубокий чёрный фон (экономит заряд на OLED/AMOLED)</string>
+    <string name="settings_amoled_dark_only">Только для тёмной темы</string>
     <string name="settings_section_defaults">Единицы и валюта по умолчанию</string>
     <string name="settings_section_data">Данные и резервные копии</string>
     <string name="settings_backup_export">Экспорт полной копии (JSON)</string>
@@ -389,7 +391,7 @@
     <string name="vin_source_cached">NHTSA, сохранено ранее</string>
     <string name="vin_source_online">NHTSA</string>
     <string name="vin_source_checking">Запрос к NHTSA…</string>
-    <string name="vin_source_failed">NHTSA недоступна, показано то, что говорит сам номер.</string>
+    <string name="vin_source_failed">Не удалось получить данные VIN онлайн. Заполните поля вручную.</string>
 
     <string name="vin_empty_title">Введите VIN</string>
     <string name="vin_empty_body">Всё разбирается на устройстве. Сеть лишь добавляет детали, которых в самом номере нет.</string>
@@ -525,5 +527,14 @@
     <string name="settings_saved_applied">Настройки успешно сохранены и применены</string>
     <string name="settings_notifications_permission_disabled">Уведомления отключены в системе. Разрешите их, чтобы получать напоминания о ТО.</string>
     <string name="settings_action_enable_notifications">Включить уведомления</string>
+    <string name="fuel_delete_confirm_title">Удалить заправку?</string>
+    <string name="fuel_delete_confirm_body">Запись о заправке будет удалена без возможности восстановления.</string>
+    <string name="expense_delete_confirm_title">Удалить расход?</string>
+    <string name="expense_delete_confirm_body">Запись о расходе будет удалена без возможности восстановления.</string>
+    <string name="expense_odometer_invalid">Пробег должен быть больше 0</string>
+    <string name="schedule_delete_confirm_title">Удалить регламент?</string>
+    <string name="schedule_delete_confirm_body">Регламент ТО будет удален.</string>
+    <string name="record_delete_confirm_title">Удалить запись?</string>
+    <string name="record_delete_confirm_body">Запись о ТО будет удалена.</string>
 </resources>
 

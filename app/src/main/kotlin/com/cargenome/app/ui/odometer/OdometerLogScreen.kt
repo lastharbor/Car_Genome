@@ -102,10 +102,12 @@ fun OdometerLogScreen(
             )
         },
         floatingActionButton = {
+            val label = stringResource(R.string.odometer_add)
             ExtendedFloatingActionButton(
                 onClick = viewModel::openAddDialog,
-                text = { Text(stringResource(R.string.odometer_add)) },
-                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                modifier = Modifier.semantics { contentDescription = label },
+                text = { Text(label) },
+                icon = { Icon(Icons.Default.Add, contentDescription = label) },
             )
         },
     ) { padding ->

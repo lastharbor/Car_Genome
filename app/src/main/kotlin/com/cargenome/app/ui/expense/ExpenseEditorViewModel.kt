@@ -14,6 +14,7 @@ import com.cargenome.app.data.ocr.ReceiptOcrScanner
 import com.cargenome.app.data.ocr.ReceiptScanResult
 import com.cargenome.app.data.repository.AttachmentRepository
 import com.cargenome.app.data.repository.ExpenseRepository
+import com.cargenome.app.data.repository.OdometerRepository
 import com.cargenome.app.data.repository.VehicleRepository
 import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.ui.common.Format
@@ -35,6 +36,7 @@ data class ExpenseEditorUiState(
     val expenseId: Long? = null,
     val isLoading: Boolean = true,
     val vehicle: VehicleEntity? = null,
+    val lastOdometerKm: Double? = null,
 
     val date: LocalDate = LocalDate.now(),
     val category: ExpenseCategory = ExpenseCategory.Other,
@@ -55,8 +57,20 @@ data class ExpenseEditorUiState(
 
     val amountValue: Double? get() = amount.toDecimalOrNull()
 
+    val odometerValue: Double? get() = odometer.toDecimalOrNull()
+
+    val isOdometerInvalid: Boolean
+        get() = odometer.isNotBlank() && (odometerValue == null || (odometerValue ?: 0.0) <= 0.0)
+
+    val odometerGoesBackwards: Boolean
+        get() {
+            val entered = odometerValue ?: return false
+            val last = lastOdometerKm ?: return false
+            return distanceUnit.toKilometres(entered) < last
+        }
+
     val canSave: Boolean
-        get() = !isSaving && title.isNotBlank() && (amountValue ?: 0.0) > 0.0
+        get() = !isSaving && title.isNotBlank() && (amountValue ?: 0.0) > 0.0 && !isOdometerInvalid
 }
 
 @HiltViewModel
@@ -64,6 +78,7 @@ class ExpenseEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val vehicles: VehicleRepository,
     private val expenses: ExpenseRepository,
+    private val odometerRepository: OdometerRepository,
     val attachmentManager: AttachmentManager,
     val ocrScanner: ReceiptOcrScanner,
     private val attachments: AttachmentRepository,
@@ -77,6 +92,7 @@ class ExpenseEditorViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val vehicle = vehicles.find(route.vehicleId)
+            val lastKm = odometerRepository.currentKm(route.vehicleId)
             val expense = route.expenseId?.let { expenses.find(it) }
             val existingAttachments = route.expenseId?.let {
                 attachments.observe(AttachmentOwner.Expense, it).firstOrNull()
@@ -88,6 +104,7 @@ class ExpenseEditorViewModel @Inject constructor(
                     current.copy(
                         isLoading = false,
                         vehicle = vehicle,
+                        lastOdometerKm = lastKm,
                         attachmentUris = existingAttachments.map { it.uri },
                     )
                 } else {
@@ -98,6 +115,7 @@ class ExpenseEditorViewModel @Inject constructor(
                     current.copy(
                         isLoading = false,
                         vehicle = vehicle,
+                        lastOdometerKm = lastKm,
                         date = expense.incurredAt.atZone(zone).toLocalDate(),
                         category = expense.category,
                         title = expense.title,
@@ -157,7 +175,7 @@ class ExpenseEditorViewModel @Inject constructor(
         viewModelScope.launch {
             val scale = Format.minorScale(vehicle.currencyCode)
             val amountMinor = (amount * scale).roundToLong().coerceAtLeast(0L)
-            val odoKm = current.odometer.toDecimalOrNull()?.coerceAtLeast(0.0)?.let { vehicle.distanceUnit.toKilometres(it) }
+            val odoKm = current.odometerValue?.takeIf { it > 0.0 }?.let { vehicle.distanceUnit.toKilometres(it) }
 
             val entity = ExpenseEntity(
                 id = current.expenseId ?: 0,

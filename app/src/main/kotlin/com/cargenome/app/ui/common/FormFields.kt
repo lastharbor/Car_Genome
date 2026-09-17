@@ -6,11 +6,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
@@ -19,7 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,9 +27,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.cargenome.app.R
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneOffset
 
 @Composable
 fun DecimalField(
@@ -88,7 +80,6 @@ fun SwitchRow(
 }
 
 /** A read-only field that opens the platform date picker. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateField(
     value: LocalDate,
@@ -114,36 +105,16 @@ fun DateField(
     )
 
     if (showPicker) {
-        val pickerState = rememberDatePickerState(
-            initialSelectedDateMillis = value.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(),
+        AppDatePickerDialog(
+            initialDate = value,
+            onDateSelected = onValueChange,
+            onDismiss = { showPicker = false },
+            title = label,
         )
-        DatePickerDialog(
-            onDismissRequest = { showPicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        // The picker speaks in UTC midnights; reading it back in
-                        // any other zone would shift the date by a day.
-                        pickerState.selectedDateMillis?.let {
-                            onValueChange(Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate())
-                        }
-                        showPicker = false
-                    },
-                ) { Text(stringResource(R.string.action_ok)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showPicker = false }) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-            },
-        ) {
-            DatePicker(pickerState)
-        }
     }
 }
 
 /** A read-only field for nullable dates that opens the platform date picker and supports clearing. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OptionalDateField(
     value: LocalDate?,
@@ -177,29 +148,12 @@ fun OptionalDateField(
     )
 
     if (showPicker) {
-        val pickerState = rememberDatePickerState(
-            initialSelectedDateMillis = value?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli(),
+        AppDatePickerDialog(
+            initialDate = value ?: LocalDate.now(),
+            onDateSelected = onValueChange,
+            onDismiss = { showPicker = false },
+            title = label,
         )
-        DatePickerDialog(
-            onDismissRequest = { showPicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        pickerState.selectedDateMillis?.let {
-                            onValueChange(Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate())
-                        }
-                        showPicker = false
-                    },
-                ) { Text(stringResource(R.string.action_ok)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showPicker = false }) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-            },
-        ) {
-            DatePicker(pickerState)
-        }
     }
 }
 
@@ -246,11 +200,12 @@ fun <T> PresetChipsRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        LazyRow(
+        FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            items(presets) { preset ->
+            presets.forEach { preset ->
                 val isSelected = selected != null && selected == preset.value
                 SuggestionChip(
                     onClick = { onSelect(preset.value) },

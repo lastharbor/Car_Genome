@@ -13,7 +13,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
 
 /** What came back from an online decoder, or why nothing did. */
@@ -67,7 +69,11 @@ class NhtsaVinDecoder @Inject constructor(
             if (!network.isOnline()) return@withContext OnlineVinLookup.Offline
 
             val response = try {
-                api.decodeVin(normalized)
+                withTimeout(6_000L) {
+                    api.decodeVin(normalized)
+                }
+            } catch (timeout: TimeoutCancellationException) {
+                return@withContext OnlineVinLookup.Failed(timeout)
             } catch (cancellation: CancellationException) {
                 throw cancellation
             } catch (error: IOException) {

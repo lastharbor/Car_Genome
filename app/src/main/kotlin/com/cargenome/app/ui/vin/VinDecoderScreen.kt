@@ -129,7 +129,7 @@ fun VinDecoderScreen(
                     start = 16.dp + sides.calculateStartPadding(direction),
                     end = 16.dp + sides.calculateEndPadding(direction),
                     top = padding.calculateTopPadding() + 8.dp,
-                    bottom = padding.calculateBottomPadding() + 24.dp,
+                    bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {

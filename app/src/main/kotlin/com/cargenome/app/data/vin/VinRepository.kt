@@ -7,6 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withTimeout
 
 /** Where the details on screen came from, so the UI can be honest about it. */
 enum class VinSource {
@@ -63,7 +64,21 @@ class VinRepository @Inject constructor(
                 }
 
                 emit(VinLookupState.Ready(base, VinSource.Offline, isEnriching = true))
-                emit(enrich(base))
+                try {
+                    val enriched = withTimeout(7_000L) {
+                        enrich(base)
+                    }
+                    emit(enriched)
+                } catch (e: Exception) {
+                    emit(
+                        VinLookupState.Ready(
+                            profile = base,
+                            source = VinSource.Offline,
+                            isEnriching = false,
+                            onlineFailure = e,
+                        ),
+                    )
+                }
             }
         }
     }

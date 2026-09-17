@@ -59,7 +59,7 @@ data class ExpenseEditorRoute(
 )
 
 @Serializable
-data object SettingsRoute
+data class SettingsRoute(val openPremium: Boolean = false)
 
 @Serializable
 data object VinScanRoute

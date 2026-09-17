@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class NavigationSmokeTest {
@@ -92,8 +93,11 @@ class NavigationSmokeTest {
         val vinDecoder = json.decodeFromString<VinDecoderRoute>(json.encodeToString(VinDecoderRoute))
         assertEquals(VinDecoderRoute, vinDecoder)
 
-        val settings = json.decodeFromString<SettingsRoute>(json.encodeToString(SettingsRoute))
-        assertEquals(SettingsRoute, settings)
+        val settings = json.decodeFromString<SettingsRoute>(json.encodeToString(SettingsRoute()))
+        assertEquals(SettingsRoute(), settings)
+
+        val settingsPremium = json.decodeFromString<SettingsRoute>(json.encodeToString(SettingsRoute(openPremium = true)))
+        assertTrue(settingsPremium.openPremium)
 
         val vinScan = json.decodeFromString<VinScanRoute>(json.encodeToString(VinScanRoute))
         assertEquals(VinScanRoute, vinScan)

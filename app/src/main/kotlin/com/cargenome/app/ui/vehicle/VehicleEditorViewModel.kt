@@ -69,8 +69,16 @@ data class VehicleEditorUiState(
 ) {
     val isEditing: Boolean get() = vehicleId != null
 
+    val isModelYearValid: Boolean
+        get() {
+            if (modelYear.isBlank()) return true
+            val year = modelYear.toIntOrNull() ?: return false
+            val maxYear = LocalDate.now().year + 1
+            return year in 1886..maxYear
+        }
+
     /** A car needs a make to be worth listing; everything else can wait. */
-    val canSave: Boolean get() = make.isNotBlank() && !isSaving
+    val canSave: Boolean get() = make.isNotBlank() && !isSaving && isModelYearValid
 
     /**
      * A blank make is only wrong once the owner has been there. An empty form
@@ -230,7 +238,7 @@ class VehicleEditorViewModel @Inject constructor(
                 vin = vin,
                 make = current.make.trim(),
                 model = current.model.trim(),
-                modelYear = current.modelYear.toIntOrNull(),
+                modelYear = current.modelYear.toIntOrNull()?.takeIf { it in 1886..(LocalDate.now().year + 1) },
                 trim = current.trim.trim().ifBlank { null },
                 engine = current.engine.trim().ifBlank { null },
                 fuelType = current.fuelType,

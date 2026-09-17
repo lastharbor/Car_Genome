@@ -81,10 +81,12 @@ fun ExpenseLogScreen(
             )
         },
         floatingActionButton = {
+            val label = stringResource(R.string.expense_add)
             ExtendedFloatingActionButton(
                 onClick = onAddExpense,
-                text = { Text(stringResource(R.string.expense_add)) },
-                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                modifier = Modifier.semantics { contentDescription = label },
+                text = { Text(label) },
+                icon = { Icon(Icons.Default.Add, contentDescription = label) },
             )
         },
     ) { padding ->

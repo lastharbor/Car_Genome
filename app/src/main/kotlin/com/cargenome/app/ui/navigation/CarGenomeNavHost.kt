@@ -118,7 +118,11 @@ fun CarGenomeNavHost(
                                 popUpTo(GarageRoute) { inclusive = false }
                             }
                         },
-                        onOpenSettings = { navController.navigate(SettingsRoute) },
+                        onOpenSettings = {
+                            navController.navigate(SettingsRoute(openPremium = true)) {
+                                launchSingleTop = true
+                            }
+                        },
                     )
                 }
 
@@ -257,9 +261,11 @@ fun CarGenomeNavHost(
                 )
             }
 
-            composable<SettingsRoute> {
+            composable<SettingsRoute> { entry ->
+                val route: SettingsRoute = entry.toRoute()
                 SettingsScreen(
                     onBack = { navController.popBackStack() },
+                    openPremiumOnLaunch = route.openPremium,
                 )
             }
 

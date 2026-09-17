@@ -119,6 +119,7 @@ private val ReminderStartTimePresets = listOf(
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
+    openPremiumOnLaunch: Boolean = false,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
@@ -128,7 +129,7 @@ fun SettingsScreen(
     val appContext = context.applicationContext
 
     var showClearDialog by remember { mutableStateOf(false) }
-    var showPromoDialog by remember { mutableStateOf(false) }
+    var showPromoDialog by remember { mutableStateOf(openPremiumOnLaunch) }
     var promoCodeInput by remember { mutableStateOf("") }
     var showPremiumBackupDialog by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
@@ -230,7 +231,7 @@ fun SettingsScreen(
                     start = 16.dp + sides.calculateStartPadding(direction),
                     end = 16.dp + sides.calculateEndPadding(direction),
                     top = padding.calculateTopPadding() + 8.dp,
-                    bottom = padding.calculateBottomPadding() + 24.dp,
+                    bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
@@ -294,6 +295,13 @@ fun SettingsScreen(
                                 )
                             }
 
+                            val isDarkThemeActive = when (settings.themeMode) {
+                                ThemeMode.Light -> false
+                                ThemeMode.Dark -> true
+                                ThemeMode.System -> androidx.compose.foundation.isSystemInDarkTheme()
+                            }
+                            val amoledAvailable = isDarkThemeActive
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -305,16 +313,22 @@ fun SettingsScreen(
                                     Text(
                                         text = stringResource(R.string.settings_amoled),
                                         style = MaterialTheme.typography.bodyMedium,
+                                        color = if (amoledAvailable) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                                     )
                                     Text(
-                                        text = stringResource(R.string.settings_amoled_desc),
+                                        text = if (!amoledAvailable) {
+                                            "${stringResource(R.string.settings_amoled_desc)} (${stringResource(R.string.settings_amoled_dark_only)})"
+                                        } else {
+                                            stringResource(R.string.settings_amoled_desc)
+                                        },
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = if (amoledAvailable) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
                                     )
                                 }
                                 Switch(
-                                    checked = settings.amoledDark,
+                                    checked = settings.amoledDark && amoledAvailable,
                                     onCheckedChange = { viewModel.setAmoledDark(it) },
+                                    enabled = amoledAvailable,
                                 )
                             }
                         }

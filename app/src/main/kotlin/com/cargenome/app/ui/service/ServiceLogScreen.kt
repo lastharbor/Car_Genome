@@ -70,6 +70,11 @@ import com.cargenome.app.ui.common.displayName
 import com.cargenome.app.ui.common.labelRes
 import com.cargenome.app.ui.common.shortRes
 import com.cargenome.app.ui.common.suffixRes
+import androidx.compose.runtime.DisposableEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.cargenome.app.domain.service.MaintenanceNotificationHelper
 import com.cargenome.app.ui.service.calendar.CompleteMaintenanceEventDialog
 import com.cargenome.app.ui.service.calendar.MaintenanceCalendarView
 import com.cargenome.app.ui.service.calendar.MaintenanceEventCard
@@ -102,22 +107,27 @@ fun ServiceLogScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     var hasNotificationPermission by remember {
-        mutableStateOf(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.POST_NOTIFICATIONS,
-                ) == PackageManager.PERMISSION_GRANTED
-            } else {
-                true
-            },
-        )
+        mutableStateOf(MaintenanceNotificationHelper.canSendNotifications(context))
     }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, lifecycleEvent ->
+            if (lifecycleEvent == Lifecycle.Event.ON_RESUME) {
+                hasNotificationPermission = MaintenanceNotificationHelper.canSendNotifications(context)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-    ) { isGranted ->
-        hasNotificationPermission = isGranted
+    ) { _ ->
+        hasNotificationPermission = MaintenanceNotificationHelper.canSendNotifications(context)
     }
 
     var showAddEventDialog by remember { mutableStateOf(false) }
@@ -185,24 +195,30 @@ fun ServiceLogScreen(
             if (currentVehicle != null) {
                 when (state.selectedTab) {
                     ServiceTab.Records -> {
+                        val label = stringResource(R.string.service_add_record)
                         ExtendedFloatingActionButton(
                             onClick = { onAddRecord(currentVehicle.id) },
-                            text = { Text(stringResource(R.string.service_add_record)) },
-                            icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                            modifier = Modifier.semantics { contentDescription = label },
+                            text = { Text(label) },
+                            icon = { Icon(Icons.Default.Add, contentDescription = label) },
                         )
                     }
                     ServiceTab.Calendar -> {
+                        val label = stringResource(R.string.service_add_event)
                         ExtendedFloatingActionButton(
                             onClick = { showAddEventDialog = true },
-                            text = { Text(stringResource(R.string.service_add_event)) },
-                            icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                            modifier = Modifier.semantics { contentDescription = label },
+                            text = { Text(label) },
+                            icon = { Icon(Icons.Default.Add, contentDescription = label) },
                         )
                     }
                     ServiceTab.Schedule -> {
+                        val label = stringResource(R.string.service_add_schedule)
                         ExtendedFloatingActionButton(
                             onClick = { onAddSchedule(currentVehicle.id) },
-                            text = { Text(stringResource(R.string.service_add_schedule)) },
-                            icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                            modifier = Modifier.semantics { contentDescription = label },
+                            text = { Text(label) },
+                            icon = { Icon(Icons.Default.Add, contentDescription = label) },
                         )
                     }
                 }
@@ -252,7 +268,7 @@ fun ServiceLogScreen(
                     }
 
                     ServiceTab.Calendar -> {
-                        if (!hasNotificationPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        if (!hasNotificationPermission) {
                             item {
                                 NotificationPermissionCard(
                                     onRequestPermission = {
@@ -386,7 +402,7 @@ fun ServiceLogScreen(
                     }
 
                     ServiceTab.Schedule -> {
-                        if (!hasNotificationPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        if (!hasNotificationPermission) {
                             item {
                                 NotificationPermissionCard(
                                     onRequestPermission = {

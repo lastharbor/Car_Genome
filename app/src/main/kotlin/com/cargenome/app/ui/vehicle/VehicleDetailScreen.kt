@@ -40,8 +40,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.OutlinedCard
@@ -55,7 +53,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDatePickerState
+import com.cargenome.app.ui.common.AppDatePickerDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -175,7 +173,7 @@ fun VehicleDetailScreen(
                     start = 16.dp + sides.calculateStartPadding(direction),
                     end = 16.dp + sides.calculateEndPadding(direction),
                     top = padding.calculateTopPadding() + 8.dp,
-                    bottom = padding.calculateBottomPadding() + 32.dp,
+                    bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -775,29 +773,12 @@ private fun InsuranceEditDialog(
     )
 
     if (showDatePicker) {
-        val pickerState = rememberDatePickerState(
-            initialSelectedDateMillis = expiresOn?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli(),
+        AppDatePickerDialog(
+            initialDate = expiresOn,
+            onDateSelected = { expiresOn = it },
+            onDismiss = { showDatePicker = false },
+            title = stringResource(R.string.field_insurance_expires),
         )
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        expiresOn = pickerState.selectedDateMillis?.let {
-                            Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate()
-                        }
-                        showDatePicker = false
-                    },
-                ) { Text(stringResource(R.string.action_ok)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text(stringResource(R.string.action_cancel))
-                }
-            },
-        ) {
-            DatePicker(pickerState)
-        }
     }
 }
 

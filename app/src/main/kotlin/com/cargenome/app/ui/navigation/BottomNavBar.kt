@@ -81,7 +81,7 @@ fun CarGenomeBottomBar(
                 labelRes = R.string.settings_title,
                 selectedIcon = Icons.Filled.Settings,
                 unselectedIcon = Icons.Outlined.Settings,
-                route = SettingsRoute,
+                route = SettingsRoute(),
                 routeClass = SettingsRoute::class,
             ),
         )
