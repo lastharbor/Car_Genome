@@ -109,6 +109,17 @@ object MaintenanceNotificationHelper {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
+        val dismissIntent = Intent(context, MaintenanceDismissReceiver::class.java).apply {
+            putExtra(MaintenanceDismissReceiver.EXTRA_SCHEDULE_ID, schedule.id)
+            putExtra(MaintenanceDismissReceiver.EXTRA_VEHICLE_ID, vehicle.id)
+        }
+        val dismissPendingIntent = PendingIntent.getBroadcast(
+            context,
+            (400_000 + schedule.id).toInt(),
+            dismissIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
@@ -116,6 +127,7 @@ object MaintenanceNotificationHelper {
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
+            .setDeleteIntent(dismissPendingIntent)
             .setOngoing(makeOngoing)
             .setAutoCancel(!makeOngoing)
             .build().apply {
