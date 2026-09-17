@@ -1,0 +1,38 @@
+*.iml
+.gradle/
+.kotlin/
+local.properties
+.idea/
+.DS_Store
+build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+keystore.properties
+
+# Python / Server
+__pycache__/
+*.pyc
+**/__pycache__/
+server/data/
+
+# Temporary / Scratch files
+ui*.xml
+screen*.png
+.cursor/
+
+# Cryptographic Keys and Generator Tools (Private, keep local!)
+*.pem
+*.key
+tools/keys/
+tools/keygen.py
+scripts/keys/
+
+# Local internal documentation (kept on local machine)
+WIKI.md
+docs/

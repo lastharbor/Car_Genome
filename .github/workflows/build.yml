@@ -1,0 +1,79 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Test Dev APK
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Run Lint
+        run: ./gradlew lintDebug
+
+      - name: Build Dev APK
+        run: ./gradlew assembleDebug
+
+      - name: Prepare APK artifact
+        run: |
+          mkdir -p build-output
+          cp app/build/outputs/apk/debug/*.apk build-output/CarGenome-v1.0.0.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CarGenome-v1.0.0
+          path: build-output/CarGenome-v1.0.0.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish Stable GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        with:
+          tag_name: v1.0.0
+          name: "CarGenome Stable Release v1.0.0"
+          body: |
+            ### CarGenome Android Application - Stable Release v1.0.0
+
+            - Unified single application build
+            - Complete vehicle lifecycle management (Odometer, Fuel logs, Service history, Calendar reminders, Expenses, Analytics)
+            - Offline VIN decoder & NHTSA online integration
+            - Isolated vehicle database architecture
+            - Modern Material 3 UI with dynamic colors & AMOLED dark theme
+          prerelease: false
+          files: |
+            build-output/CarGenome-v1.0.0.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

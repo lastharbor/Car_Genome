@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  cargenome-sync:
+    build: .
+    container_name: cargenome-sync-server
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - SECRET_KEY=cargenome_jwt_secret_change_me_in_production
+      - DB_PATH=/app/data/cargenome.db

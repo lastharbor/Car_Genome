@@ -1,0 +1,2556 @@
+{
+ "source": "ru.wikipedia.org/wiki/Идентификационный номер транспортного средства + Приказ Минпромторга РФ от 14.01.2010 N 9",
+ "entries": [
+  {
+   "code": "MX0",
+   "manufacturer": "АгромашХолдинг",
+   "country": "KZ"
+  },
+  {
+   "code": "MX1",
+   "manufacturer": "СарыАркаАвтопром",
+   "country": "KZ"
+  },
+  {
+   "code": "MX5",
+   "manufacturer": "Daewoo Bus Kazakhstan",
+   "country": "KZ"
+  },
+  {
+   "code": "MX9",
+   "manufacturer": "ТОО «АЗТО»",
+   "country": "KZ"
+  },
+  {
+   "code": "NS4",
+   "manufacturer": "Atlant Invest Group",
+   "country": "UZ"
+  },
+  {
+   "code": "NST",
+   "manufacturer": "ADM-Jizzakh",
+   "country": "UZ"
+  },
+  {
+   "code": "X01",
+   "manufacturer": "Юргинский машиностроительный завод",
+   "country": "RU"
+  },
+  {
+   "code": "X02",
+   "manufacturer": "Мотовилихинские заводы",
+   "country": "RU"
+  },
+  {
+   "code": "X04",
+   "manufacturer": "ГУП «МАРЗ № 8»",
+   "country": "RU"
+  },
+  {
+   "code": "X06",
+   "manufacturer": "ДИСА Авто",
+   "country": "RU"
+  },
+  {
+   "code": "X08",
+   "manufacturer": "Михневский ремонтно-механический завод",
+   "country": "RU"
+  },
+  {
+   "code": "X09",
+   "manufacturer": "ОАО «Строммашина»",
+   "country": "RU"
+  },
+  {
+   "code": "X0B",
+   "manufacturer": "АО «Геомаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X0C",
+   "manufacturer": "Таганрогский автомобильный завод (ТагАЗ)",
+   "country": "RU"
+  },
+  {
+   "code": "X0F",
+   "manufacturer": "ООО НПК «Ранко»",
+   "country": "RU"
+  },
+  {
+   "code": "X0J",
+   "manufacturer": "Меркатор-Сервис СпецТехника",
+   "country": "RU"
+  },
+  {
+   "code": "X0K",
+   "manufacturer": "ОАО «Амурдормаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X0L",
+   "manufacturer": "ГУП УЗ-62/14 ГУИН Минюста России",
+   "country": "RU"
+  },
+  {
+   "code": "X0N",
+   "manufacturer": "ОАО «Нальчикский Машзавод»",
+   "country": "RU"
+  },
+  {
+   "code": "X0P",
+   "manufacturer": "ООО «Астейс»",
+   "country": "RU"
+  },
+  {
+   "code": "X0S",
+   "manufacturer": "ООО «Полипрофиль»",
+   "country": "RU"
+  },
+  {
+   "code": "X0T",
+   "manufacturer": "Машиностроительный завод «Тонар»",
+   "country": "RU"
+  },
+  {
+   "code": "X0V",
+   "manufacturer": "АО «Авто Иквипмент Плант»",
+   "country": "RU"
+  },
+  {
+   "code": "X0Y",
+   "manufacturer": "Родниковский машиностроительный завод (РМЗ)",
+   "country": "RU"
+  },
+  {
+   "code": "X1A",
+   "manufacturer": "Горьковский завод специальных автомобилей (ГЗСА)&lt;br&gt;Завод специализированных автомобилей «Бизон»",
+   "country": "RU"
+  },
+  {
+   "code": "X1C",
+   "manufacturer": "Кременчугский автомобильный завод (КрАЗ)",
+   "country": "UA"
+  },
+  {
+   "code": "X1D",
+   "manufacturer": "Рижская автобусная фабрика (РАФ)",
+   "country": "LV"
+  },
+  {
+   "code": "X1E",
+   "manufacturer": "Курганский автобусный завод (КАвЗ)",
+   "country": "RU"
+  },
+  {
+   "code": "X1F",
+   "manufacturer": "НЕФАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "X1G",
+   "manufacturer": "МоАЗ",
+   "country": "BY"
+  },
+  {
+   "code": "X1H",
+   "manufacturer": "Сердобский машиностроительный завод (СМЗ ПО ЗиЛ)",
+   "country": "RU"
+  },
+  {
+   "code": "X1J",
+   "manufacturer": "Красноярский завод автомобильных прицепов (КЗАП)",
+   "country": "RU"
+  },
+  {
+   "code": "X1L",
+   "manufacturer": "Тавдинский машиностроительный завод (ТМЗ)",
+   "country": "RU"
+  },
+  {
+   "code": "X1M",
+   "manufacturer": "Павловский автобусный завод (ПАЗ)&lt;br&gt;С 1986 г. по 1997 г. использовался код XTM.",
+   "country": "RU"
+  },
+  {
+   "code": "X1N",
+   "manufacturer": "ОАО «Ишимский машиностроительный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X1P",
+   "manufacturer": "Уральский автомобильный завод (Урал)",
+   "country": "RU"
+  },
+  {
+   "code": "X1R",
+   "manufacturer": "Белорусский автомобильный завод (БелАЗ)",
+   "country": "BY"
+  },
+  {
+   "code": "X1S",
+   "manufacturer": "Завод имени В. А. Дегтярёва (ЗиД)",
+   "country": "RU"
+  },
+  {
+   "code": "X1T",
+   "manufacturer": "Пермский завод «Машиностроитель»",
+   "country": "RU"
+  },
+  {
+   "code": "X1U",
+   "manufacturer": "MAG Motor Company",
+   "country": "RU"
+  },
+  {
+   "code": "X1V",
+   "manufacturer": "Краснодарский механический завод нестандартного оборудования (АвтоКубань)",
+   "country": "RU"
+  },
+  {
+   "code": "X1W",
+   "manufacturer": "Ставропольский завод автомобильных прицепов (СЗАП, ОАО «Автоприцеп КАМАЗ»)",
+   "country": "RU"
+  },
+  {
+   "code": "X1X",
+   "manufacturer": "ТОО «ТурТранс» (позднее «МАЗ-Купава» и код Y3H)",
+   "country": "BY"
+  },
+  {
+   "code": "X1Y",
+   "manufacturer": "ООО «Шмитц Каргобулл Руссланд»",
+   "country": "RU"
+  },
+  {
+   "code": "X1Z",
+   "manufacturer": "ООО «РБА-Сервис»",
+   "country": "RU"
+  },
+  {
+   "code": "X21",
+   "manufacturer": "ООО «Дизель-С»",
+   "country": "RU"
+  },
+  {
+   "code": "X2S",
+   "manufacturer": "ООО «ЛМК»",
+   "country": "RU"
+  },
+  {
+   "code": "X2W",
+   "manufacturer": "ООО «Инвеставто»",
+   "country": "RU"
+  },
+  {
+   "code": "X3C",
+   "manufacturer": "ООО «Спецавто»",
+   "country": "RU"
+  },
+  {
+   "code": "X3E",
+   "manufacturer": "Саранский завод автосамосвалов",
+   "country": "RU"
+  },
+  {
+   "code": "X3W",
+   "manufacturer": "Машиностроительный завод «Бецема»",
+   "country": "RU"
+  },
+  {
+   "code": "X3Z",
+   "manufacturer": "Воскресенский завод «Машиностроитель»",
+   "country": "RU"
+  },
+  {
+   "code": "X43",
+   "manufacturer": "Московский завод специализированных автомобилей (МЗСА)",
+   "country": "RU"
+  },
+  {
+   "code": "X4A",
+   "manufacturer": "Автотор",
+   "country": "RU"
+  },
+  {
+   "code": "X4J",
+   "manufacturer": "ООО «Багем»",
+   "country": "RU"
+  },
+  {
+   "code": "X4K",
+   "manufacturer": "ВАП «Волжанин» (Volgabus, Волгабас (до 2012 года)",
+   "country": "RU"
+  },
+  {
+   "code": "X4P",
+   "manufacturer": "АО «НовосибАРЗ»",
+   "country": "RU"
+  },
+  {
+   "code": "X4S",
+   "manufacturer": "Вятско-Полянский машиностроительный завод",
+   "country": "RU"
+  },
+  {
+   "code": "X4X",
+   "manufacturer": "Автотор",
+   "country": "RU"
+  },
+  {
+   "code": "X52",
+   "manufacturer": "Транслес",
+   "country": "RU"
+  },
+  {
+   "code": "X57",
+   "manufacturer": "ООО «Канашский завод стройтехника»",
+   "country": "RU"
+  },
+  {
+   "code": "X5C",
+   "manufacturer": "ООО «Трейлер»",
+   "country": "RU"
+  },
+  {
+   "code": "X5F",
+   "manufacturer": "ОАО «Автогидроподъемник»",
+   "country": "RU"
+  },
+  {
+   "code": "X5H",
+   "manufacturer": "АО «Мценский завод коммунального машиностроения»",
+   "country": "RU"
+  },
+  {
+   "code": "X5T",
+   "manufacturer": "ОАО «41 центральный завод железнодорожной техники»",
+   "country": "RU"
+  },
+  {
+   "code": "X6A",
+   "manufacturer": "ООО «Ирбитский завод спецтехники»",
+   "country": "RU"
+  },
+  {
+   "code": "X6D",
+   "manufacturer": "АО «ВАЗИНТЕРСЕРВИС»",
+   "country": "RU"
+  },
+  {
+   "code": "X6F",
+   "manufacturer": "ООО «Спектор Моторс»",
+   "country": "RU"
+  },
+  {
+   "code": "X6P",
+   "manufacturer": "ОАО «172 ЦАРЗ»",
+   "country": "RU"
+  },
+  {
+   "code": "X6Y",
+   "manufacturer": "ООО «Вектор» (ЛАВ)",
+   "country": "RU"
+  },
+  {
+   "code": "X78",
+   "manufacturer": "ГАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "X7D",
+   "manufacturer": "РосЛада",
+   "country": "RU"
+  },
+  {
+   "code": "X7F",
+   "manufacturer": "ГРАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "X7L",
+   "manufacturer": "ЗАО «Рено Россия» (Автофрамос)",
+   "country": "RU",
+   "make": "Renault"
+  },
+  {
+   "code": "X7M",
+   "manufacturer": "ТагАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "X7T",
+   "manufacturer": "Чкаловский автобусный завод",
+   "country": "TJ"
+  },
+  {
+   "code": "X7Y",
+   "manufacturer": "ЗАО «Супер-Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "X7Z",
+   "manufacturer": "ОМП им. Баранова",
+   "country": "RU"
+  },
+  {
+   "code": "X89AA3",
+   "manufacturer": "ОАО «Ряжский авторемонтный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AA6",
+   "manufacturer": "ООО НПФ «Практик»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AA9",
+   "manufacturer": "ЗАО НПК «Коммаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB0",
+   "manufacturer": "ООО «Глоббас»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB2",
+   "manufacturer": "ОАО «Тайшетский завод по ремонту дорожно-строительных машин»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB5",
+   "manufacturer": "ООО «Строймаш-Сервис»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB6",
+   "manufacturer": "Козловский комбинат автофургонов",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB7",
+   "manufacturer": "ОАО «Абаканский экспериментально-механический завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB8",
+   "manufacturer": "ЗАО «Завод Рида»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AB9",
+   "manufacturer": "ЗАО «Исток»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC1",
+   "manufacturer": "ЗАО «Яхромский автобусный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC2",
+   "manufacturer": "АО «751 ремонтный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC4",
+   "manufacturer": "АО «Имя-М»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC5",
+   "manufacturer": "ООО «Автокад»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC6",
+   "manufacturer": "ЗАО «КАПРИ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC7",
+   "manufacturer": "АО «Мосдормаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AC8",
+   "manufacturer": "АО «Завидовский экспериментально-механический завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AD1",
+   "manufacturer": "ООО «Промышленная Группа „Самотлор-НН“»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AD2",
+   "manufacturer": "ЗАО НТЦ «Экспертцентр»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AD4",
+   "manufacturer": "ОАО «Вологодский машиностроительный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AE2",
+   "manufacturer": "ООО «ПКФ „Берц“»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AE3",
+   "manufacturer": "ОАО «Тушинский машиностроительный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AF3",
+   "manufacturer": "Сокольнический вагоноремонтно-строительный завод",
+   "country": "RU"
+  },
+  {
+   "code": "X89AG6",
+   "manufacturer": "ГП «Московский авторемонтный кузовной завод „Аремкуз“»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AH2",
+   "manufacturer": "ООО ПКП «Комби-Люкс»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AH6",
+   "manufacturer": "ЗАО «Воронежский авторемонтный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AH9",
+   "manufacturer": "ЗАО «Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AM1",
+   "manufacturer": "ОАО «Тосненский Автобусный Завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AM8",
+   "manufacturer": "Ярославский электромеханический завод",
+   "country": "RU"
+  },
+  {
+   "code": "X89AN0",
+   "manufacturer": "ООО «Пауэр Технолоджис»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AN5",
+   "manufacturer": "ФГУП «81 ЦИБ МО РФ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AR4",
+   "manufacturer": "ОАО «Мытищинский приборостроительный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AT3",
+   "manufacturer": "ОАО «БТЗ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AT6",
+   "manufacturer": "ИНМАН",
+   "country": "RU"
+  },
+  {
+   "code": "X89AU2",
+   "manufacturer": "ООО НПФ «Галант-Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AU9",
+   "manufacturer": "ЗАО «Спецмаш Сервис»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AV9",
+   "manufacturer": "ОАО НПО «Росдормаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X89AY4",
+   "manufacturer": "ООО «АвтоЛИК»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BA8",
+   "manufacturer": "ООО ПКФ «Кержач»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BB1",
+   "manufacturer": "Жуковский машиностроительный завод",
+   "country": "RU"
+  },
+  {
+   "code": "X89BB7",
+   "manufacturer": "ООО «Автомодерн»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BD7",
+   "manufacturer": "ЗАО «Интерпласт-Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BE1",
+   "manufacturer": "ООО «Дизайн-Центр»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BE4",
+   "manufacturer": "ПО «Берег»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BF3",
+   "manufacturer": "ООО «Автосервис-Центр»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BF6",
+   "manufacturer": "ОАО «Транс-Альфа»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BF8",
+   "manufacturer": "ООО «РОСВЭН»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BF9",
+   "manufacturer": "ООО «ДиОРА»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BG6",
+   "manufacturer": "ЗАО «ВЗТМ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BJ6",
+   "manufacturer": "ООО НТЦ «Таганай-Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BJ8",
+   "manufacturer": "ФГУ «1 ЭППО» МО РФ",
+   "country": "RU"
+  },
+  {
+   "code": "X89BK0",
+   "manufacturer": "ООО «АК МОТОР СЕРВИС»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BL3",
+   "manufacturer": "АО «Электроагрегат»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BR2",
+   "manufacturer": "ООО «Технополис»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BR7",
+   "manufacturer": "Филиал Московский троллейбусный завод «МТрЗ» ГУП «Мосгортранс»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BS5",
+   "manufacturer": "ЗАО «БАКМ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BT2",
+   "manufacturer": "ЗАО «Завод автомототехники малых серий»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BY9",
+   "manufacturer": "ООО «Рошавтофургон»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BZ4",
+   "manufacturer": "ООО «АЛСА-Энерго-Промконструкция»",
+   "country": "RU"
+  },
+  {
+   "code": "X89BZ7",
+   "manufacturer": "ООО «Семар-Сервис»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CA4",
+   "manufacturer": "ОАО «Петербургский трамвайно-механический завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CA5",
+   "manufacturer": "ООО «Фирма Ариар»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CC3",
+   "manufacturer": "ООО «Морские системы»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CC7",
+   "manufacturer": "ООО «Техномак»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CE4",
+   "manufacturer": "ООО «Крона-НН»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CE9",
+   "manufacturer": "ООО «Автоспектр-НН»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CF8",
+   "manufacturer": "АО «Иркутский завод дорожных машин»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CG7",
+   "manufacturer": "ООО «Клетинский машиностроительный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CK1",
+   "manufacturer": "ООО «Балтспецмаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CK6",
+   "manufacturer": "ООО «ГАС»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CK9",
+   "manufacturer": "ООО ПКФ «Алькаир»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CL3",
+   "manufacturer": "ОАО ИПП «Челябтехстром»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CL6",
+   "manufacturer": "ООО «КамМЗ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CM1",
+   "manufacturer": "Челябинский тракторный завод",
+   "country": "RU"
+  },
+  {
+   "code": "X89CP5",
+   "manufacturer": "ООО \"НПК «Ранко»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CR6",
+   "manufacturer": "ООО «Газмонтаж»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CS9",
+   "manufacturer": "ООО «Транслес»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CU1",
+   "manufacturer": "ООО «Каланча»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CU2",
+   "manufacturer": "ООО «ЕвоБус Русслэнд»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CV5",
+   "manufacturer": "ООО «Терра Плюс»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CV8",
+   "manufacturer": "ООО ТПП «Пеленг»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CW8",
+   "manufacturer": "ООО «АвтоСпецТехника-Урал»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CX6",
+   "manufacturer": "ООО «Прагматик-Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CX8",
+   "manufacturer": "ООО «Дорпром Интернациональ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89CY8",
+   "manufacturer": "ООО «Авто Вектор»",
+   "country": "RU"
+  },
+  {
+   "code": "X89DA7",
+   "manufacturer": "Завод «Электроизолятор»",
+   "country": "RU"
+  },
+  {
+   "code": "X89DD1",
+   "manufacturer": "ООО «Корона-Тэк»",
+   "country": "RU"
+  },
+  {
+   "code": "X89DD5",
+   "manufacturer": "ОАО «Криогенмаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X89DE2",
+   "manufacturer": "АО «Коминвест-АКМТ»",
+   "country": "RU"
+  },
+  {
+   "code": "X89DF7",
+   "manufacturer": "НАО «Завод „Джи Ти Сэвэн“ (GT7)",
+   "country": "RU"
+  },
+  {
+   "code": "X89DF8",
+   "manufacturer": "OOO „В-Кран“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DG7",
+   "manufacturer": "ООО „АвтоСпецТехника-Канаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DH0",
+   "manufacturer": "ООО „Автотранслессервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DH7",
+   "manufacturer": "ТПК „София“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DH8",
+   "manufacturer": "ООО ПКС „Нефтесервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DJ1",
+   "manufacturer": "ЗАО „Пильнинский оптико-механический завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DJ8",
+   "manufacturer": "ЗАО „МОЗБТ“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DK1",
+   "manufacturer": "ООО НПО „Ростар“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DL0",
+   "manufacturer": "ООО „Марков и Компания“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DL1",
+   "manufacturer": "ООО „Фокстанк“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DM7",
+   "manufacturer": "ООО „Уральский завод спецтехники“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DN2",
+   "manufacturer": "ООО „Петротроллейбус“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DN9",
+   "manufacturer": "ООО НПФ „ТРЭКОЛ“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DR8",
+   "manufacturer": "ООО „ЧелябДорМаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DU5",
+   "manufacturer": "ООО „Камышинский машзавод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DV2",
+   "manufacturer": "ООО „Кроганн“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DV8",
+   "manufacturer": "ООО „Кузбассавто“",
+   "country": "RU"
+  },
+  {
+   "code": "X89DX3",
+   "manufacturer": "ООО „Канашский завод стройтехника“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EC8",
+   "manufacturer": "ИП Гараев З. М.",
+   "country": "RU"
+  },
+  {
+   "code": "X89ED8",
+   "manufacturer": "ООО „Завод СпецАгрегат“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EG2",
+   "manufacturer": "ООО „Краснодарский компрессорный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EG4",
+   "manufacturer": "ООО „Энерготрансмаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EG7",
+   "manufacturer": "ООО Завод „Силач“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EH1",
+   "manufacturer": "ООО „Автомастер“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EJ6",
+   "manufacturer": "ОАО „Чистый город“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EJ9",
+   "manufacturer": "ОАО „Сибэлтранссервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EK2",
+   "manufacturer": "ООО „ТС ателье“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EK7",
+   "manufacturer": "ООО „Тегас“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EL5",
+   "manufacturer": "ИП Узилов С. А.",
+   "country": "RU"
+  },
+  {
+   "code": "X89EL6",
+   "manufacturer": "ООО „Канашский завод стройтехника“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EM0",
+   "manufacturer": "ООО „Мизатеф“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EN0",
+   "manufacturer": "ООО „СВАРМЕТ+“ (Завод прицепов „Батыр“)",
+   "country": "RU"
+  },
+  {
+   "code": "X89EP9",
+   "manufacturer": "ООО „Вологодские Машины“",
+   "country": "RU"
+  },
+  {
+   "code": "X89ER9",
+   "manufacturer": "АО „Автобау“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EY1",
+   "manufacturer": "АО „Нижегородский центр спецавтомобилей“",
+   "country": "RU"
+  },
+  {
+   "code": "X89EY9",
+   "manufacturer": "ООО „ФоксТанк Моторс“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FA0",
+   "manufacturer": "ООО „Спецмаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FB1",
+   "manufacturer": "ООО „Уфимский завод геологоразведочного оборудования“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FB3",
+   "manufacturer": "ООО „Инвеставто“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FB7",
+   "manufacturer": "ООО „НижГеоКомплект“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FC6",
+   "manufacturer": "ООО „Кобит.ру“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FD3",
+   "manufacturer": "АО НТЦ „Эврика-Трейд“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FD9",
+   "manufacturer": "ООО ПК „Анкер“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FF3",
+   "manufacturer": "ООО „Автотехника“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FG2",
+   "manufacturer": "ООО „Логинпром“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FG3",
+   "manufacturer": "ООО АЗ „Стройдормаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FG4",
+   "manufacturer": "ООО „ТрансИжАвто“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FJ4",
+   "manufacturer": "ООО „ТехМодерн“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FM4",
+   "manufacturer": "ООО „Джитиэс-Трейлер“ (GTS Trailer)",
+   "country": "RU"
+  },
+  {
+   "code": "X89FN9",
+   "manufacturer": "ООО „Промавтотранс“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FP1",
+   "manufacturer": "ОАО „Станкоагрегат“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FP3",
+   "manufacturer": "ООО „Челябинский машиностроительный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FP7",
+   "manufacturer": "ООО „Завод Буровых Технологий“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FR4",
+   "manufacturer": "ООО „Автоконструкция“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FR7",
+   "manufacturer": "ООО „ЛекоМ-сервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FS6",
+   "manufacturer": "ООО НПО „Трансмастер“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FT0",
+   "manufacturer": "ООО „Техникс“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FT5",
+   "manufacturer": "ООО ТК „Трансмастер“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FT7",
+   "manufacturer": "ООО „Лоренс Груп“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FX6",
+   "manufacturer": "ООО Завод Вакуумных Машин „Слон“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FX9",
+   "manufacturer": "ООО ПТП „Уралмаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89FY0",
+   "manufacturer": "НПО „Нефтегазовое машиностроение и специальное автомобилестроение“ (GT7)",
+   "country": "RU"
+  },
+  {
+   "code": "X89FZ4",
+   "manufacturer": "ООО „Челябинский компрессорный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GA2",
+   "manufacturer": "ООО „Сибирь Трейлер-Инжиниринг“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GB0",
+   "manufacturer": "ООО „АвтоСпецВан“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GB3",
+   "manufacturer": "СпецАвтоИнжиниринг",
+   "country": "RU"
+  },
+  {
+   "code": "X89GD8",
+   "manufacturer": "ООО НПО „Группа компаний машиностроения и приборостроения“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GE7",
+   "manufacturer": "ООО „Нефтемаш-Сервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GF1",
+   "manufacturer": "ООО ЗМК „Башеврокуб“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GF3",
+   "manufacturer": "ООО „Рифзапчасть“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GG1",
+   "manufacturer": "ООО „Автоэкспорт“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GG9",
+   "manufacturer": "ООО „Альянсавто“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GJ1",
+   "manufacturer": "ООО „Промбуравто“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GJ2",
+   "manufacturer": "АО „Уфимский трамвайно-троллейбусный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GJ7",
+   "manufacturer": "ООО „Союзпрофмонтаж“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GL4",
+   "manufacturer": "ООО МЗ „Роксон“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GL8",
+   "manufacturer": "ООО „Охтинский механический завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GM3",
+   "manufacturer": "ООО „Элефант Сервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GM5",
+   "manufacturer": "ООО „Ленкомтех“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GN5",
+   "manufacturer": "ООО „Завод Спецмаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GP4",
+   "manufacturer": "ООО РМЗ „Дорожник“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GV0",
+   "manufacturer": "ООО „Нордтанк“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GV5",
+   "manufacturer": "ОАО СМЗ „Элеватормельмаш“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GY3",
+   "manufacturer": "ООО „Автоприцеп“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GY8",
+   "manufacturer": "ООО „ЕМГ“",
+   "country": "RU"
+  },
+  {
+   "code": "X89GZ9",
+   "manufacturer": "ООО „Осинский машиностроительный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA1",
+   "manufacturer": "ООО „Урал НПО Сервис“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA3",
+   "manufacturer": "ООО „Промышленные компоненты КамАЗ“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA5",
+   "manufacturer": "ООО „Петсун“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA6",
+   "manufacturer": "ООО „Фургонград“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA7",
+   "manufacturer": "ООО „Ракурс24“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA8",
+   "manufacturer": "АО „Волтрак Корп“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HA9",
+   "manufacturer": "ООО „Ставропольский Завод Автоприцепов“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HB2",
+   "manufacturer": "ООО „СевЗапГидроПроект“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HB4",
+   "manufacturer": "ИП Стадников Е. А.",
+   "country": "RU"
+  },
+  {
+   "code": "X89HB7",
+   "manufacturer": "ООО „Металлстрой64“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HB9",
+   "manufacturer": "ООО „Газпром недра“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HC1",
+   "manufacturer": "АО „Барренс“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HC2",
+   "manufacturer": "ООО „НовТек Новые Технологии“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HC4",
+   "manufacturer": "ООО „ТТехно“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HC6",
+   "manufacturer": "ООО „Профтрейлер“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HC7",
+   "manufacturer": "ООО „А. В. Ангард“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HD2",
+   "manufacturer": "ООО „Вектор“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HD4",
+   "manufacturer": "ООО ТД „Союзавтоком“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HD5",
+   "manufacturer": "ООО „Спецмаш-Диагностика“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HD8",
+   "manufacturer": "ООО „Алькор“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HD9",
+   "manufacturer": "ООО „ЗЕОН“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HE1",
+   "manufacturer": "ООО „Техас“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HE2",
+   "manufacturer": "ООО ПК „ИМК“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HE3",
+   "manufacturer": "ООО „Кедр“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HE7",
+   "manufacturer": "ООО „Дивизион“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HE8",
+   "manufacturer": "ООО ГК „Коммерческие Грузовики“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HE9",
+   "manufacturer": "ООО АЗ „Реммаш НН“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HF3",
+   "manufacturer": "ООО „Компрессорный Завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HF4",
+   "manufacturer": "ООО „Вэлтекс“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HF5",
+   "manufacturer": "ООО Фирма „Транс-Мобиль“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HF8",
+   "manufacturer": "ООО КС „Дон“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HF9",
+   "manufacturer": "ООО „Авторекорд“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HG1",
+   "manufacturer": "ООО „Аврора Трейлер“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HG2",
+   "manufacturer": "ООО „Форсмакс“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HG4",
+   "manufacturer": "ООО „СМУ-Теплогаз“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HG5",
+   "manufacturer": "ООО „УСПТК — Холдинг“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HH5",
+   "manufacturer": "ООО „Кингисеппский машиностроительный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X89HH6",
+   "manufacturer": "ООО „Балтийский машиностроительный завод“",
+   "country": "RU"
+  },
+  {
+   "code": "X8A",
+   "manufacturer": "ЗАО ЧП «Сеспель»",
+   "country": "RU"
+  },
+  {
+   "code": "X8K",
+   "manufacturer": "АО «Уралтермосвар»",
+   "country": "RU"
+  },
+  {
+   "code": "X8L",
+   "manufacturer": "АО «Курганские Прицепы»",
+   "country": "RU"
+  },
+  {
+   "code": "X8U",
+   "manufacturer": "Скания-Питер",
+   "country": "RU"
+  },
+  {
+   "code": "X8W",
+   "manufacturer": "АО «МордовАгроМаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X90",
+   "manufacturer": "ГРАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "X91",
+   "manufacturer": "Уральский автомоторный завод",
+   "country": "RU"
+  },
+  {
+   "code": "X96",
+   "manufacturer": "ГАЗ",
+   "country": "RU",
+   "make": "ГАЗ"
+  },
+  {
+   "code": "X98",
+   "manufacturer": "ОАО «АВТОВАЗ»",
+   "country": "RU",
+   "make": "LADA"
+  },
+  {
+   "code": "X9F",
+   "manufacturer": "Форд Мотор Компани",
+   "country": "RU",
+   "make": "Ford"
+  },
+  {
+   "code": "X9H",
+   "manufacturer": "ООО «Центртранстехмаш»",
+   "country": "RU"
+  },
+  {
+   "code": "X9L",
+   "manufacturer": "GM-АВТОВАЗ",
+   "country": "RU",
+   "make": "Chevrolet"
+  },
+  {
+   "code": "X9N",
+   "manufacturer": "ООО «Самотлор-НН»",
+   "country": "RU"
+  },
+  {
+   "code": "X9U",
+   "manufacturer": "ООО «Альманах»",
+   "country": "RU"
+  },
+  {
+   "code": "X9X",
+   "manufacturer": "ООО «Автотрейд-12»",
+   "country": "RU"
+  },
+  {
+   "code": "XD2",
+   "manufacturer": "ООО «ТТМ Центр»",
+   "country": "RU"
+  },
+  {
+   "code": "XDD",
+   "manufacturer": "ООО «Евромонтаж»",
+   "country": "RU"
+  },
+  {
+   "code": "XDK",
+   "manufacturer": "ООО «Нижегородский автомеханический завод»",
+   "country": "RU"
+  },
+  {
+   "code": "XDP",
+   "manufacturer": "ООО «Карус»",
+   "country": "RU"
+  },
+  {
+   "code": "XE2",
+   "manufacturer": "ООО «Автомастер»",
+   "country": "RU"
+  },
+  {
+   "code": "XE7",
+   "manufacturer": "ООО «Технология движения»",
+   "country": "RU"
+  },
+  {
+   "code": "XED",
+   "manufacturer": "ООО ПП «СпецАвтоПрицеп»",
+   "country": "RU"
+  },
+  {
+   "code": "XEZ",
+   "manufacturer": "ООО «СВАРМЕТ+» (Завод прицепов «Батыр»)",
+   "country": "RU"
+  },
+  {
+   "code": "XJ4",
+   "manufacturer": "ООО «ПК Транспортные системы»",
+   "country": "RU"
+  },
+  {
+   "code": "XJ6",
+   "manufacturer": "ООО «Технотерра»",
+   "country": "RU"
+  },
+  {
+   "code": "XJB",
+   "manufacturer": "ООО «Крепость АТ» (Arctic Trucks)",
+   "country": "RU"
+  },
+  {
+   "code": "XJF",
+   "manufacturer": "ООО «Ижевские Прицепы»",
+   "country": "RU"
+  },
+  {
+   "code": "XJT",
+   "manufacturer": "ООО «Компонент»",
+   "country": "RU"
+  },
+  {
+   "code": "XJY",
+   "manufacturer": "ООО «Бонум» (Bonum)",
+   "country": "RU"
+  },
+  {
+   "code": "XKH",
+   "manufacturer": "ООО «Бэст»",
+   "country": "RU"
+  },
+  {
+   "code": "XKT",
+   "manufacturer": "ООО «Форвард»",
+   "country": "RU"
+  },
+  {
+   "code": "XKY",
+   "manufacturer": "ООО «КМЗ»",
+   "country": "RU"
+  },
+  {
+   "code": "XKZ",
+   "manufacturer": "ООО «Прицепцентр»",
+   "country": "RU"
+  },
+  {
+   "code": "XS0",
+   "manufacturer": "Арзамасский машиностроительный завод",
+   "country": "RU"
+  },
+  {
+   "code": "XS3",
+   "manufacturer": "ЗАО «Скуратовский Завод „Стройтехника“»",
+   "country": "RU"
+  },
+  {
+   "code": "XS6",
+   "manufacturer": "ООО «Механический Завод „Спецтранс“»",
+   "country": "RU"
+  },
+  {
+   "code": "XS7",
+   "manufacturer": "ОАО «Погрузчик»",
+   "country": "RU"
+  },
+  {
+   "code": "XS8",
+   "manufacturer": "АО «Завод Строммашина»",
+   "country": "RU"
+  },
+  {
+   "code": "XSC",
+   "manufacturer": "ОАО «ОЗТП-Сармат»",
+   "country": "RU"
+  },
+  {
+   "code": "XSD",
+   "manufacturer": "АО АК «Туламашзавод»",
+   "country": "RU"
+  },
+  {
+   "code": "XSE",
+   "manufacturer": "Ирбитский мотоциклетный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "XSF",
+   "manufacturer": "БАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "XSJ",
+   "manufacturer": "ООО «Автосервис-Центр»",
+   "country": "RU"
+  },
+  {
+   "code": "XSM",
+   "manufacturer": "Киргизавтомаш",
+   "country": "KG"
+  },
+  {
+   "code": "XSR",
+   "manufacturer": "Новолипецкий металлургический комбинат",
+   "country": "RU"
+  },
+  {
+   "code": "XST",
+   "manufacturer": "АО «41 Центральный завод железнодорожной техники»",
+   "country": "RU"
+  },
+  {
+   "code": "XSU",
+   "manufacturer": "ООО «СпецМобиль»",
+   "country": "RU"
+  },
+  {
+   "code": "XSW",
+   "manufacturer": "Киевский авторемонтный завод № 5",
+   "country": "UA"
+  },
+  {
+   "code": "XSY",
+   "manufacturer": "АООТ «Контес»",
+   "country": "RU"
+  },
+  {
+   "code": "XSZ",
+   "manufacturer": "ТОО «ЭМОС»",
+   "country": "RU"
+  },
+  {
+   "code": "XT1",
+   "manufacturer": "АО «Завод „Газстроймаш“»",
+   "country": "RU"
+  },
+  {
+   "code": "XT2",
+   "manufacturer": "Ивэнергомаш",
+   "country": "RU"
+  },
+  {
+   "code": "XT6",
+   "manufacturer": "ОАО «Псковавто»",
+   "country": "RU"
+  },
+  {
+   "code": "XT7",
+   "manufacturer": "АО НПО «Плавский»",
+   "country": "RU"
+  },
+  {
+   "code": "XT8",
+   "manufacturer": "АО «Завод Корпусов»",
+   "country": "RU"
+  },
+  {
+   "code": "XTA",
+   "manufacturer": "АвтоВАЗ",
+   "country": "RU",
+   "make": "LADA"
+  },
+  {
+   "code": "XTB",
+   "manufacturer": "Москвич",
+   "country": "RU",
+   "make": "Москвич"
+  },
+  {
+   "code": "XTC",
+   "manufacturer": "Камский автомобильный завод (КамАЗ)",
+   "country": "RU",
+   "make": "КамАЗ"
+  },
+  {
+   "code": "XTD",
+   "manufacturer": "ЛуАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "XTE",
+   "manufacturer": "ЗАЗ",
+   "country": "UA",
+   "make": "ЗАЗ"
+  },
+  {
+   "code": "XTF",
+   "manufacturer": "ГолАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "XTG",
+   "manufacturer": "ОдАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "XTH",
+   "manufacturer": "ГАЗ",
+   "country": "RU",
+   "make": "ГАЗ"
+  },
+  {
+   "code": "XTJ",
+   "manufacturer": "СеАЗ",
+   "country": "RU",
+   "make": "СеАЗ"
+  },
+  {
+   "code": "XTK",
+   "manufacturer": "ИжАвто",
+   "country": "RU",
+   "make": "ИжАвто"
+  },
+  {
+   "code": "XTL",
+   "manufacturer": "КЗКТ",
+   "country": "RU"
+  },
+  {
+   "code": "XTM",
+   "manufacturer": "МАЗ",
+   "country": "BY",
+   "make": "МАЗ"
+  },
+  {
+   "code": "XTN",
+   "manufacturer": "ФГУП «ГСКБ по ремонтным мастерским и кузовам»",
+   "country": "RU"
+  },
+  {
+   "code": "XTP",
+   "manufacturer": "ММЗ",
+   "country": "RU"
+  },
+  {
+   "code": "XTS",
+   "manufacturer": "ЧМЗАП",
+   "country": "RU"
+  },
+  {
+   "code": "XTT",
+   "manufacturer": "Ульяновский автомобильный завод (УАЗ)",
+   "country": "RU",
+   "make": "УАЗ"
+  },
+  {
+   "code": "XTU",
+   "manufacturer": "Тролза (ЗиУ)",
+   "country": "RU",
+   "make": "Тролза"
+  },
+  {
+   "code": "XTW",
+   "manufacturer": "ЛАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "XTX",
+   "manufacturer": "ОАО ЗТО «Камея»",
+   "country": "RU"
+  },
+  {
+   "code": "XTY",
+   "manufacturer": "ЛиАЗ",
+   "country": "RU",
+   "make": "ЛиАЗ"
+  },
+  {
+   "code": "XTZ",
+   "manufacturer": "ЗИЛ",
+   "country": "RU",
+   "make": "ЗИЛ"
+  },
+  {
+   "code": "XU3",
+   "manufacturer": "ОАО «Соллерс-Набережные Челны»",
+   "country": "RU"
+  },
+  {
+   "code": "XU5",
+   "manufacturer": "ООО «Автомеханический завод»",
+   "country": "RU"
+  },
+  {
+   "code": "XU6",
+   "manufacturer": "ООО «Автодом»",
+   "country": "RU"
+  },
+  {
+   "code": "XUB",
+   "manufacturer": "ООО «Чайка-НН»",
+   "country": "RU"
+  },
+  {
+   "code": "XUJ",
+   "manufacturer": "ООО «Авто-Профи»",
+   "country": "RU"
+  },
+  {
+   "code": "XUS",
+   "manufacturer": "ООО СТ «Нижегородец»",
+   "country": "RU"
+  },
+  {
+   "code": "XUU",
+   "manufacturer": "Автотор",
+   "country": "RU",
+   "make": "Автотор"
+  },
+  {
+   "code": "XUW",
+   "manufacturer": "ООО «Балтавтоагрегат»",
+   "country": "RU"
+  },
+  {
+   "code": "XUY",
+   "manufacturer": "ООО «Рускомтранс»",
+   "country": "RU"
+  },
+  {
+   "code": "XVC",
+   "manufacturer": "ОАО «Кургандормаш»",
+   "country": "RU"
+  },
+  {
+   "code": "XVD",
+   "manufacturer": "СемАР",
+   "country": "RU"
+  },
+  {
+   "code": "XVF",
+   "manufacturer": "Курганмашзавод",
+   "country": "RU"
+  },
+  {
+   "code": "XVG",
+   "manufacturer": "МАРЗ",
+   "country": "RU"
+  },
+  {
+   "code": "XVL",
+   "manufacturer": "Арзамасский завод коммунального машиностроения",
+   "country": "RU"
+  },
+  {
+   "code": "XVU",
+   "manufacturer": "ОАО «Завод Старт»",
+   "country": "RU"
+  },
+  {
+   "code": "XW2",
+   "manufacturer": "ООО «Уралпромтехника»",
+   "country": "RU"
+  },
+  {
+   "code": "XW4",
+   "manufacturer": "ООО «Пластик-Рустер» (Grünwald)",
+   "country": "RU"
+  },
+  {
+   "code": "XW7",
+   "manufacturer": "ООО «Тойота Мануфэкчуринг Рус»",
+   "country": "RU",
+   "make": "Toyota"
+  },
+  {
+   "code": "XW8",
+   "manufacturer": "ООО «Фольксваген Груп»",
+   "country": "RU",
+   "make": "Volkswagen"
+  },
+  {
+   "code": "XWB",
+   "manufacturer": "UzDaewooAuto",
+   "country": "UZ",
+   "make": "Daewoo"
+  },
+  {
+   "code": "XWE",
+   "manufacturer": "Автотор",
+   "country": "RU",
+   "make": "Автотор"
+  },
+  {
+   "code": "XWF",
+   "manufacturer": "Автотор",
+   "country": "RU",
+   "make": "Автотор"
+  },
+  {
+   "code": "XWK",
+   "manufacturer": "ИжАвто",
+   "country": "RU",
+   "make": "ИжАвто"
+  },
+  {
+   "code": "XWM",
+   "manufacturer": "ООО АЗК «Тор»",
+   "country": "RU"
+  },
+  {
+   "code": "XWN",
+   "manufacturer": "Армор Групп",
+   "country": "RU"
+  },
+  {
+   "code": "XWW",
+   "manufacturer": "Азия Авто",
+   "country": "KZ"
+  },
+  {
+   "code": "XWX",
+   "manufacturer": "ООО «Крона-НН»",
+   "country": "RU"
+  },
+  {
+   "code": "XWY",
+   "manufacturer": "ООО «Смартэко»",
+   "country": "RU"
+  },
+  {
+   "code": "XWZ",
+   "manufacturer": "АО «Великолукский опытный машиностроительный завод»",
+   "country": "RU"
+  },
+  {
+   "code": "XZ2",
+   "manufacturer": "ООО «Корн Кипперс»",
+   "country": "RU"
+  },
+  {
+   "code": "XZ7",
+   "manufacturer": "ООО «ТехноСтавПрицеп»",
+   "country": "RU"
+  },
+  {
+   "code": "XZA",
+   "manufacturer": "ООО «ЗАМС»",
+   "country": "RU"
+  },
+  {
+   "code": "XZL",
+   "manufacturer": "ООО «Тавиалс»",
+   "country": "RU"
+  },
+  {
+   "code": "XZP",
+   "manufacturer": "ООО «Гут Трейлер»",
+   "country": "RU"
+  },
+  {
+   "code": "XZV",
+   "manufacturer": "ООО «Новый Завод»",
+   "country": "RU"
+  },
+  {
+   "code": "Y39000",
+   "manufacturer": "ООО „Комдор“",
+   "country": "BY"
+  },
+  {
+   "code": "Y39001",
+   "manufacturer": "ОАО „Кохановский экскаваторный завод“",
+   "country": "BY"
+  },
+  {
+   "code": "Y39003",
+   "manufacturer": "ОДО „Авторемонтный завод“",
+   "country": "BY"
+  },
+  {
+   "code": "Y39005",
+   "manufacturer": "ОАО „Спецавтотехника“",
+   "country": "BY"
+  },
+  {
+   "code": "Y39006",
+   "manufacturer": "СП „Святовит“» ООО",
+   "country": "BY"
+  },
+  {
+   "code": "Y39007",
+   "manufacturer": "ООО «Мидивисана»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39008",
+   "manufacturer": "ОАО «Пинский завод СММ»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39009",
+   "manufacturer": "ОАО «БРМЗ»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39010",
+   "manufacturer": "ОАО «Гродненский механический завод»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39011",
+   "manufacturer": "РУП «Дорстройиндустрия»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39016",
+   "manufacturer": "СЗАО «ФИДМАШ»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39017",
+   "manufacturer": "РНПУП «Сейсмотехника БГУ»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39018",
+   "manufacturer": "ООО «Пожснаб»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39019",
+   "manufacturer": "ОАО «Гомельский авторемонтный завод»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39020",
+   "manufacturer": "ООО «Комдор»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39023",
+   "manufacturer": "УЧПП «Стройремавто»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39026",
+   "manufacturer": "УП «СТиМ»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39041",
+   "manufacturer": "ООО «Югум»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39050",
+   "manufacturer": "СЗАО \"Витебский машиностроительный завод «Новмаш»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39054",
+   "manufacturer": "ОДО «Белтехавтопром»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39059",
+   "manufacturer": "ООО «Блюминг»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39060",
+   "manufacturer": "ООО «Автомобильные конструкции»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39064",
+   "manufacturer": "СООО «Евромаш»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39066",
+   "manufacturer": "ООО «Русавтопром»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39069",
+   "manufacturer": "ОДО «Профмаштехника»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39079",
+   "manufacturer": "ООО «ЭТОН» (с 2012 года)",
+   "country": "BY"
+  },
+  {
+   "code": "Y39082",
+   "manufacturer": "ЧПТУП «Витстройтехмаш» (ВИПО)",
+   "country": "BY"
+  },
+  {
+   "code": "Y39113",
+   "manufacturer": "ООО «Реймер Трейдинг»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39120",
+   "manufacturer": "Сморгонский завод оптического станкостроения",
+   "country": "BY"
+  },
+  {
+   "code": "Y39122",
+   "manufacturer": "ЗАО «БелСТАТС»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39138",
+   "manufacturer": "ЧПТУП «Витстройтехмаш»,",
+   "country": "BY"
+  },
+  {
+   "code": "Y39144",
+   "manufacturer": "ООО «Руммспецмаш»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39145",
+   "manufacturer": "ОДО «АВТ-Сервис»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39167",
+   "manufacturer": "ЗАО «Амкодор-Пинск» (Амкодор)",
+   "country": "BY"
+  },
+  {
+   "code": "Y39186",
+   "manufacturer": "ООО «Аксиом-групп»",
+   "country": "BY"
+  },
+  {
+   "code": "Y39235",
+   "manufacturer": "ООО «КФ-АВТО» (KF Auto)",
+   "country": "BY"
+  },
+  {
+   "code": "Y39B19",
+   "manufacturer": "ООО «Стрый Авто»",
+   "country": "UA"
+  },
+  {
+   "code": "Y3B",
+   "manufacturer": "БелАЗ",
+   "country": "BY"
+  },
+  {
+   "code": "Y3C",
+   "manufacturer": "МоАЗ",
+   "country": "BY"
+  },
+  {
+   "code": "Y3D",
+   "manufacturer": "Могилёвтрансмаш",
+   "country": "BY"
+  },
+  {
+   "code": "Y3F",
+   "manufacturer": "Неман",
+   "country": "BY"
+  },
+  {
+   "code": "Y3H",
+   "manufacturer": "МАЗ-Купава (ранее ТОО «ТурТранс» и код X1X)",
+   "country": "BY"
+  },
+  {
+   "code": "Y3J",
+   "manufacturer": "БКМ",
+   "country": "BY"
+  },
+  {
+   "code": "Y3K",
+   "manufacturer": "МЗКТ",
+   "country": "BY"
+  },
+  {
+   "code": "Y3M",
+   "manufacturer": "МАЗ",
+   "country": "BY"
+  },
+  {
+   "code": "Y3N",
+   "manufacturer": "МАЗ-MAN",
+   "country": "BY"
+  },
+  {
+   "code": "Y4A",
+   "manufacturer": "ООО «ЭТОН» (до 2012 года)",
+   "country": "BY"
+  },
+  {
+   "code": "Y4K",
+   "manufacturer": "СЗАО «БЕЛДЖИ»",
+   "country": "BY"
+  },
+  {
+   "code": "Y69B68",
+   "manufacturer": "ВАТ «Днепропетровский ремонтный завод электротранспорта»",
+   "country": "UA"
+  },
+  {
+   "code": "Y6D",
+   "manufacturer": "ЗАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "Y6E",
+   "manufacturer": "Днепродзержинский АРЗ",
+   "country": "UA"
+  },
+  {
+   "code": "Y6L",
+   "manufacturer": "ЛуАЗ (сборка автобусов и троллейбусов Богдан)",
+   "country": "UA"
+  },
+  {
+   "code": "Y6M",
+   "manufacturer": "Кременчугский колёсный завод",
+   "country": "UA"
+  },
+  {
+   "code": "Y6P",
+   "manufacturer": "Черниговский автозавод",
+   "country": "UA"
+  },
+  {
+   "code": "Y6R",
+   "manufacturer": "Херсонский автосборочный завод «Анто-Рус»",
+   "country": "UA"
+  },
+  {
+   "code": "Y79A53",
+   "manufacturer": "Днепровский автобусный завод",
+   "country": "UA"
+  },
+  {
+   "code": "Y79A88",
+   "manufacturer": "Галицкий автозавод",
+   "country": "UA"
+  },
+  {
+   "code": "Y7A",
+   "manufacturer": "КрАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "Y7B",
+   "manufacturer": "«Черкасский автобус»",
+   "country": "UA"
+  },
+  {
+   "code": "Y7F",
+   "manufacturer": "БАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "Y7S",
+   "manufacturer": "ООО «Корида-Тех»",
+   "country": "UA"
+  },
+  {
+   "code": "Y7X",
+   "manufacturer": "Часовоярские автобусы",
+   "country": "UA"
+  },
+  {
+   "code": "Y89A54",
+   "manufacturer": "ЮМЗ",
+   "country": "UA"
+  },
+  {
+   "code": "Y89B22",
+   "manufacturer": "ГП «126 ХАРЗ»",
+   "country": "UA"
+  },
+  {
+   "code": "Y89B26",
+   "manufacturer": "«АВИАНТ»",
+   "country": "UA"
+  },
+  {
+   "code": "Y8A",
+   "manufacturer": "ЛАЗ",
+   "country": "UA"
+  },
+  {
+   "code": "Y8J",
+   "manufacturer": "ПОГ «КРЕМОС»",
+   "country": "UA"
+  },
+  {
+   "code": "Y8U",
+   "manufacturer": "Укравтобуспром",
+   "country": "UA"
+  },
+  {
+   "code": "Y99C39",
+   "manufacturer": "ВАТ Ирклиевское РТП",
+   "country": "UA"
+  },
+  {
+   "code": "Y99C53",
+   "manufacturer": "Галицкий автозавод",
+   "country": "UA"
+  },
+  {
+   "code": "Y99C79",
+   "manufacturer": "«Электронтранс»",
+   "country": "UA"
+  },
+  {
+   "code": "Y9Z",
+   "manufacturer": "ЗАЗ (сборка автомобилей Lada и Renault)",
+   "country": "UA"
+  },
+  {
+   "code": "Z02",
+   "manufacturer": "ООО ТД «СаранскСпецТехника»",
+   "country": "RU"
+  },
+  {
+   "code": "Z05",
+   "manufacturer": "Яровит Моторс",
+   "country": "RU"
+  },
+  {
+   "code": "Z06",
+   "manufacturer": "ООО «Автоприцепы Сибтрал»",
+   "country": "RU"
+  },
+  {
+   "code": "Z07",
+   "manufacturer": "Volgabus (с 2012 года)",
+   "country": "RU"
+  },
+  {
+   "code": "Z0E",
+   "manufacturer": "ООО «Ё-Авто»",
+   "country": "RU"
+  },
+  {
+   "code": "Z0G",
+   "manufacturer": "ООО «Грюнвальд» (Grünwald)",
+   "country": "RU"
+  },
+  {
+   "code": "Z0V",
+   "manufacturer": "ООО «УралСпецТранс»",
+   "country": "RU"
+  },
+  {
+   "code": "Z0X",
+   "manufacturer": "ООО «ЛАДА Спорт»",
+   "country": "RU"
+  },
+  {
+   "code": "Z6F",
+   "manufacturer": "ООО «Форд Соллерс Елабуга»",
+   "country": "RU"
+  },
+  {
+   "code": "Z76",
+   "manufacturer": "ТОО «Daewoo Bus Kazakhstan»",
+   "country": "KZ"
+  },
+  {
+   "code": "Z7C",
+   "manufacturer": "«Луидор»",
+   "country": "RU"
+  },
+  {
+   "code": "Z7G",
+   "manufacturer": "ООО «Соллерс-Елабуга»",
+   "country": "RU"
+  },
+  {
+   "code": "Z7H",
+   "manufacturer": "ООО ПКФ «Политранс»",
+   "country": "RU"
+  },
+  {
+   "code": "Z7K",
+   "manufacturer": "ООО «РекАвто»",
+   "country": "RU"
+  },
+  {
+   "code": "Z7S",
+   "manufacturer": "Мелеузовский АРЗ",
+   "country": "RU"
+  },
+  {
+   "code": "Z7T",
+   "manufacturer": "РоАЗ",
+   "country": "RU"
+  },
+  {
+   "code": "Z7Y",
+   "manufacturer": "«Артан»",
+   "country": "RU"
+  },
+  {
+   "code": "Z88",
+   "manufacturer": "ООО «Северстальавто-Кама»",
+   "country": "RU"
+  },
+  {
+   "code": "Z8E",
+   "manufacturer": "ООО «Жуковский мотовелозавод»",
+   "country": "RU"
+  },
+  {
+   "code": "Z8G",
+   "manufacturer": "ООО «AvtoS»",
+   "country": "RU"
+  },
+  {
+   "code": "Z8N",
+   "manufacturer": "ООО «Ниссан Мануфэкчуринг Рус»",
+   "country": "RU",
+   "make": "Nissan"
+  },
+  {
+   "code": "Z8Y",
+   "manufacturer": "«ХОРС-А»",
+   "country": "RU"
+  },
+  {
+   "code": "Z94",
+   "manufacturer": "ООО «Хендэ Мотор Мануфактуринг Рус»",
+   "country": "RU",
+   "make": "Hyundai"
+  },
+  {
+   "code": "Z95",
+   "manufacturer": "ООО «Сервис Моторс»",
+   "country": "RU"
+  },
+  {
+   "code": "Z96",
+   "manufacturer": "ООО «Исмиль»",
+   "country": "RU"
+  },
+  {
+   "code": "Z9G",
+   "manufacturer": "ООО «Рустрак»",
+   "country": "RU"
+  },
+  {
+   "code": "Z9L",
+   "manufacturer": "ООО ТФК «Феникс»",
+   "country": "RU"
+  },
+  {
+   "code": "Z9N",
+   "manufacturer": "ООО «Автоспецоборудование»",
+   "country": "RU"
+  },
+  {
+   "code": "Z9R",
+   "manufacturer": "ООО «Рейсер»",
+   "country": "RU"
+  },
+  {
+   "code": "Z9Z",
+   "manufacturer": "ООО «Объединённая Автомобильная Группа»",
+   "country": "RU"
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+package com.cargenome.app.domain.service
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import com.cargenome.app.data.db.dao.MaintenanceEventDao
+import com.cargenome.app.data.repository.VehicleRepository
+import com.cargenome.app.data.settings.AppSettingsRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+
+/**
+ * BroadcastReceiver triggered when the user dismisses / swipes away an ongoing
+ * maintenance reminder notification.
+ *
+ * If the event is still not marked as completed and persistent notifications are enabled:
+ * - If reminder interval is set to 0 ("Immediately / Continuous"), re-posts the notification instantly
+ *   so it behaves like an undismissable player notification.
+ * - Otherwise schedules a repeat alarm to notify again after the user-configured interval.
+ */
+@AndroidEntryPoint
+class MaintenanceDismissReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var appSettings: AppSettingsRepository
+
+    @Inject
+    lateinit var eventDao: MaintenanceEventDao
+
+    @Inject
+    lateinit var vehicleRepo: VehicleRepository
+
+    @Inject
+    lateinit var alarmScheduler: MaintenanceAlarmScheduler
+
+    override fun onReceive(context: Context, intent: Intent) {
+        val eventId = intent.getLongExtra(EXTRA_EVENT_ID, -1L)
+        if (eventId <= 0L) return
+
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val event = eventDao.findById(eventId)
+                if (event == null || event.isCompleted) {
+                    alarmScheduler.cancelAlarm(eventId)
+                    return@launch
+                }
+
+                val settings = appSettings.settings.first()
+                if (!settings.persistentMaintenanceNotification) {
+                    // User disabled persistent notifications, respect the dismissal
+                    return@launch
+                }
+
+                val intervalMinutes = settings.maintenanceReminderIntervalMinutes
+
+                if (intervalMinutes <= 0) {
+                    // Immediate re-post (undismissable ongoing reminder)
+                    val vehicle = vehicleRepo.find(event.vehicleId)
+                    val vehicleName = vehicle?.let { v ->
+                        v.nickname?.takeIf { it.isNotBlank() }
+                            ?: listOf(v.make, v.model).filter { it.isNotBlank() }.joinToString(" ")
+                    }.orEmpty()
+
+                    MaintenanceNotificationHelper.showEventReminder(
+                        context = context,
+                        eventId = event.id,
+                        vehicleId = event.vehicleId,
+                        title = event.title,
+                        vehicleName = vehicleName,
+                        scheduledDate = event.scheduledDate,
+                        scheduledTimeMinutes = event.scheduledTimeMinutes,
+                        shop = event.shop,
+                        notes = event.notes,
+                        isPersistent = true,
+                    )
+                } else {
+                    // Reschedule alarm for the user-configured reminder interval
+                    alarmScheduler.scheduleRepeatAlarm(event.id, intervalMinutes)
+                }
+            } finally {
+                pendingResult.finish()
+            }
+        }
+    }
+
+    companion object {
+        const val EXTRA_EVENT_ID = "dismiss_event_id"
+    }
+}

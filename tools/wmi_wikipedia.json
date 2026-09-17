@@ -1,0 +1,6077 @@
+{
+ "source": "en.wikipedia.org/wiki/Vehicle_identification_number#List_of_common_WMI",
+ "entries": [
+  {
+   "code": "001",
+   "manufacturer": "Prevost"
+  },
+  {
+   "code": "003",
+   "manufacturer": "Autobusfabriek Bova BV"
+  },
+  {
+   "code": "004",
+   "manufacturer": "Tomcar"
+  },
+  {
+   "code": "005",
+   "manufacturer": "Panther"
+  },
+  {
+   "code": "007",
+   "manufacturer": "Koenigsegg Automotive AB"
+  },
+  {
+   "code": "013",
+   "manufacturer": "Neoplan USA"
+  },
+  {
+   "code": "019",
+   "manufacturer": "TVR"
+  },
+  {
+   "code": "038",
+   "manufacturer": "BYD Coach & Bus LLC"
+  },
+  {
+   "code": "039",
+   "manufacturer": "Westfield Sportscars"
+  },
+  {
+   "code": "048",
+   "manufacturer": "McLaren F1"
+  },
+  {
+   "code": "050",
+   "manufacturer": "Marcos Engineering"
+  },
+  {
+   "code": "098",
+   "manufacturer": "Scania AB"
+  },
+  {
+   "code": "10R",
+   "manufacturer": "E-Z-GO"
+  },
+  {
+   "code": "10T",
+   "manufacturer": "Oshkosh Corporation"
+  },
+  {
+   "code": "12A",
+   "manufacturer": "Avanti"
+  },
+  {
+   "code": "130",
+   "manufacturer": "MG Sport and Racing"
+  },
+  {
+   "code": "133",
+   "manufacturer": "Buell Motorcycle Company"
+  },
+  {
+   "code": "137",
+   "manufacturer": "AM General Hummer"
+  },
+  {
+   "code": "145",
+   "manufacturer": "Campagna Motors"
+  },
+  {
+   "code": "15G",
+   "manufacturer": "Gillig"
+  },
+  {
+   "code": "16X",
+   "manufacturer": "Vixen 21 motorhome"
+  },
+  {
+   "code": "17N",
+   "manufacturer": "John Deere"
+  },
+  {
+   "code": "197",
+   "manufacturer": "Smith Electric Vehicles"
+  },
+  {
+   "code": "19U",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "19V",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "19X",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "1A4",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "1A8",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "1AC",
+   "manufacturer": "American Motors Corporation"
+  },
+  {
+   "code": "1AF",
+   "manufacturer": "American LaFrance"
+  },
+  {
+   "code": "1AM",
+   "manufacturer": "American Motors Corporation"
+  },
+  {
+   "code": "1B3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1B4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1B6",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1B7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1B9",
+   "manufacturer": "Buell Motorcycle Company"
+  },
+  {
+   "code": "1BA",
+   "manufacturer": "Blue Bird Corporation"
+  },
+  {
+   "code": "1BB",
+   "manufacturer": "Blue Bird Wanderlodge"
+  },
+  {
+   "code": "1BD",
+   "manufacturer": "Blue Bird Corporation"
+  },
+  {
+   "code": "1BL",
+   "manufacturer": "Balko, Inc. from Ladysmith, WI"
+  },
+  {
+   "code": "1C3",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "1C4",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "1C6",
+   "manufacturer": "Chrysler Group (all brands)"
+  },
+  {
+   "code": "1C8",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "1C9",
+   "manufacturer": "CX Automotive"
+  },
+  {
+   "code": "1CM",
+   "manufacturer": "Checker Motors Corporation"
+  },
+  {
+   "code": "1CU",
+   "manufacturer": "Cushman Haulster"
+  },
+  {
+   "code": "1CY",
+   "manufacturer": "Crane Carrier Company"
+  },
+  {
+   "code": "1D3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1D4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1D7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1D8",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "1F1",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1F6",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1F9",
+   "manufacturer": "Seagrave"
+  },
+  {
+   "code": "1FA",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1FB",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1FC",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1FD",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1FM",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1FT",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1FU",
+   "manufacturer": "Freightliner Trucks"
+  },
+  {
+   "code": "1FV",
+   "manufacturer": "Freightliner Trucks"
+  },
+  {
+   "code": "1G0",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "1G1",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1G2",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "1G3",
+   "manufacturer": "Oldsmobile"
+  },
+  {
+   "code": "1G4",
+   "manufacturer": "Buick"
+  },
+  {
+   "code": "1G5",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "1G6",
+   "manufacturer": "Cadillac"
+  },
+  {
+   "code": "1G7",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "1G8",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1G9",
+   "manufacturer": "Google"
+  },
+  {
+   "code": "1GA",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1GB",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1GC",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1GD",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "1GE",
+   "manufacturer": "Cadillac"
+  },
+  {
+   "code": "1GF",
+   "manufacturer": "Flxible"
+  },
+  {
+   "code": "1GG",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "1GH",
+   "manufacturer": "Oldsmobile"
+  },
+  {
+   "code": "1GJ",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "1GK",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "1GM",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "1GN",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1GT",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "1GY",
+   "manufacturer": "Cadillac"
+  },
+  {
+   "code": "1H9",
+   "manufacturer": "Crane Carrier Company"
+  },
+  {
+   "code": "1HA",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1HD",
+   "manufacturer": "Harley-Davidson"
+  },
+  {
+   "code": "1HF",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "1HG",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "1HS",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "1HT",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "1HV",
+   "manufacturer": "IC Bus"
+  },
+  {
+   "code": "1J4",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "1J7",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "1J8",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "1JC",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "1JT",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "1JU",
+   "manufacturer": "Marmon Motor Company"
+  },
+  {
+   "code": "1L1",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "1L9",
+   "manufacturer": "Laforza"
+  },
+  {
+   "code": "1LJ",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "1LN",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "1LV",
+   "manufacturer": "John Deere"
+  },
+  {
+   "code": "1M0",
+   "manufacturer": "John Deere Gator"
+  },
+  {
+   "code": "1M1",
+   "manufacturer": "Mack Trucks"
+  },
+  {
+   "code": "1M2",
+   "manufacturer": "Mack Trucks"
+  },
+  {
+   "code": "1M8",
+   "manufacturer": "Motor Coach Industries"
+  },
+  {
+   "code": "1M9",
+   "manufacturer": "Mosler Automotive"
+  },
+  {
+   "code": "1MB",
+   "manufacturer": "Mercedes-Benz Truck Co"
+  },
+  {
+   "code": "1ME",
+   "manufacturer": "Mercury"
+  },
+  {
+   "code": "1MR",
+   "manufacturer": "Continental Mark VI & VII"
+  },
+  {
+   "code": "1N4",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "1N6",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "1N9",
+   "manufacturer": "Neoplan USA"
+  },
+  {
+   "code": "1NK",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "1NP",
+   "manufacturer": "Peterbilt"
+  },
+  {
+   "code": "1NX",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "1P3",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "1P4",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "1P9",
+   "manufacturer": "Panoz"
+  },
+  {
+   "code": "1PY",
+   "manufacturer": "John Deere"
+  },
+  {
+   "code": "1S9",
+   "manufacturer": "Scania AB"
+  },
+  {
+   "code": "1T7",
+   "manufacturer": "Thomas Built Buses"
+  },
+  {
+   "code": "1T8",
+   "manufacturer": "Thomas Built Buses"
+  },
+  {
+   "code": "1T9",
+   "manufacturer": "Tomcar USA"
+  },
+  {
+   "code": "1TU",
+   "manufacturer": "Transportation Manufacturing Corporation"
+  },
+  {
+   "code": "1UT",
+   "manufacturer": "Jeep DJ"
+  },
+  {
+   "code": "1V1",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "1V2",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "1V9",
+   "manufacturer": "Vector Aeromotive"
+  },
+  {
+   "code": "1VH",
+   "manufacturer": "Orion Bus Industries"
+  },
+  {
+   "code": "1VR",
+   "manufacturer": "Vermeer Corporation"
+  },
+  {
+   "code": "1VW",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "1WU",
+   "manufacturer": "White"
+  },
+  {
+   "code": "1WV",
+   "manufacturer": "Winnebago Industries"
+  },
+  {
+   "code": "1WW",
+   "manufacturer": "Winnebago Industries"
+  },
+  {
+   "code": "1WX",
+   "manufacturer": "White"
+  },
+  {
+   "code": "1WY",
+   "manufacturer": "White"
+  },
+  {
+   "code": "1XK",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "1XM",
+   "manufacturer": "Renault Alliance"
+  },
+  {
+   "code": "1XP",
+   "manufacturer": "Peterbilt"
+  },
+  {
+   "code": "1Y1",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "1YJ",
+   "manufacturer": "Rokon International, Inc"
+  },
+  {
+   "code": "1YV",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "1Z3",
+   "manufacturer": "Mitsubishi Raider"
+  },
+  {
+   "code": "1Z7",
+   "manufacturer": "Mitsubishi Raider"
+  },
+  {
+   "code": "1Z9",
+   "manufacturer": "Oshkosh Specialty Vehicles LLC"
+  },
+  {
+   "code": "1ZV",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "1ZW",
+   "manufacturer": "Mercury"
+  },
+  {
+   "code": "202",
+   "manufacturer": "Morgan 3-Wheeler"
+  },
+  {
+   "code": "208",
+   "manufacturer": "Xos, Inc"
+  },
+  {
+   "code": "213",
+   "manufacturer": "Panoz"
+  },
+  {
+   "code": "234",
+   "manufacturer": "Laforza"
+  },
+  {
+   "code": "291",
+   "manufacturer": "CX Automotive"
+  },
+  {
+   "code": "2A3",
+   "manufacturer": "Imperial"
+  },
+  {
+   "code": "2A4",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "2A8",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "2AY",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "2AZ",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "2B1",
+   "manufacturer": "Orion Bus Industries"
+  },
+  {
+   "code": "2B3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2B4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2B5",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2B6",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2B7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2BC",
+   "manufacturer": "Jeep Wrangler (YJ)"
+  },
+  {
+   "code": "2BP",
+   "manufacturer": "Ski-Doo"
+  },
+  {
+   "code": "2BV",
+   "manufacturer": "Can-Am"
+  },
+  {
+   "code": "2BW",
+   "manufacturer": "Can-Am"
+  },
+  {
+   "code": "2BX",
+   "manufacturer": "Can-Am Spyder"
+  },
+  {
+   "code": "2BZ",
+   "manufacturer": "Can-Am Freedom Trailer for Can-Am Spyder"
+  },
+  {
+   "code": "2C1",
+   "manufacturer": "Geo"
+  },
+  {
+   "code": "2C3",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "2C4",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "2C7",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "2C8",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "2C9",
+   "manufacturer": "Campagna Motors"
+  },
+  {
+   "code": "2CC",
+   "manufacturer": "American Motors Corporation"
+  },
+  {
+   "code": "2CG",
+   "manufacturer": "Asüna"
+  },
+  {
+   "code": "2CK",
+   "manufacturer": "GMC Tracker"
+  },
+  {
+   "code": "2CM",
+   "manufacturer": "American Motors Corporation"
+  },
+  {
+   "code": "2CN",
+   "manufacturer": "Geo"
+  },
+  {
+   "code": "2CT",
+   "manufacturer": "GMC Terrain"
+  },
+  {
+   "code": "2D4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2D6",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2D7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2D8",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "2DG",
+   "manufacturer": "Ontario Drive & Gear"
+  },
+  {
+   "code": "2E3",
+   "manufacturer": "Eagle"
+  },
+  {
+   "code": "2E4",
+   "manufacturer": "Lancia"
+  },
+  {
+   "code": "2FA",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "2FM",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "2FT",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "2FU",
+   "manufacturer": "Freightliner Trucks"
+  },
+  {
+   "code": "2FV",
+   "manufacturer": "Freightliner Trucks"
+  },
+  {
+   "code": "2FW",
+   "manufacturer": "Sterling Trucks"
+  },
+  {
+   "code": "2FY",
+   "manufacturer": "New Flyer"
+  },
+  {
+   "code": "2FZ",
+   "manufacturer": "Sterling Trucks"
+  },
+  {
+   "code": "2G0",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2G1",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "2G2",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "2G3",
+   "manufacturer": "Oldsmobile"
+  },
+  {
+   "code": "2G4",
+   "manufacturer": "Buick"
+  },
+  {
+   "code": "2G5",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2G6",
+   "manufacturer": "Cadillac"
+  },
+  {
+   "code": "2G7",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "2G8",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "2G9",
+   "manufacturer": "Gnome Homes"
+  },
+  {
+   "code": "2GA",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "2GB",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "2GC",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "2GD",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2GE",
+   "manufacturer": "Cadillac"
+  },
+  {
+   "code": "2GH",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2GJ",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2GK",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2GN",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "2GT",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "2GX",
+   "manufacturer": "General Motors"
+  },
+  {
+   "code": "2HG",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "2HH",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "2HJ",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "2HK",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "2HM",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "2HN",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "2HS",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "2HT",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "2J4",
+   "manufacturer": "Jeep Wrangler (YJ)"
+  },
+  {
+   "code": "2L1",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "2L9",
+   "manufacturer": "Les Contenants Durabac"
+  },
+  {
+   "code": "2LJ",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "2LM",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "2LN",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "2M1",
+   "manufacturer": "Mack Trucks"
+  },
+  {
+   "code": "2M2",
+   "manufacturer": "Mack Trucks"
+  },
+  {
+   "code": "2ME",
+   "manufacturer": "Mercury"
+  },
+  {
+   "code": "2MG",
+   "manufacturer": "Motor Coach Industries"
+  },
+  {
+   "code": "2MR",
+   "manufacturer": "Mercury"
+  },
+  {
+   "code": "2NK",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "2NP",
+   "manufacturer": "Peterbilt"
+  },
+  {
+   "code": "2NV",
+   "manufacturer": "Nova Bus"
+  },
+  {
+   "code": "2P3",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "2P4",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "2P5",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "2P9",
+   "manufacturer": "Prevost"
+  },
+  {
+   "code": "2PC",
+   "manufacturer": "Prevost"
+  },
+  {
+   "code": "2S2",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "2S3",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "2T1",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "2T2",
+   "manufacturer": "Lexus"
+  },
+  {
+   "code": "2T3",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "2V4",
+   "manufacturer": "Volkswagen Routan"
+  },
+  {
+   "code": "2V8",
+   "manufacturer": "Volkswagen Routan"
+  },
+  {
+   "code": "2WK",
+   "manufacturer": "Western Star Trucks"
+  },
+  {
+   "code": "2WL",
+   "manufacturer": "Western Star Trucks"
+  },
+  {
+   "code": "2WM",
+   "manufacturer": "Western Star Trucks"
+  },
+  {
+   "code": "2XK",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "2XM",
+   "manufacturer": "Eagle Premier"
+  },
+  {
+   "code": "2XP",
+   "manufacturer": "Peterbilt"
+  },
+  {
+   "code": "320",
+   "manufacturer": "VDL Bova"
+  },
+  {
+   "code": "332",
+   "manufacturer": "Oshkosh Specialty Vehicles LLC"
+  },
+  {
+   "code": "363",
+   "manufacturer": "Spyker Cars"
+  },
+  {
+   "code": "393",
+   "manufacturer": "Nikola Corporation"
+  },
+  {
+   "code": "3A4",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "3A8",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "3AK",
+   "manufacturer": "Freightliner Trucks"
+  },
+  {
+   "code": "3AL",
+   "manufacturer": "Freightliner Trucks"
+  },
+  {
+   "code": "3AV",
+   "manufacturer": "BMW Mexico 1999-2009"
+  },
+  {
+   "code": "3B3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3B4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3B6",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3B7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3BJ",
+   "manufacturer": "Western Star"
+  },
+  {
+   "code": "3BK",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "3BM",
+   "manufacturer": "Motor Coach Industries"
+  },
+  {
+   "code": "3BP",
+   "manufacturer": "Peterbilt"
+  },
+  {
+   "code": "3C3",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "3C4",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "3C6",
+   "manufacturer": "Chrysler Group (all brands)"
+  },
+  {
+   "code": "3C7",
+   "manufacturer": "Chrysler Group (all brands)"
+  },
+  {
+   "code": "3C8",
+   "manufacturer": "Chrysler brand"
+  },
+  {
+   "code": "3CE",
+   "manufacturer": "Volvo Buses"
+  },
+  {
+   "code": "3CZ",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "3D2",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3D3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3D4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3D6",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3D7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "3E4",
+   "manufacturer": "Fiat"
+  },
+  {
+   "code": "3F6",
+   "manufacturer": "Sterling Bullet"
+  },
+  {
+   "code": "3FA",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "3FC",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "3FM",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "3FN",
+   "manufacturer": "Ford F-650/F-750 made by Blue Diamond Truck Co"
+  },
+  {
+   "code": "3FR",
+   "manufacturer": "Ford F-650/F-750 made by Blue Diamond Truck Co"
+  },
+  {
+   "code": "3FT",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "3G0",
+   "manufacturer": "Saab 9-4X"
+  },
+  {
+   "code": "3G1",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "3G2",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "3G4",
+   "manufacturer": "Buick"
+  },
+  {
+   "code": "3G5",
+   "manufacturer": "Buick"
+  },
+  {
+   "code": "3G7",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "3GC",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "3GK",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "3GM",
+   "manufacturer": "Holden Suburban"
+  },
+  {
+   "code": "3GN",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "3GS",
+   "manufacturer": "Saturn"
+  },
+  {
+   "code": "3GT",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "3GY",
+   "manufacturer": "Cadillac"
+  },
+  {
+   "code": "3H1",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "3H3",
+   "manufacturer": "Hyundai de Mexico, S.A. de C.V. for Hyundai Translead (truck trailers)"
+  },
+  {
+   "code": "3HA",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "3HC",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "3HG",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "3HS",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "3HT",
+   "manufacturer": "International Trucks"
+  },
+  {
+   "code": "3JB",
+   "manufacturer": "Can-Am"
+  },
+  {
+   "code": "3KP",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "3LN",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "3MD",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "3ME",
+   "manufacturer": "Mercury"
+  },
+  {
+   "code": "3MV",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "3MW",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "3MY",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "3MZ",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "3N1",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "3N6",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "3N8",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "3NE",
+   "manufacturer": "Polaris Inc"
+  },
+  {
+   "code": "3NS",
+   "manufacturer": "Polaris Inc"
+  },
+  {
+   "code": "3P3",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "3PC",
+   "manufacturer": "Infiniti"
+  },
+  {
+   "code": "3TM",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "3TY",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "3VV",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "3VW",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "3WK",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "3WP",
+   "manufacturer": "Peterbilt"
+  },
+  {
+   "code": "419",
+   "manufacturer": "Spartan Motors"
+  },
+  {
+   "code": "43C",
+   "manufacturer": "Consulier"
+  },
+  {
+   "code": "454",
+   "manufacturer": "Scuderia Cameron Glickenhaus"
+  },
+  {
+   "code": "46G",
+   "manufacturer": "Gillig"
+  },
+  {
+   "code": "478",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "480",
+   "manufacturer": "Sterling Trucks"
+  },
+  {
+   "code": "484",
+   "manufacturer": "Munro Vehicles"
+  },
+  {
+   "code": "495",
+   "manufacturer": "Google"
+  },
+  {
+   "code": "49H",
+   "manufacturer": "Sterling Trucks"
+  },
+  {
+   "code": "4A3",
+   "manufacturer": "Mitsubishi Motors"
+  },
+  {
+   "code": "4A4",
+   "manufacturer": "Mitsubishi Motors"
+  },
+  {
+   "code": "4B3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "4B9",
+   "manufacturer": "BYD Coach & Bus LLC"
+  },
+  {
+   "code": "4C3",
+   "manufacturer": "Chrysler"
+  },
+  {
+   "code": "4C9",
+   "manufacturer": "Czinger"
+  },
+  {
+   "code": "4CD",
+   "manufacturer": "Oshkosh Chassis Division"
+  },
+  {
+   "code": "4DR",
+   "manufacturer": "IC Bus"
+  },
+  {
+   "code": "4E3",
+   "manufacturer": "Eagle"
+  },
+  {
+   "code": "4F2",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "4F4",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "4G1",
+   "manufacturer": "Chevrolet Cavalier"
+  },
+  {
+   "code": "4G2",
+   "manufacturer": "Pontiac Sunfire"
+  },
+  {
+   "code": "4G3",
+   "manufacturer": "Toyota Cavalier"
+  },
+  {
+   "code": "4G5",
+   "manufacturer": "General Motors EV1"
+  },
+  {
+   "code": "4GD",
+   "manufacturer": "WhiteGMC Brigadier"
+  },
+  {
+   "code": "4GL",
+   "manufacturer": "Buick"
+  },
+  {
+   "code": "4GT",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "4JG",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "4KB",
+   "manufacturer": "Chevrolet W-Series"
+  },
+  {
+   "code": "4KD",
+   "manufacturer": "GMC W-Series"
+  },
+  {
+   "code": "4KL",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "4M2",
+   "manufacturer": "Mercury"
+  },
+  {
+   "code": "4ML",
+   "manufacturer": "Oshkosh Trailer Division"
+  },
+  {
+   "code": "4MZ",
+   "manufacturer": "Buell Motorcycle Company"
+  },
+  {
+   "code": "4N2",
+   "manufacturer": "Nissan Quest"
+  },
+  {
+   "code": "4NU",
+   "manufacturer": "Isuzu Ascender"
+  },
+  {
+   "code": "4P1",
+   "manufacturer": "Pierce Manufacturing"
+  },
+  {
+   "code": "4P3",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "4RK",
+   "manufacturer": "Nova Bus"
+  },
+  {
+   "code": "4S1",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "4S2",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "4S3",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "4S4",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "4S6",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "4S7",
+   "manufacturer": "Spartan Motors"
+  },
+  {
+   "code": "4S9",
+   "manufacturer": "Smith Electric Vehicles"
+  },
+  {
+   "code": "4T1",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "4T3",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "4T4",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "4T9",
+   "manufacturer": "Xos, Inc"
+  },
+  {
+   "code": "4TA",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "4UF",
+   "manufacturer": "Arctic Cat"
+  },
+  {
+   "code": "4US",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "4UZ",
+   "manufacturer": "Freightliner Custom Chassis Corporation"
+  },
+  {
+   "code": "4V1",
+   "manufacturer": "WhiteGMC"
+  },
+  {
+   "code": "4V2",
+   "manufacturer": "WhiteGMC"
+  },
+  {
+   "code": "4V4",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4V5",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4VA",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4VE",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4VG",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4VH",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4VM",
+   "manufacturer": "Volvo Trucks North America"
+  },
+  {
+   "code": "4VZ",
+   "manufacturer": "Spartan Motors"
+  },
+  {
+   "code": "4XA",
+   "manufacturer": "Polaris Inc"
+  },
+  {
+   "code": "4YD",
+   "manufacturer": "Keystone RV"
+  },
+  {
+   "code": "4YM",
+   "manufacturer": "Carry-On Trailer, Inc"
+  },
+  {
+   "code": "4Z3",
+   "manufacturer": "American LaFrance"
+  },
+  {
+   "code": "506",
+   "manufacturer": "KaiserRushforth"
+  },
+  {
+   "code": "50E",
+   "manufacturer": "Lucid Motors"
+  },
+  {
+   "code": "50G",
+   "manufacturer": "Karma Automotive"
+  },
+  {
+   "code": "516",
+   "manufacturer": "Autocar"
+  },
+  {
+   "code": "51R",
+   "manufacturer": "Brammo Motorcycles"
+  },
+  {
+   "code": "523",
+   "manufacturer": "VPG"
+  },
+  {
+   "code": "52C",
+   "manufacturer": "GEM"
+  },
+  {
+   "code": "538",
+   "manufacturer": "Zero Motorcycles"
+  },
+  {
+   "code": "53G",
+   "manufacturer": "Coda Automotive"
+  },
+  {
+   "code": "53T",
+   "manufacturer": "Think North America"
+  },
+  {
+   "code": "542",
+   "manufacturer": "Scuderia Cameron Glickenhaus"
+  },
+  {
+   "code": "544",
+   "manufacturer": "Scuderia Cameron Glickenhaus"
+  },
+  {
+   "code": "546",
+   "manufacturer": "EBR"
+  },
+  {
+   "code": "54C",
+   "manufacturer": "Winnebago Industries"
+  },
+  {
+   "code": "54D",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "559",
+   "manufacturer": "Spartan Fire, LLC"
+  },
+  {
+   "code": "55S",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "560",
+   "manufacturer": "Spartan Fire, LLC"
+  },
+  {
+   "code": "561",
+   "manufacturer": "Czinger"
+  },
+  {
+   "code": "56K",
+   "manufacturer": "Indian Motorcycle International, LLC"
+  },
+  {
+   "code": "57W",
+   "manufacturer": "Mobility Ventures"
+  },
+  {
+   "code": "57X",
+   "manufacturer": "Polaris Slingshot"
+  },
+  {
+   "code": "58A",
+   "manufacturer": "Lexus"
+  },
+  {
+   "code": "5AS",
+   "manufacturer": "GEM"
+  },
+  {
+   "code": "5B4",
+   "manufacturer": "Workhorse Custom Chassis, LLC"
+  },
+  {
+   "code": "5BZ",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "5CD",
+   "manufacturer": "Indian Motorcycle Company of America"
+  },
+  {
+   "code": "5CX",
+   "manufacturer": "Shelby Series 1"
+  },
+  {
+   "code": "5DF",
+   "manufacturer": "Thomas Dennis Company LLC"
+  },
+  {
+   "code": "5EH",
+   "manufacturer": "Excelsior-Henderson Motorcycle"
+  },
+  {
+   "code": "5FN",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "5FP",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "5FR",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "5FY",
+   "manufacturer": "New Flyer"
+  },
+  {
+   "code": "5G8",
+   "manufacturer": "Holden Volt"
+  },
+  {
+   "code": "5GA",
+   "manufacturer": "Buick"
+  },
+  {
+   "code": "5GD",
+   "manufacturer": "Daewoo G2X"
+  },
+  {
+   "code": "5GN",
+   "manufacturer": "Hummer H3T"
+  },
+  {
+   "code": "5GR",
+   "manufacturer": "Hummer H2"
+  },
+  {
+   "code": "5GT",
+   "manufacturer": "Hummer H3"
+  },
+  {
+   "code": "5GZ",
+   "manufacturer": "Saturn"
+  },
+  {
+   "code": "5HD",
+   "manufacturer": "Harley-Davidson"
+  },
+  {
+   "code": "5J6",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "5J8",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "5KB",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "5KJ",
+   "manufacturer": "Western Star Trucks"
+  },
+  {
+   "code": "5KK",
+   "manufacturer": "Western Star Trucks"
+  },
+  {
+   "code": "5L1",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "5LD",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "5LM",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "5LT",
+   "manufacturer": "Lincoln"
+  },
+  {
+   "code": "5MZ",
+   "manufacturer": "Buell Motorcycle Company"
+  },
+  {
+   "code": "5N1",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "5N3",
+   "manufacturer": "Infiniti"
+  },
+  {
+   "code": "5NM",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "5NP",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "5NT",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "5PV",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "5S3",
+   "manufacturer": "Saab 9-7X"
+  },
+  {
+   "code": "5SA",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "5SX",
+   "manufacturer": "American LaFrance"
+  },
+  {
+   "code": "5TB",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "5TD",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "5TE",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "5TF",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "5UM",
+   "manufacturer": "BMW M"
+  },
+  {
+   "code": "5UX",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "5VC",
+   "manufacturer": "Autocar"
+  },
+  {
+   "code": "5VP",
+   "manufacturer": "Victory Motorcycles"
+  },
+  {
+   "code": "5WE",
+   "manufacturer": "IC Bus"
+  },
+  {
+   "code": "5WT",
+   "manufacturer": "Aptera"
+  },
+  {
+   "code": "5XX",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "5XY",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "5Y2",
+   "manufacturer": "Pontiac Vibe"
+  },
+  {
+   "code": "5Y4",
+   "manufacturer": "Yamaha Motor Company"
+  },
+  {
+   "code": "5YA",
+   "manufacturer": "Indian Motorcycle Company"
+  },
+  {
+   "code": "5YF",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "5YJ",
+   "manufacturer": "Tesla"
+  },
+  {
+   "code": "5YM",
+   "manufacturer": "BMW M"
+  },
+  {
+   "code": "5Z6",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "607",
+   "manufacturer": "Mathieu Fayat Group"
+  },
+  {
+   "code": "673",
+   "manufacturer": "Venturi Automobiles"
+  },
+  {
+   "code": "682",
+   "manufacturer": "Mosler Automotive"
+  },
+  {
+   "code": "6F1",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "6F2",
+   "manufacturer": "Iveco Trucks Australia Ltd"
+  },
+  {
+   "code": "6F4",
+   "manufacturer": "Nissan Motor Australia"
+  },
+  {
+   "code": "6F5",
+   "manufacturer": "Kenworth Australia"
+  },
+  {
+   "code": "6FM",
+   "manufacturer": "Mack Trucks Australia"
+  },
+  {
+   "code": "6FP",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "6G1",
+   "manufacturer": "Holden"
+  },
+  {
+   "code": "6G2",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "6G3",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "6MM",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "6MP",
+   "manufacturer": "Mercury Capri"
+  },
+  {
+   "code": "6T1",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "6T9",
+   "manufacturer": "Trailer"
+  },
+  {
+   "code": "6U9",
+   "manufacturer": "Low Volume (Grey) Import Vehicles which don't have 17 Digit VIN. Uses NON ISO VIN with \"Filler 0's between WMI & Non Iso VIN – I.e Japanese VIN PV35-400637 would become 6U90000PV35400637"
+  },
+  {
+   "code": "6ZZ",
+   "manufacturer": "Low Volume (Grey) Import Vehicles which don't have 17 Digit VIN. Uses NON ISO VIN with \"Filler 0's between WMI & Non Iso VIN – I.e Japanese VIN PV35-400637 would become 6ZZ0000PV35400637"
+  },
+  {
+   "code": "795",
+   "manufacturer": "Bugatti Automobiles S.A.S"
+  },
+  {
+   "code": "7A1",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "7A3",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "7A4",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "7A5",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "7A7",
+   "manufacturer": "Nissan New Zealand"
+  },
+  {
+   "code": "7A8",
+   "manufacturer": "NZ Transport Agency"
+  },
+  {
+   "code": "7AT",
+   "manufacturer": "NZ Transport Agency"
+  },
+  {
+   "code": "7FA",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "7FC",
+   "manufacturer": "Rivian"
+  },
+  {
+   "code": "7G2",
+   "manufacturer": "Tesla Cybertruck"
+  },
+  {
+   "code": "7GZ",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "7H4",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "7JR",
+   "manufacturer": "Volvo Cars"
+  },
+  {
+   "code": "7JZ",
+   "manufacturer": "Proterra"
+  },
+  {
+   "code": "7KG",
+   "manufacturer": "Vanderhall Motor Works"
+  },
+  {
+   "code": "7MM",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "7MU",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "7NA",
+   "manufacturer": "Navistar Defense"
+  },
+  {
+   "code": "7NY",
+   "manufacturer": "Lordstown Motors"
+  },
+  {
+   "code": "7PD",
+   "manufacturer": "Rivian"
+  },
+  {
+   "code": "7R4",
+   "manufacturer": "Icon Electric Vehicles"
+  },
+  {
+   "code": "7RZ",
+   "manufacturer": "Electric Last Mile Solutions"
+  },
+  {
+   "code": "7SA",
+   "manufacturer": "Tesla"
+  },
+  {
+   "code": "7SU",
+   "manufacturer": "Blue Arc"
+  },
+  {
+   "code": "7SV",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "7SX",
+   "manufacturer": "Global Electric Motorcars"
+  },
+  {
+   "code": "7Z0",
+   "manufacturer": "Zoox"
+  },
+  {
+   "code": "816",
+   "manufacturer": "Proterra"
+  },
+  {
+   "code": "829",
+   "manufacturer": "Quantum Motors"
+  },
+  {
+   "code": "842",
+   "manufacturer": "Saleen S7"
+  },
+  {
+   "code": "899",
+   "manufacturer": "Tomcar USA"
+  },
+  {
+   "code": "8A1",
+   "manufacturer": "Renault Argentina"
+  },
+  {
+   "code": "8A3",
+   "manufacturer": "Scania Argentina"
+  },
+  {
+   "code": "8AC",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "8AD",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "8AE",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "8AF",
+   "manufacturer": "Ford Motor Argentina"
+  },
+  {
+   "code": "8AG",
+   "manufacturer": "General Motors de Argentina"
+  },
+  {
+   "code": "8AJ",
+   "manufacturer": "Toyota Argentina"
+  },
+  {
+   "code": "8AN",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "8AP",
+   "manufacturer": "Fiat"
+  },
+  {
+   "code": "8AT",
+   "manufacturer": "Iveco"
+  },
+  {
+   "code": "8AW",
+   "manufacturer": "Volkswagen Argentina"
+  },
+  {
+   "code": "8BB",
+   "manufacturer": "Agrale Argentina S.A"
+  },
+  {
+   "code": "8BC",
+   "manufacturer": "Citroën"
+  },
+  {
+   "code": "8BN",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "8BR",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "8BT",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "8BU",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "8C3",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "8CH",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "8F9",
+   "manufacturer": "Reborn Electric Motors SPA"
+  },
+  {
+   "code": "8G1",
+   "manufacturer": "Automotores Franco Chilena S.A"
+  },
+  {
+   "code": "8GD",
+   "manufacturer": "Automotores Franco Chilena S.A"
+  },
+  {
+   "code": "8GG",
+   "manufacturer": "General Motors Chile Ltda"
+  },
+  {
+   "code": "8L4",
+   "manufacturer": "Great Wall Motors"
+  },
+  {
+   "code": "8LB",
+   "manufacturer": "General Motors OBB"
+  },
+  {
+   "code": "8LF",
+   "manufacturer": "Maresa"
+  },
+  {
+   "code": "8LG",
+   "manufacturer": "Aymesa"
+  },
+  {
+   "code": "8XD",
+   "manufacturer": "Ford Motor Venezuela"
+  },
+  {
+   "code": "8XJ",
+   "manufacturer": "Mack de Venezuela C.A"
+  },
+  {
+   "code": "8XV",
+   "manufacturer": "Iveco Venezuela C.A"
+  },
+  {
+   "code": "8Z1",
+   "manufacturer": "General Motors Venezolana C.A"
+  },
+  {
+   "code": "903",
+   "manufacturer": "Royal Enfield"
+  },
+  {
+   "code": "906",
+   "manufacturer": "PACE (Planta Automotiva do Ceará)"
+  },
+  {
+   "code": "92V",
+   "manufacturer": "BYD"
+  },
+  {
+   "code": "92Z",
+   "manufacturer": "Great Wall Motors"
+  },
+  {
+   "code": "932",
+   "manufacturer": "Harley-Davidson"
+  },
+  {
+   "code": "935",
+   "manufacturer": "Citroën"
+  },
+  {
+   "code": "936",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "937",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "93C",
+   "manufacturer": "General Motors do Brasil"
+  },
+  {
+   "code": "93H",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "93K",
+   "manufacturer": "Volvo Trucks"
+  },
+  {
+   "code": "93P",
+   "manufacturer": "Volare"
+  },
+  {
+   "code": "93S",
+   "manufacturer": "Navistar International"
+  },
+  {
+   "code": "93U",
+   "manufacturer": "Audi"
+  },
+  {
+   "code": "93V",
+   "manufacturer": "Navistar International"
+  },
+  {
+   "code": "93W",
+   "manufacturer": "Fiat Ducato"
+  },
+  {
+   "code": "93X",
+   "manufacturer": "Souza Ramos – Mitsubishi Motors / Suzuki Jimny"
+  },
+  {
+   "code": "93Y",
+   "manufacturer": "Renault do Brasil"
+  },
+  {
+   "code": "93Z",
+   "manufacturer": "Iveco"
+  },
+  {
+   "code": "944",
+   "manufacturer": "SSC North America"
+  },
+  {
+   "code": "94D",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "94G",
+   "manufacturer": "Indabra"
+  },
+  {
+   "code": "94M",
+   "manufacturer": "HVR-Busscar"
+  },
+  {
+   "code": "94N",
+   "manufacturer": "RWM Brazil"
+  },
+  {
+   "code": "94T",
+   "manufacturer": "Troller Veículos Especiais"
+  },
+  {
+   "code": "953",
+   "manufacturer": "VW Truck & Bus"
+  },
+  {
+   "code": "95P",
+   "manufacturer": "CAOA / Hyundai"
+  },
+  {
+   "code": "95V",
+   "manufacturer": "Dafra Motos"
+  },
+  {
+   "code": "95Z",
+   "manufacturer": "Buell Motorcycle Company"
+  },
+  {
+   "code": "96P",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "975",
+   "manufacturer": "Motus Motorcycles"
+  },
+  {
+   "code": "97N",
+   "manufacturer": "Triumph Motorcycles Ltd"
+  },
+  {
+   "code": "988",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "98M",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "98R",
+   "manufacturer": "Chery"
+  },
+  {
+   "code": "99A",
+   "manufacturer": "Audi"
+  },
+  {
+   "code": "99J",
+   "manufacturer": "Jaguar Land Rover"
+  },
+  {
+   "code": "99K",
+   "manufacturer": "Haojue"
+  },
+  {
+   "code": "99L",
+   "manufacturer": "BYD"
+  },
+  {
+   "code": "99Z",
+   "manufacturer": "BMW Motorrad"
+  },
+  {
+   "code": "9AM",
+   "manufacturer": "Massari (?)"
+  },
+  {
+   "code": "9BD",
+   "manufacturer": "Fiat Automóveis"
+  },
+  {
+   "code": "9BF",
+   "manufacturer": "Ford Brasil"
+  },
+  {
+   "code": "9BG",
+   "manufacturer": "General Motors do Brasil"
+  },
+  {
+   "code": "9BH",
+   "manufacturer": "Hyundai Motor Brasil"
+  },
+  {
+   "code": "9BM",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "9BN",
+   "manufacturer": "Mafersa"
+  },
+  {
+   "code": "9BR",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "9BS",
+   "manufacturer": "Scania Brazil"
+  },
+  {
+   "code": "9BV",
+   "manufacturer": "Volvo Trucks"
+  },
+  {
+   "code": "9BW",
+   "manufacturer": "Volkswagen do Brasil"
+  },
+  {
+   "code": "9BY",
+   "manufacturer": "Agrale"
+  },
+  {
+   "code": "9C2",
+   "manufacturer": "Honda Motorcycles"
+  },
+  {
+   "code": "9C6",
+   "manufacturer": "Yamaha Motor"
+  },
+  {
+   "code": "9CD",
+   "manufacturer": "Suzuki (motorcycles)"
+  },
+  {
+   "code": "9DW",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "9EZ",
+   "manufacturer": "Homebuilt"
+  },
+  {
+   "code": "9FB",
+   "manufacturer": "Sofasa"
+  },
+  {
+   "code": "9FC",
+   "manufacturer": "Compañía Colombiana Automotriz"
+  },
+  {
+   "code": "9GA",
+   "manufacturer": "GM Colmotores"
+  },
+  {
+   "code": "9UJ",
+   "manufacturer": "Chery"
+  },
+  {
+   "code": "9UK",
+   "manufacturer": "Lifan"
+  },
+  {
+   "code": "9UW",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "9V7",
+   "manufacturer": "Citroen"
+  },
+  {
+   "code": "9V8",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "A12",
+   "manufacturer": "Lamborghini"
+  },
+  {
+   "code": "A27",
+   "manufacturer": "Groenewold Carrosseriefabriek B.V"
+  },
+  {
+   "code": "AAA",
+   "manufacturer": "Audi South Africa"
+  },
+  {
+   "code": "AAK",
+   "manufacturer": "FAW Vehicle Manufacturers SA (PTY) Ltd"
+  },
+  {
+   "code": "AAM",
+   "manufacturer": "MAN Automotive (South Africa) (Pty) Ltd"
+  },
+  {
+   "code": "AAV",
+   "manufacturer": "Volkswagen of South Africa"
+  },
+  {
+   "code": "AB8",
+   "manufacturer": "Rimac Automobili"
+  },
+  {
+   "code": "ABJ",
+   "manufacturer": "Mitsubishi Colt & Triton pickups"
+  },
+  {
+   "code": "ABM",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "AC5",
+   "manufacturer": "Hyundai Automotive South Africa"
+  },
+  {
+   "code": "ACV",
+   "manufacturer": "Isuzu Motors South Africa"
+  },
+  {
+   "code": "ADD",
+   "manufacturer": "UD Trucks Southern Africa (Pty) Ltd"
+  },
+  {
+   "code": "ADM",
+   "manufacturer": "General Motors South Africa"
+  },
+  {
+   "code": "ADN",
+   "manufacturer": "Nissan South Africa (Pty) Ltd"
+  },
+  {
+   "code": "ADR",
+   "manufacturer": "Renault Sandero"
+  },
+  {
+   "code": "ADX",
+   "manufacturer": "Tata Automobile Corporation (SA) Ltd"
+  },
+  {
+   "code": "AFA",
+   "manufacturer": "Ford Motor Company of Southern Africa"
+  },
+  {
+   "code": "AFB",
+   "manufacturer": "Mazda BT-50"
+  },
+  {
+   "code": "AHH",
+   "manufacturer": "Hino South Africa"
+  },
+  {
+   "code": "AHM",
+   "manufacturer": "Honda Ballade"
+  },
+  {
+   "code": "AHT",
+   "manufacturer": "Toyota South Africa Motors"
+  },
+  {
+   "code": "B09",
+   "manufacturer": "Bitter Cars"
+  },
+  {
+   "code": "B16",
+   "manufacturer": "Brabus"
+  },
+  {
+   "code": "BAB",
+   "manufacturer": "BMW cars 1986-2019"
+  },
+  {
+   "code": "BF9",
+   "manufacturer": "KIBO Motorcycles"
+  },
+  {
+   "code": "BRY",
+   "manufacturer": "Fiat el Djazaïr"
+  },
+  {
+   "code": "CL9",
+   "manufacturer": "Wallyscar"
+  },
+  {
+   "code": "D05",
+   "manufacturer": "Drögmöller"
+  },
+  {
+   "code": "D38",
+   "manufacturer": "Cizeta Automobili SRL"
+  },
+  {
+   "code": "D39",
+   "manufacturer": "Bugatti Automobili S.p.A"
+  },
+  {
+   "code": "DA1",
+   "manufacturer": "Arab American Vehicles"
+  },
+  {
+   "code": "DA4",
+   "manufacturer": "Arab American Vehicles"
+  },
+  {
+   "code": "DAA",
+   "manufacturer": "Fiat Auto Egypt Industrial Co"
+  },
+  {
+   "code": "DAB",
+   "manufacturer": "BMW Egypt SKD"
+  },
+  {
+   "code": "DF9",
+   "manufacturer": "Laraki"
+  },
+  {
+   "code": "F76",
+   "manufacturer": "Pagani Automobili S.p.A"
+  },
+  {
+   "code": "GA1",
+   "manufacturer": "Renault"
+  },
+  {
+   "code": "HA8",
+   "manufacturer": "HWA AG"
+  },
+  {
+   "code": "J81",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "J87",
+   "manufacturer": "Pontiac"
+  },
+  {
+   "code": "J8B",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "J8C",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "J8D",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "J8T",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "J8Z",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "JA3",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JA4",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JA7",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JAA",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "JAB",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "JAC",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "JAE",
+   "manufacturer": "Acura SLX"
+  },
+  {
+   "code": "JAL",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "JAM",
+   "manufacturer": "Isuzu"
+  },
+  {
+   "code": "JB3",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "JB4",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "JB7",
+   "manufacturer": "Dodge"
+  },
+  {
+   "code": "JC0",
+   "manufacturer": "Ford brand"
+  },
+  {
+   "code": "JC1",
+   "manufacturer": "Fiat 124 Spider"
+  },
+  {
+   "code": "JC2",
+   "manufacturer": "Ford Courier"
+  },
+  {
+   "code": "JD1",
+   "manufacturer": "Daihatsu"
+  },
+  {
+   "code": "JD2",
+   "manufacturer": "Daihatsu"
+  },
+  {
+   "code": "JD4",
+   "manufacturer": "Daihatsu"
+  },
+  {
+   "code": "JDA",
+   "manufacturer": "Daihatsu"
+  },
+  {
+   "code": "JE3",
+   "manufacturer": "Eagle"
+  },
+  {
+   "code": "JE4",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JF1",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "JF2",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "JF3",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "JF4",
+   "manufacturer": "Saab 9-2X"
+  },
+  {
+   "code": "JG1",
+   "manufacturer": "Chevrolet/Geo"
+  },
+  {
+   "code": "JG7",
+   "manufacturer": "Pontiac/Asuna"
+  },
+  {
+   "code": "JGC",
+   "manufacturer": "Chevrolet/Geo"
+  },
+  {
+   "code": "JGT",
+   "manufacturer": "GMC"
+  },
+  {
+   "code": "JH2",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "JH3",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "JH4",
+   "manufacturer": "Acura"
+  },
+  {
+   "code": "JHA",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "JHB",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "JHD",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "JHF",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "JHH",
+   "manufacturer": "Hino"
+  },
+  {
+   "code": "JHL",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "JHM",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "JJ3",
+   "manufacturer": "Chrysler"
+  },
+  {
+   "code": "JK8",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "JKA",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "JKB",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "JKS",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "JL5",
+   "manufacturer": "Mitsubishi FUSO Truck & Bus Corp"
+  },
+  {
+   "code": "JL6",
+   "manufacturer": "Mitsubishi FUSO Truck & Bus Corp"
+  },
+  {
+   "code": "JLF",
+   "manufacturer": "Mitsubishi FUSO Truck & Bus Corp"
+  },
+  {
+   "code": "JLS",
+   "manufacturer": "Sterling Trucks"
+  },
+  {
+   "code": "JM0",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JM1",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JM2",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JM3",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JM6",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JM7",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JMA",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JMB",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JMF",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JMY",
+   "manufacturer": "Mitsubishi"
+  },
+  {
+   "code": "JMZ",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "JN1",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "JN3",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "JN6",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "JN8",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "JNA",
+   "manufacturer": "Nissan Diesel"
+  },
+  {
+   "code": "JNC",
+   "manufacturer": "Nissan Diesel"
+  },
+  {
+   "code": "JNE",
+   "manufacturer": "Nissan Diesel"
+  },
+  {
+   "code": "JNK",
+   "manufacturer": "Infiniti"
+  },
+  {
+   "code": "JNR",
+   "manufacturer": "Infiniti"
+  },
+  {
+   "code": "JNX",
+   "manufacturer": "Infiniti"
+  },
+  {
+   "code": "JP3",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "JP4",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "JP7",
+   "manufacturer": "Plymouth"
+  },
+  {
+   "code": "JPC",
+   "manufacturer": "Nissan Diesel"
+  },
+  {
+   "code": "JR2",
+   "manufacturer": "Isuzu Oasis"
+  },
+  {
+   "code": "JS1",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "JS2",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "JS3",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "JSA",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "JSK",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "JSL",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "JT2",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JT3",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JT4",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JT5",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JT6",
+   "manufacturer": "Lexus"
+  },
+  {
+   "code": "JT8",
+   "manufacturer": "Lexus"
+  },
+  {
+   "code": "JTD",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTE",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTF",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTG",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTH",
+   "manufacturer": "Lexus"
+  },
+  {
+   "code": "JTJ",
+   "manufacturer": "Lexus"
+  },
+  {
+   "code": "JTK",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTL",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTM",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JTN",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "JW6",
+   "manufacturer": "Mitsubishi FUSO division of Mitsubishi Motors"
+  },
+  {
+   "code": "JY3",
+   "manufacturer": "Yamaha Motor"
+  },
+  {
+   "code": "JY4",
+   "manufacturer": "Yamaha Motor"
+  },
+  {
+   "code": "JYA",
+   "manufacturer": "Yamaha Motor"
+  },
+  {
+   "code": "JYE",
+   "manufacturer": "Yamaha Motor"
+  },
+  {
+   "code": "KA1",
+   "manufacturer": "KEWR Technologies"
+  },
+  {
+   "code": "KAA",
+   "manufacturer": "RS Automotive"
+  },
+  {
+   "code": "KAL",
+   "manufacturer": "Lanka Ashok Leyland"
+  },
+  {
+   "code": "KF3",
+   "manufacturer": "Merkavim"
+  },
+  {
+   "code": "KF6",
+   "manufacturer": "Automotive Industries, Ltd"
+  },
+  {
+   "code": "KF9",
+   "manufacturer": "Tomcar"
+  },
+  {
+   "code": "KL1",
+   "manufacturer": "GM Daewoo"
+  },
+  {
+   "code": "KL2",
+   "manufacturer": "Daewoo"
+  },
+  {
+   "code": "KL3",
+   "manufacturer": "GM Daewoo"
+  },
+  {
+   "code": "KL4",
+   "manufacturer": "GM Korea"
+  },
+  {
+   "code": "KL5",
+   "manufacturer": "GM Daewoo"
+  },
+  {
+   "code": "KL6",
+   "manufacturer": "GM Daewoo"
+  },
+  {
+   "code": "KL7",
+   "manufacturer": "Daewoo"
+  },
+  {
+   "code": "KL8",
+   "manufacturer": "GM Daewoo"
+  },
+  {
+   "code": "KLA",
+   "manufacturer": "Daewoo"
+  },
+  {
+   "code": "KLT",
+   "manufacturer": "Tata Daewoo"
+  },
+  {
+   "code": "KLU",
+   "manufacturer": "Tata Daewoo"
+  },
+  {
+   "code": "KM4",
+   "manufacturer": "Hyosung Motors/S&T Motors/KR Motors"
+  },
+  {
+   "code": "KM8",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "KM9",
+   "manufacturer": "Edison Motors/KG Mobility Commercial Buses"
+  },
+  {
+   "code": "KMA",
+   "manufacturer": "Asia Motors"
+  },
+  {
+   "code": "KME",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "KMF",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "KMH",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "KMJ",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "KMT",
+   "manufacturer": "Genesis Motor"
+  },
+  {
+   "code": "KMU",
+   "manufacturer": "Genesis Motor"
+  },
+  {
+   "code": "KMY",
+   "manufacturer": "Daelim Motor Company, Ltd"
+  },
+  {
+   "code": "KNA",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "KNC",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "KND",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "KNE",
+   "manufacturer": "Kia"
+  },
+  {
+   "code": "KNG",
+   "manufacturer": "Kia Granbird"
+  },
+  {
+   "code": "KNJ",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "KNM",
+   "manufacturer": "Renault Samsung Motors"
+  },
+  {
+   "code": "KPA",
+   "manufacturer": "KG Mobility"
+  },
+  {
+   "code": "KPB",
+   "manufacturer": "KG Mobility"
+  },
+  {
+   "code": "KPH",
+   "manufacturer": "Mitsubishi Precis"
+  },
+  {
+   "code": "KPT",
+   "manufacturer": "KG Mobility"
+  },
+  {
+   "code": "L1C",
+   "manufacturer": "Hubei Huawei Special-Purpose Automobile"
+  },
+  {
+   "code": "L2C",
+   "manufacturer": "Chery Jaguar Land Rover"
+  },
+  {
+   "code": "L5Y",
+   "manufacturer": "Znen"
+  },
+  {
+   "code": "L6T",
+   "manufacturer": "Geely"
+  },
+  {
+   "code": "L8A",
+   "manufacturer": "Jinhua Youngman Automobile Manufacturing Co., Ltd"
+  },
+  {
+   "code": "L8Y",
+   "manufacturer": "Zhejiang Jonway Motorcycle Manufacturing Co., Ltd"
+  },
+  {
+   "code": "L9N",
+   "manufacturer": "Zhejiang Taotao Vehicles Co., Ltd"
+  },
+  {
+   "code": "LA6",
+   "manufacturer": "King Long"
+  },
+  {
+   "code": "LA9",
+   "manufacturer": "BYD Auto"
+  },
+  {
+   "code": "LAL",
+   "manufacturer": "Sundiro Honda Motorcycle Co., Ltd"
+  },
+  {
+   "code": "LB1",
+   "manufacturer": "Fujian Benz"
+  },
+  {
+   "code": "LB2",
+   "manufacturer": "Geely"
+  },
+  {
+   "code": "LB3",
+   "manufacturer": "Geely"
+  },
+  {
+   "code": "LBB",
+   "manufacturer": "Qianjiang Motorcycle"
+  },
+  {
+   "code": "LBE",
+   "manufacturer": "Beijing Hyundai"
+  },
+  {
+   "code": "LBP",
+   "manufacturer": "Chongqing Jianshe Yamaha Motor Co. Ltd"
+  },
+  {
+   "code": "LBV",
+   "manufacturer": "BMW Brilliance"
+  },
+  {
+   "code": "LC0",
+   "manufacturer": "BYD Auto"
+  },
+  {
+   "code": "LC2",
+   "manufacturer": "Changzhou Kwang Yang Motor Co., Ltd"
+  },
+  {
+   "code": "LC6",
+   "manufacturer": "Changzhou Haojue Suzuki Motorcycle Co. Ltd"
+  },
+  {
+   "code": "LCE",
+   "manufacturer": "CF Moto by Chunfeng Holding Group Hangzhou Motorcycles Manufacturing Co., Ltd"
+  },
+  {
+   "code": "LCR",
+   "manufacturer": "Gonow"
+  },
+  {
+   "code": "LDC",
+   "manufacturer": "Dongfeng Peugeot-Citroën"
+  },
+  {
+   "code": "LDK",
+   "manufacturer": "FAW Bus (Dalian) Co., Ltd"
+  },
+  {
+   "code": "LDN",
+   "manufacturer": "Soueast"
+  },
+  {
+   "code": "LDY",
+   "manufacturer": "Zhongtong Bus"
+  },
+  {
+   "code": "LE4",
+   "manufacturer": "Beijing Benz"
+  },
+  {
+   "code": "LEF",
+   "manufacturer": "JMC"
+  },
+  {
+   "code": "LET",
+   "manufacturer": "Jiangxi Isuzu"
+  },
+  {
+   "code": "LF3",
+   "manufacturer": "Lifan"
+  },
+  {
+   "code": "LFA",
+   "manufacturer": "Ford Lio Ho Motor Co Ltd"
+  },
+  {
+   "code": "LFB",
+   "manufacturer": "FAW Jilin"
+  },
+  {
+   "code": "LFM",
+   "manufacturer": "FAW Toyota"
+  },
+  {
+   "code": "LFN",
+   "manufacturer": "FAW Bus (Wuxi) Co., Ltd"
+  },
+  {
+   "code": "LFP",
+   "manufacturer": "FAW Car"
+  },
+  {
+   "code": "LFV",
+   "manufacturer": "FAW-Volkswagen"
+  },
+  {
+   "code": "LGA",
+   "manufacturer": "Dongfeng Commercial Vehicle Co., Ltd"
+  },
+  {
+   "code": "LGB",
+   "manufacturer": "Dongfeng Nissan"
+  },
+  {
+   "code": "LGC",
+   "manufacturer": "Dongfeng Commercial Vehicle Co., Ltd"
+  },
+  {
+   "code": "LGG",
+   "manufacturer": "Dongfeng Liuzhou Motor"
+  },
+  {
+   "code": "LGJ",
+   "manufacturer": "Dongfeng Fengshen"
+  },
+  {
+   "code": "LGL",
+   "manufacturer": "Guilin Daewoo"
+  },
+  {
+   "code": "LGW",
+   "manufacturer": "Great Wall"
+  },
+  {
+   "code": "LGX",
+   "manufacturer": "BYD Auto"
+  },
+  {
+   "code": "LGZ",
+   "manufacturer": "Guangzhou Denway Bus"
+  },
+  {
+   "code": "LH1",
+   "manufacturer": "FAW Haima"
+  },
+  {
+   "code": "LHG",
+   "manufacturer": "Guangzhou Honda"
+  },
+  {
+   "code": "LJ1",
+   "manufacturer": "JAC"
+  },
+  {
+   "code": "LJ8",
+   "manufacturer": "Zotye Auto"
+  },
+  {
+   "code": "LJC",
+   "manufacturer": "Jincheng Corporation"
+  },
+  {
+   "code": "LJD",
+   "manufacturer": "Dongfeng Yueda Kia"
+  },
+  {
+   "code": "LJN",
+   "manufacturer": "Zhengzhou Nissan"
+  },
+  {
+   "code": "LJS",
+   "manufacturer": "Yaxing Coach"
+  },
+  {
+   "code": "LJU",
+   "manufacturer": "Shanghai Maple Automobile"
+  },
+  {
+   "code": "LJV",
+   "manufacturer": "Sinotruk Chengdu Wangpai Commercial Vehicle Co., Ltd"
+  },
+  {
+   "code": "LJX",
+   "manufacturer": "JMC Ford"
+  },
+  {
+   "code": "LKC",
+   "manufacturer": "Changhe"
+  },
+  {
+   "code": "LKG",
+   "manufacturer": "Youngman Lotus Automobile Co., Ltd"
+  },
+  {
+   "code": "LKL",
+   "manufacturer": "Higer Bus"
+  },
+  {
+   "code": "LKT",
+   "manufacturer": "Yunnan Lifan Junma Vehicle Co., Ltd"
+  },
+  {
+   "code": "LL3",
+   "manufacturer": "Xiamen Golden Dragon Bus Co. Ltd"
+  },
+  {
+   "code": "LL6",
+   "manufacturer": "GAC Mitsubishi"
+  },
+  {
+   "code": "LL8",
+   "manufacturer": "Jiangsu Linhai Yamaha Motor Co., Ltd"
+  },
+  {
+   "code": "LLC",
+   "manufacturer": "Loncin Holdings"
+  },
+  {
+   "code": "LLN",
+   "manufacturer": "Qoros"
+  },
+  {
+   "code": "LLV",
+   "manufacturer": "Lifan"
+  },
+  {
+   "code": "LM1",
+   "manufacturer": "Tai Ling Motor Co Ltd"
+  },
+  {
+   "code": "LM4",
+   "manufacturer": "Tai Ling Motor Co Ltd"
+  },
+  {
+   "code": "LM6",
+   "manufacturer": "SWM (automobiles)"
+  },
+  {
+   "code": "LMG",
+   "manufacturer": "GAC Trumpchi"
+  },
+  {
+   "code": "LNB",
+   "manufacturer": "BAIC Motor"
+  },
+  {
+   "code": "LNP",
+   "manufacturer": "NAC MG UK Limited"
+  },
+  {
+   "code": "LNY",
+   "manufacturer": "Yuejin"
+  },
+  {
+   "code": "LPA",
+   "manufacturer": "Changan PSA (DS Automobiles)"
+  },
+  {
+   "code": "LPE",
+   "manufacturer": "BYD Auto"
+  },
+  {
+   "code": "LPR",
+   "manufacturer": "Yamaha Motor Taiwan Co. Ltd"
+  },
+  {
+   "code": "LPS",
+   "manufacturer": "Polestar"
+  },
+  {
+   "code": "LRB",
+   "manufacturer": "SAIC General Motors"
+  },
+  {
+   "code": "LRD",
+   "manufacturer": "Beijing Foton Daimler Automotive Co., Ltd"
+  },
+  {
+   "code": "LRE",
+   "manufacturer": "SAIC General Motors"
+  },
+  {
+   "code": "LRW",
+   "manufacturer": "Tesla"
+  },
+  {
+   "code": "LS5",
+   "manufacturer": "Changan Automobile"
+  },
+  {
+   "code": "LS7",
+   "manufacturer": "JMC Heavy Duty Vehicle"
+  },
+  {
+   "code": "LSF",
+   "manufacturer": "SAIC Maxus"
+  },
+  {
+   "code": "LSG",
+   "manufacturer": "SAIC General Motors"
+  },
+  {
+   "code": "LSH",
+   "manufacturer": "SAIC Maxus"
+  },
+  {
+   "code": "LSJ",
+   "manufacturer": "SAIC MG"
+  },
+  {
+   "code": "LSK",
+   "manufacturer": "SAIC Maxus"
+  },
+  {
+   "code": "LSV",
+   "manufacturer": "SAIC Volkswagen"
+  },
+  {
+   "code": "LSY",
+   "manufacturer": "Brilliance"
+  },
+  {
+   "code": "LTA",
+   "manufacturer": "ZX Auto"
+  },
+  {
+   "code": "LTN",
+   "manufacturer": "Soueast"
+  },
+  {
+   "code": "LTV",
+   "manufacturer": "FAW Toyota (Tianjin)"
+  },
+  {
+   "code": "LUC",
+   "manufacturer": "Honda Automobile (China)"
+  },
+  {
+   "code": "LUD",
+   "manufacturer": "Dongfeng Nissan Diesel Motor Co Ltd"
+  },
+  {
+   "code": "LUX",
+   "manufacturer": "Dongfeng Yulon Motor Co. Ltd"
+  },
+  {
+   "code": "LVA",
+   "manufacturer": "Foton Motor"
+  },
+  {
+   "code": "LVB",
+   "manufacturer": "Foton Motor"
+  },
+  {
+   "code": "LVC",
+   "manufacturer": "Foton Motor"
+  },
+  {
+   "code": "LVF",
+   "manufacturer": "Changhe Suzuki"
+  },
+  {
+   "code": "LVG",
+   "manufacturer": "GAC Toyota"
+  },
+  {
+   "code": "LVH",
+   "manufacturer": "Dongfeng Honda"
+  },
+  {
+   "code": "LVM",
+   "manufacturer": "Chery Commercial Vehicle"
+  },
+  {
+   "code": "LVR",
+   "manufacturer": "Changan Mazda"
+  },
+  {
+   "code": "LVS",
+   "manufacturer": "Changan Ford"
+  },
+  {
+   "code": "LVV",
+   "manufacturer": "Chery"
+  },
+  {
+   "code": "LVX",
+   "manufacturer": "Landwind"
+  },
+  {
+   "code": "LVY",
+   "manufacturer": "Volvo Cars"
+  },
+  {
+   "code": "LVZ",
+   "manufacturer": "DFSK Motor"
+  },
+  {
+   "code": "LWB",
+   "manufacturer": "Wuyang Honda Motorcycle (Guangzhou) Co., Ltd"
+  },
+  {
+   "code": "LWL",
+   "manufacturer": "Qingling Isuzu"
+  },
+  {
+   "code": "LWV",
+   "manufacturer": "GAC Fiat Chrysler"
+  },
+  {
+   "code": "LXV",
+   "manufacturer": "Beijing Borgward Automotive Co., Ltd"
+  },
+  {
+   "code": "LXY",
+   "manufacturer": "Chongqing Shineray Motorcycle Co., Ltd"
+  },
+  {
+   "code": "LYB",
+   "manufacturer": "Weichai (Yangzhou) Yaxing Automobile Co., Ltd"
+  },
+  {
+   "code": "LYM",
+   "manufacturer": "Zhuzhou Jianshe Yamaha Motorcycle Co., Ltd"
+  },
+  {
+   "code": "LYV",
+   "manufacturer": "Volvo Cars"
+  },
+  {
+   "code": "LZF",
+   "manufacturer": "SAIC Iveco Hongyan"
+  },
+  {
+   "code": "LZG",
+   "manufacturer": "Shaanxi Automobile Group"
+  },
+  {
+   "code": "LZK",
+   "manufacturer": "Sinotruk (CNHTC)"
+  },
+  {
+   "code": "LZS",
+   "manufacturer": "Zongshen"
+  },
+  {
+   "code": "LZU",
+   "manufacturer": "Guangzhou Isuzu Bus"
+  },
+  {
+   "code": "LZW",
+   "manufacturer": "SAIC GM Wuling"
+  },
+  {
+   "code": "LZY",
+   "manufacturer": "Yutong"
+  },
+  {
+   "code": "LZZ",
+   "manufacturer": "Sinotruk (CNHTC)"
+  },
+  {
+   "code": "M09",
+   "manufacturer": "Italdesign Automobili Speciali"
+  },
+  {
+   "code": "M27",
+   "manufacturer": "Dallara Stradale"
+  },
+  {
+   "code": "M3G",
+   "manufacturer": "Isuzu Motors India"
+  },
+  {
+   "code": "M6F",
+   "manufacturer": "UM"
+  },
+  {
+   "code": "M91",
+   "manufacturer": "Automobili Pininfarina"
+  },
+  {
+   "code": "MA1",
+   "manufacturer": "Mahindra"
+  },
+  {
+   "code": "MA3",
+   "manufacturer": "Maruti Suzuki India Limited"
+  },
+  {
+   "code": "MA6",
+   "manufacturer": "General Motors India Pvt. Ltd"
+  },
+  {
+   "code": "MA7",
+   "manufacturer": "Hindustan Motors Ltd"
+  },
+  {
+   "code": "MAH",
+   "manufacturer": "Fiat India Automobiles Pvt. Ltd"
+  },
+  {
+   "code": "MAJ",
+   "manufacturer": "Ford India"
+  },
+  {
+   "code": "MAK",
+   "manufacturer": "Honda Cars India"
+  },
+  {
+   "code": "MAL",
+   "manufacturer": "Hyundai Motor India"
+  },
+  {
+   "code": "MAN",
+   "manufacturer": "Eicher Polaris Multix"
+  },
+  {
+   "code": "MAT",
+   "manufacturer": "Tata Motors"
+  },
+  {
+   "code": "MB1",
+   "manufacturer": "Ashok Leyland Ltd"
+  },
+  {
+   "code": "MB8",
+   "manufacturer": "Suzuki Motorcycle India Limited"
+  },
+  {
+   "code": "MBF",
+   "manufacturer": "Royal Enfield"
+  },
+  {
+   "code": "MBH",
+   "manufacturer": "Nissan Pixo"
+  },
+  {
+   "code": "MBJ",
+   "manufacturer": "Toyota Kirloskar Motor Pvt Ltd"
+  },
+  {
+   "code": "MBK",
+   "manufacturer": "MAN Trucks India Pvt. Ltd"
+  },
+  {
+   "code": "MBL",
+   "manufacturer": "Hero MotoCorp"
+  },
+  {
+   "code": "MBU",
+   "manufacturer": "Swaraj Vehicles Limited"
+  },
+  {
+   "code": "MBV",
+   "manufacturer": "Premier Automobiles Limited"
+  },
+  {
+   "code": "MBX",
+   "manufacturer": "Piaggio India"
+  },
+  {
+   "code": "MBY",
+   "manufacturer": "Asia Motor Works Ltd"
+  },
+  {
+   "code": "MC1",
+   "manufacturer": "Force Motors Limited"
+  },
+  {
+   "code": "MC2",
+   "manufacturer": "Eicher Motors Limited"
+  },
+  {
+   "code": "MC4",
+   "manufacturer": "Dilip Chhabria Design Pvt Ltd"
+  },
+  {
+   "code": "MCA",
+   "manufacturer": "FCA India Automobiles Pvt. Ltd"
+  },
+  {
+   "code": "MCB",
+   "manufacturer": "General Motors India Pvt. Ltd"
+  },
+  {
+   "code": "MCD",
+   "manufacturer": "Mahindra Two Wheelers"
+  },
+  {
+   "code": "MCG",
+   "manufacturer": "Atul Auto"
+  },
+  {
+   "code": "MCL",
+   "manufacturer": "International Cars And Motors Ltd"
+  },
+  {
+   "code": "MD2",
+   "manufacturer": "Bajaj Auto Ltd"
+  },
+  {
+   "code": "MD6",
+   "manufacturer": "TVS Motor Company"
+  },
+  {
+   "code": "MD7",
+   "manufacturer": "LML Ltd"
+  },
+  {
+   "code": "MDE",
+   "manufacturer": "Kinetic Engineering Limited"
+  },
+  {
+   "code": "MDH",
+   "manufacturer": "Nissan Motor India Pvt Ltd"
+  },
+  {
+   "code": "MDT",
+   "manufacturer": "Kerala Automobiles Limited"
+  },
+  {
+   "code": "ME1",
+   "manufacturer": "India Yamaha Motor Pvt. Ltd"
+  },
+  {
+   "code": "ME3",
+   "manufacturer": "Royal Enfield"
+  },
+  {
+   "code": "ME4",
+   "manufacturer": "Honda Motorcycle and Scooter India"
+  },
+  {
+   "code": "ME9",
+   "manufacturer": "BUYMYEV TECHNOLOGY PVT LTD"
+  },
+  {
+   "code": "MEC",
+   "manufacturer": "Daimler India Commercial Vehicles Pvt. Ltd"
+  },
+  {
+   "code": "MEE",
+   "manufacturer": "Renault India Private Limited"
+  },
+  {
+   "code": "MEG",
+   "manufacturer": "Harley-Davidson India"
+  },
+  {
+   "code": "MER",
+   "manufacturer": "Benelli"
+  },
+  {
+   "code": "MET",
+   "manufacturer": "Piaggio India"
+  },
+  {
+   "code": "MEX",
+   "manufacturer": "Škoda Auto Volkswagen India Pvt. Ltd"
+  },
+  {
+   "code": "MH1",
+   "manufacturer": "PT Astra Honda Motor"
+  },
+  {
+   "code": "MH3",
+   "manufacturer": "PT Yamaha Indonesia Motor Mfg"
+  },
+  {
+   "code": "MH4",
+   "manufacturer": "PT Kawasaki Motor Indonesia"
+  },
+  {
+   "code": "MHF",
+   "manufacturer": "PT Toyota Astra Motor"
+  },
+  {
+   "code": "MHH",
+   "manufacturer": "BMW cars 2003-2019 India"
+  },
+  {
+   "code": "MHK",
+   "manufacturer": "PT Astra Daihatsu Motor"
+  },
+  {
+   "code": "MHL",
+   "manufacturer": "PT Mercedes-Benz Indonesia"
+  },
+  {
+   "code": "MHR",
+   "manufacturer": "PT Honda Prospect Motor"
+  },
+  {
+   "code": "MHY",
+   "manufacturer": "PT Suzuki Indomobil Motor"
+  },
+  {
+   "code": "MJB",
+   "manufacturer": "GM Indonesia"
+  },
+  {
+   "code": "MK2",
+   "manufacturer": "Mitsubishi Motors Krama Yudha Indonesia"
+  },
+  {
+   "code": "MK3",
+   "manufacturer": "PT SGMW Motor Indonesia Wuling"
+  },
+  {
+   "code": "ML0",
+   "manufacturer": "Ducati Motor (Thailand) Co., Ltd"
+  },
+  {
+   "code": "ML3",
+   "manufacturer": "Mitsubishi Motors (Thailand)"
+  },
+  {
+   "code": "ML5",
+   "manufacturer": "Kawasaki Motors Enterprise Co. Ltd. (Thailand)"
+  },
+  {
+   "code": "MLC",
+   "manufacturer": "Thai Suzuki Motor Co., Ltd"
+  },
+  {
+   "code": "MLE",
+   "manufacturer": "Thai Yamaha Motor Co., Ltd"
+  },
+  {
+   "code": "MLH",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "MLY",
+   "manufacturer": "Harley-Davidson"
+  },
+  {
+   "code": "MM0",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "MM6",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "MM7",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "MM8",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "MMA",
+   "manufacturer": "Mitsubishi Motors (Thailand)"
+  },
+  {
+   "code": "MMB",
+   "manufacturer": "Mitsubishi Motors (Thailand)"
+  },
+  {
+   "code": "MMC",
+   "manufacturer": "Mitsubishi Motors (Thailand)"
+  },
+  {
+   "code": "MMD",
+   "manufacturer": "Mitsubishi Motors (Thailand)"
+  },
+  {
+   "code": "MMF",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "MMH",
+   "manufacturer": "Tata"
+  },
+  {
+   "code": "MMK",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "MML",
+   "manufacturer": "MG"
+  },
+  {
+   "code": "MMM",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "MMR",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "MMS",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "MMT",
+   "manufacturer": "Mitsubishi Motors (Thailand)"
+  },
+  {
+   "code": "MMU",
+   "manufacturer": "Holden"
+  },
+  {
+   "code": "MNA",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "MNB",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "MNC",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "MNK",
+   "manufacturer": "Hino Motors Manufacturing Thailand Co Ltd"
+  },
+  {
+   "code": "MNT",
+   "manufacturer": "Nissan Motor Thailand"
+  },
+  {
+   "code": "MP1",
+   "manufacturer": "IMCT Isuzu Motors Company Thailand"
+  },
+  {
+   "code": "MP2",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "MP5",
+   "manufacturer": "Foton"
+  },
+  {
+   "code": "MPA",
+   "manufacturer": "IMCT Isuzu Motors Company Thailand"
+  },
+  {
+   "code": "MPB",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "MR0",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "MR1",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "MR2",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "MRH",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "MS0",
+   "manufacturer": "SSS MOTORS Myanmar/Kia"
+  },
+  {
+   "code": "MS3",
+   "manufacturer": "Suzuki Myanmar Motor Co., Ltd"
+  },
+  {
+   "code": "MX3",
+   "manufacturer": "Hyundai Trans Auto"
+  },
+  {
+   "code": "MXV",
+   "manufacturer": "IMZ-Ural"
+  },
+  {
+   "code": "MYH",
+   "manufacturer": "Ather Energy"
+  },
+  {
+   "code": "MZ7",
+   "manufacturer": "MG Motor India Pvt. Ltd"
+  },
+  {
+   "code": "MZB",
+   "manufacturer": "Kia India Pvt. Ltd"
+  },
+  {
+   "code": "MZD",
+   "manufacturer": "Classic Legends Private Limited – Jawa"
+  },
+  {
+   "code": "NAA",
+   "manufacturer": "Iran khodro Company"
+  },
+  {
+   "code": "NAD",
+   "manufacturer": "Saipa Diesel"
+  },
+  {
+   "code": "NAG",
+   "manufacturer": "Bahman Industrial Group"
+  },
+  {
+   "code": "NAP",
+   "manufacturer": "Pars Khodro"
+  },
+  {
+   "code": "NAS",
+   "manufacturer": "Saipa Co"
+  },
+  {
+   "code": "NC0",
+   "manufacturer": "BMW South Africa"
+  },
+  {
+   "code": "NFB",
+   "manufacturer": "Honda Atlas Cars Pakistan Ltd"
+  },
+  {
+   "code": "NG3",
+   "manufacturer": "Lucky Motor Corporation"
+  },
+  {
+   "code": "NL1",
+   "manufacturer": "Togg"
+  },
+  {
+   "code": "NLA",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "NLC",
+   "manufacturer": "Askam Kamyon Imalat Ve Ticaret A.S"
+  },
+  {
+   "code": "NLH",
+   "manufacturer": "Hyundai Assan Otomotiv"
+  },
+  {
+   "code": "NLJ",
+   "manufacturer": "Hyundai Assan Otomotiv"
+  },
+  {
+   "code": "NLN",
+   "manufacturer": "Karsan Automotive Industry & Trade"
+  },
+  {
+   "code": "NLR",
+   "manufacturer": "Otokar"
+  },
+  {
+   "code": "NLT",
+   "manufacturer": "TEMSA"
+  },
+  {
+   "code": "NM0",
+   "manufacturer": "Ford Otosan"
+  },
+  {
+   "code": "NM1",
+   "manufacturer": "Oyak-Renault Oto Fab AS"
+  },
+  {
+   "code": "NM4",
+   "manufacturer": "Tofas (Turk Otomobil Fabrikasi AS)"
+  },
+  {
+   "code": "NMA",
+   "manufacturer": "MAN Türkiye A.Ş"
+  },
+  {
+   "code": "NMB",
+   "manufacturer": "Mercedes-Benz Türk A.S"
+  },
+  {
+   "code": "NMC",
+   "manufacturer": "BMC Otomotiv Sanayi ve Ticaret A.Ş"
+  },
+  {
+   "code": "NMH",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "NMT",
+   "manufacturer": "Toyota Motor Manufacturing Turkey"
+  },
+  {
+   "code": "NNA",
+   "manufacturer": "Anadolu Isuzu"
+  },
+  {
+   "code": "P6W",
+   "manufacturer": "Simple Energy"
+  },
+  {
+   "code": "PAB",
+   "manufacturer": "Isuzu Philippines Corporation"
+  },
+  {
+   "code": "PAD",
+   "manufacturer": "Honda Cars Philippines"
+  },
+  {
+   "code": "PAF",
+   "manufacturer": "BMW Philippines"
+  },
+  {
+   "code": "PE1",
+   "manufacturer": "Ford Motor Company Philippines"
+  },
+  {
+   "code": "PE3",
+   "manufacturer": "Mazda Philippines"
+  },
+  {
+   "code": "PL1",
+   "manufacturer": "Proton"
+  },
+  {
+   "code": "PL8",
+   "manufacturer": "Hyundai/Inokom"
+  },
+  {
+   "code": "PLP",
+   "manufacturer": "Subaru"
+  },
+  {
+   "code": "PLZ",
+   "manufacturer": "Isuzu Malaysia"
+  },
+  {
+   "code": "PM1",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "PM2",
+   "manufacturer": "Perodua"
+  },
+  {
+   "code": "PM9",
+   "manufacturer": "Bufori"
+  },
+  {
+   "code": "PMH",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "PMK",
+   "manufacturer": "Honda Boon Siew"
+  },
+  {
+   "code": "PML",
+   "manufacturer": "Hicom"
+  },
+  {
+   "code": "PMN",
+   "manufacturer": "Modenas"
+  },
+  {
+   "code": "PMV",
+   "manufacturer": "Hong Leong Yamaha Motor Sdn. Bhd"
+  },
+  {
+   "code": "PN1",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "PN2",
+   "manufacturer": "Toyota"
+  },
+  {
+   "code": "PN8",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "PNA",
+   "manufacturer": "Naza/Kia/Peugeot"
+  },
+  {
+   "code": "PNV",
+   "manufacturer": "Volvo Cars"
+  },
+  {
+   "code": "PP1",
+   "manufacturer": "Mazda"
+  },
+  {
+   "code": "PP3",
+   "manufacturer": "Hyundai"
+  },
+  {
+   "code": "PPP",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "PPV",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "PR8",
+   "manufacturer": "Ford"
+  },
+  {
+   "code": "PRA",
+   "manufacturer": "Sinotruk"
+  },
+  {
+   "code": "PRH",
+   "manufacturer": "Chery"
+  },
+  {
+   "code": "PRN",
+   "manufacturer": "GAC Trumpchi"
+  },
+  {
+   "code": "R06",
+   "manufacturer": "Ruf Automobile"
+  },
+  {
+   "code": "R4N",
+   "manufacturer": "Elyx Smart Technology Holdings (Hong Kong) Ltd"
+  },
+  {
+   "code": "RF3",
+   "manufacturer": "Aeon Motor"
+  },
+  {
+   "code": "RF5",
+   "manufacturer": "Yulon Motor Co Ltd"
+  },
+  {
+   "code": "RFB",
+   "manufacturer": "Kymco"
+  },
+  {
+   "code": "RFC",
+   "manufacturer": "Taiwan Golden Bee"
+  },
+  {
+   "code": "RFD",
+   "manufacturer": "Tai Ling Motor Co Ltd"
+  },
+  {
+   "code": "RFG",
+   "manufacturer": "SYM Motors"
+  },
+  {
+   "code": "RFV",
+   "manufacturer": "PGO Scooters"
+  },
+  {
+   "code": "RGS",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "RHA",
+   "manufacturer": "Ford Lio Ho Motor Co Ltd"
+  },
+  {
+   "code": "RK7",
+   "manufacturer": "Kawasaki"
+  },
+  {
+   "code": "RKJ",
+   "manufacturer": "Prince Motors Taiwan"
+  },
+  {
+   "code": "RKL",
+   "manufacturer": "Kuozui Motors"
+  },
+  {
+   "code": "RKM",
+   "manufacturer": "China Motor Corporation"
+  },
+  {
+   "code": "RKR",
+   "manufacturer": "Yamaha Motor Taiwan Co. Ltd"
+  },
+  {
+   "code": "RKT",
+   "manufacturer": "Honda Taiwan"
+  },
+  {
+   "code": "RL0",
+   "manufacturer": "Ford Vietnam"
+  },
+  {
+   "code": "RL4",
+   "manufacturer": "Toyota Motor Vietnam"
+  },
+  {
+   "code": "RLA",
+   "manufacturer": "Vina Star Motors Corp. – Mitsubishi"
+  },
+  {
+   "code": "RLC",
+   "manufacturer": "Yamaha Motor Vietnam Co. Ltd"
+  },
+  {
+   "code": "RLE",
+   "manufacturer": "Isuzu Vietnam Co"
+  },
+  {
+   "code": "RLF",
+   "manufacturer": "BMW BMW cars 2003-2014 Vietnam"
+  },
+  {
+   "code": "RLH",
+   "manufacturer": "Honda Vietnam Co. Ltd"
+  },
+  {
+   "code": "RLL",
+   "manufacturer": "VinFast"
+  },
+  {
+   "code": "RLM",
+   "manufacturer": "Mercedes-Benz Vietnam"
+  },
+  {
+   "code": "RLV",
+   "manufacturer": "Vietnam Precision Industrial CO., Ltd"
+  },
+  {
+   "code": "RP8",
+   "manufacturer": "Piaggio"
+  },
+  {
+   "code": "SA9",
+   "manufacturer": "Morgan Motor Company"
+  },
+  {
+   "code": "SAA",
+   "manufacturer": "Austin"
+  },
+  {
+   "code": "SAB",
+   "manufacturer": "Optare"
+  },
+  {
+   "code": "SAD",
+   "manufacturer": "Daimler"
+  },
+  {
+   "code": "SAF",
+   "manufacturer": "ERF"
+  },
+  {
+   "code": "SAH",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "SAJ",
+   "manufacturer": "Jaguar"
+  },
+  {
+   "code": "SAL",
+   "manufacturer": "Land Rover"
+  },
+  {
+   "code": "SAM",
+   "manufacturer": "Morris"
+  },
+  {
+   "code": "SAR",
+   "manufacturer": "Rover"
+  },
+  {
+   "code": "SAT",
+   "manufacturer": "Triumph"
+  },
+  {
+   "code": "SAX",
+   "manufacturer": "Austin Rover Group"
+  },
+  {
+   "code": "SAY",
+   "manufacturer": "Norton Motorcycles"
+  },
+  {
+   "code": "SAZ",
+   "manufacturer": "Freight Rover"
+  },
+  {
+   "code": "SB1",
+   "manufacturer": "Toyota Manufacturing UK"
+  },
+  {
+   "code": "SBB",
+   "manufacturer": "Leyland Vehicles"
+  },
+  {
+   "code": "SBC",
+   "manufacturer": "Iveco Ford Truck"
+  },
+  {
+   "code": "SBJ",
+   "manufacturer": "Leyland Bus"
+  },
+  {
+   "code": "SBL",
+   "manufacturer": "Leyland Motors"
+  },
+  {
+   "code": "SBM",
+   "manufacturer": "McLaren Group"
+  },
+  {
+   "code": "SBS",
+   "manufacturer": "Scammell"
+  },
+  {
+   "code": "SBV",
+   "manufacturer": "Kenworth"
+  },
+  {
+   "code": "SC6",
+   "manufacturer": "INEOS Automotive"
+  },
+  {
+   "code": "SCA",
+   "manufacturer": "Rolls-Royce Motor Cars"
+  },
+  {
+   "code": "SCB",
+   "manufacturer": "Bentley Motors Limited"
+  },
+  {
+   "code": "SCC",
+   "manufacturer": "Lotus Cars Limited"
+  },
+  {
+   "code": "SCE",
+   "manufacturer": "DeLorean"
+  },
+  {
+   "code": "SCF",
+   "manufacturer": "Aston Martin Lagonda Limited"
+  },
+  {
+   "code": "SCG",
+   "manufacturer": "Triumph Engineering"
+  },
+  {
+   "code": "SCK",
+   "manufacturer": "Ifor Williams Trailers"
+  },
+  {
+   "code": "SCR",
+   "manufacturer": "London Electric Vehicle Company"
+  },
+  {
+   "code": "SCV",
+   "manufacturer": "Volvo Truck & Bus"
+  },
+  {
+   "code": "SD7",
+   "manufacturer": "Aston Martin"
+  },
+  {
+   "code": "SDB",
+   "manufacturer": "Talbot Motor Company"
+  },
+  {
+   "code": "SDF",
+   "manufacturer": "Dodge Trucks – UK"
+  },
+  {
+   "code": "SDG",
+   "manufacturer": "Renault Trucks Industries"
+  },
+  {
+   "code": "SDK",
+   "manufacturer": "Caterham Cars"
+  },
+  {
+   "code": "SDL",
+   "manufacturer": "TVR"
+  },
+  {
+   "code": "SDP",
+   "manufacturer": "MG Motor"
+  },
+  {
+   "code": "SED",
+   "manufacturer": "IBC Vehicles"
+  },
+  {
+   "code": "SEG",
+   "manufacturer": "Dennis Eagle"
+  },
+  {
+   "code": "SEY",
+   "manufacturer": "LDV Group"
+  },
+  {
+   "code": "SFA",
+   "manufacturer": "Ford of Britain"
+  },
+  {
+   "code": "SFD",
+   "manufacturer": "Dennis"
+  },
+  {
+   "code": "SFE",
+   "manufacturer": "Alexander Dennis"
+  },
+  {
+   "code": "SFN",
+   "manufacturer": "Foden"
+  },
+  {
+   "code": "SFZ",
+   "manufacturer": "Tesla"
+  },
+  {
+   "code": "SGD",
+   "manufacturer": "Swift Group Ltd"
+  },
+  {
+   "code": "SHH",
+   "manufacturer": "Honda UK Manufacturing"
+  },
+  {
+   "code": "SHS",
+   "manufacturer": "Honda UK Manufacturing"
+  },
+  {
+   "code": "SJA",
+   "manufacturer": "Bentley"
+  },
+  {
+   "code": "SJK",
+   "manufacturer": "Nissan Motor Manufacturing UK"
+  },
+  {
+   "code": "SJN",
+   "manufacturer": "Nissan Motor Manufacturing UK"
+  },
+  {
+   "code": "SKA",
+   "manufacturer": "Vauxhall Motors"
+  },
+  {
+   "code": "SKF",
+   "manufacturer": "Bedford Vehicles"
+  },
+  {
+   "code": "SL5",
+   "manufacturer": "SOR Libchavy"
+  },
+  {
+   "code": "SLA",
+   "manufacturer": "Rolls-Royce Motor Cars"
+  },
+  {
+   "code": "SLP",
+   "manufacturer": "JC Bamford Excavators"
+  },
+  {
+   "code": "SLV",
+   "manufacturer": "Volvo Bus"
+  },
+  {
+   "code": "SMT",
+   "manufacturer": "Triumph Motorcycles Ltd"
+  },
+  {
+   "code": "SNE",
+   "manufacturer": "Wartburg"
+  },
+  {
+   "code": "SNT",
+   "manufacturer": "Trabant"
+  },
+  {
+   "code": "SNZ",
+   "manufacturer": "MZ Motorrad- und Zweiradwerk"
+  },
+  {
+   "code": "ST2",
+   "manufacturer": "Seagrave"
+  },
+  {
+   "code": "SUA",
+   "manufacturer": "Sanocka Fabryka Autobusow Sfa"
+  },
+  {
+   "code": "SUD",
+   "manufacturer": "Wielton"
+  },
+  {
+   "code": "SUF",
+   "manufacturer": "Fabryka Samochodów Małolitrażowych"
+  },
+  {
+   "code": "SUJ",
+   "manufacturer": "Jelcz"
+  },
+  {
+   "code": "SUL",
+   "manufacturer": "FSC Lublin Automotive Factory"
+  },
+  {
+   "code": "SUM",
+   "manufacturer": "Metal-Fach Sp. z o.o"
+  },
+  {
+   "code": "SUP",
+   "manufacturer": "Fabryka Samochodow Osobowych"
+  },
+  {
+   "code": "SUR",
+   "manufacturer": "Factory of Agricultural Vehicles ‘Polmo’ in Poznań"
+  },
+  {
+   "code": "SUS",
+   "manufacturer": "Fabryka Samochodów Ciężarowych „Star”"
+  },
+  {
+   "code": "SUU",
+   "manufacturer": "Solaris Bus & Coach"
+  },
+  {
+   "code": "SUZ",
+   "manufacturer": "Zasław"
+  },
+  {
+   "code": "SVS",
+   "manufacturer": "BODEX"
+  },
+  {
+   "code": "SW9",
+   "manufacturer": "Solbus"
+  },
+  {
+   "code": "SX9",
+   "manufacturer": "SOMMER"
+  },
+  {
+   "code": "SZ9",
+   "manufacturer": "EPOKA"
+  },
+  {
+   "code": "SZA",
+   "manufacturer": "Scania Production Slupsk"
+  },
+  {
+   "code": "SZB",
+   "manufacturer": "Pronar"
+  },
+  {
+   "code": "SZH",
+   "manufacturer": "BWW"
+  },
+  {
+   "code": "SZR",
+   "manufacturer": "BORO"
+  },
+  {
+   "code": "TAM",
+   "manufacturer": "Mowag"
+  },
+  {
+   "code": "TAP",
+   "manufacturer": "Polaris Europe"
+  },
+  {
+   "code": "TAW",
+   "manufacturer": "Nutzfahrzeuggesellschaft Arbon & Wetzikon (NAW)"
+  },
+  {
+   "code": "TCC",
+   "manufacturer": "Micro Compact Car"
+  },
+  {
+   "code": "TEB",
+   "manufacturer": "Bucher Municipal"
+  },
+  {
+   "code": "TH9",
+   "manufacturer": "Carrosserie HESS AG"
+  },
+  {
+   "code": "TK9",
+   "manufacturer": "SOR Libchavy"
+  },
+  {
+   "code": "TLJ",
+   "manufacturer": "Jawa Moto"
+  },
+  {
+   "code": "TMA",
+   "manufacturer": "Hyundai Motor Manufacturing Czech"
+  },
+  {
+   "code": "TMB",
+   "manufacturer": "Škoda Auto AS"
+  },
+  {
+   "code": "TMC",
+   "manufacturer": "Hyundai Motor Manufacturing Czech"
+  },
+  {
+   "code": "TMK",
+   "manufacturer": "Karosa"
+  },
+  {
+   "code": "TMP",
+   "manufacturer": "Škoda Ostrov"
+  },
+  {
+   "code": "TMT",
+   "manufacturer": "Tatra"
+  },
+  {
+   "code": "TNA",
+   "manufacturer": "Avia"
+  },
+  {
+   "code": "TNT",
+   "manufacturer": "Tatra"
+  },
+  {
+   "code": "TNU",
+   "manufacturer": "Tatra"
+  },
+  {
+   "code": "TRA",
+   "manufacturer": "Ikarus Bus"
+  },
+  {
+   "code": "TRU",
+   "manufacturer": "Audi"
+  },
+  {
+   "code": "TSM",
+   "manufacturer": "Suzuki"
+  },
+  {
+   "code": "TW1",
+   "manufacturer": "Toyota Caetano Portugal"
+  },
+  {
+   "code": "TW3",
+   "manufacturer": "Renault Portuguesa SARL"
+  },
+  {
+   "code": "TW7",
+   "manufacturer": "Mini Moke"
+  },
+  {
+   "code": "TW8",
+   "manufacturer": "General Motors De Portugal Lda"
+  },
+  {
+   "code": "TWG",
+   "manufacturer": "Salvador Caetano"
+  },
+  {
+   "code": "TX5",
+   "manufacturer": "Mini Moke"
+  },
+  {
+   "code": "TYA",
+   "manufacturer": "Mitsubishi Fuso Truck and Bus Corp"
+  },
+  {
+   "code": "TYB",
+   "manufacturer": "Mitsubishi Fuso Truck and Bus Corp"
+  },
+  {
+   "code": "U5Y",
+   "manufacturer": "Kia Motors Slovakia"
+  },
+  {
+   "code": "U6Y",
+   "manufacturer": "Kia Motors Slovakia"
+  },
+  {
+   "code": "UKH",
+   "manufacturer": "HARDI International A/S (Agricultural Machinery)"
+  },
+  {
+   "code": "ULA",
+   "manufacturer": "ASA-LIFT: Vegetable Technology Specialist (Agricultural Machinery)"
+  },
+  {
+   "code": "UU1",
+   "manufacturer": "Dacia"
+  },
+  {
+   "code": "UU2",
+   "manufacturer": "Oltcit"
+  },
+  {
+   "code": "UU3",
+   "manufacturer": "ARO"
+  },
+  {
+   "code": "UU5",
+   "manufacturer": "Rocar"
+  },
+  {
+   "code": "UU6",
+   "manufacturer": "Daewoo Romania"
+  },
+  {
+   "code": "UU7",
+   "manufacturer": "Euro Bus Diamond"
+  },
+  {
+   "code": "UU9",
+   "manufacturer": "Astra Bus"
+  },
+  {
+   "code": "UZT",
+   "manufacturer": "UTB (Uzina de Tractoare Brașov)"
+  },
+  {
+   "code": "V31",
+   "manufacturer": "Tvornica Autobusa Zagreb"
+  },
+  {
+   "code": "V39",
+   "manufacturer": "Rimac Automobili"
+  },
+  {
+   "code": "VA0",
+   "manufacturer": "ÖAF"
+  },
+  {
+   "code": "VAG",
+   "manufacturer": "Steyr-Daimler-Puch"
+  },
+  {
+   "code": "VAN",
+   "manufacturer": "Steyr-Daimler-Puch"
+  },
+  {
+   "code": "VBK",
+   "manufacturer": "KTM"
+  },
+  {
+   "code": "VCF",
+   "manufacturer": "Fisker Inc"
+  },
+  {
+   "code": "VF1",
+   "manufacturer": "Renault"
+  },
+  {
+   "code": "VF2",
+   "manufacturer": "Renault Trucks"
+  },
+  {
+   "code": "VF3",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "VF4",
+   "manufacturer": "Talbot"
+  },
+  {
+   "code": "VF5",
+   "manufacturer": "Iveco Unic"
+  },
+  {
+   "code": "VF6",
+   "manufacturer": "Renault Trucks"
+  },
+  {
+   "code": "VF7",
+   "manufacturer": "Citroën"
+  },
+  {
+   "code": "VF8",
+   "manufacturer": "Matra/Talbot/Simca"
+  },
+  {
+   "code": "VF9",
+   "manufacturer": "Mathieu Fayat Group"
+  },
+  {
+   "code": "VFA",
+   "manufacturer": "Alpine"
+  },
+  {
+   "code": "VG5",
+   "manufacturer": "MBK"
+  },
+  {
+   "code": "VG6",
+   "manufacturer": "Renault Trucks"
+  },
+  {
+   "code": "VG8",
+   "manufacturer": "Renault Trucks"
+  },
+  {
+   "code": "VG9",
+   "manufacturer": "EVRARD (Agricultural Machinery)"
+  },
+  {
+   "code": "VGA",
+   "manufacturer": "Peugeot Motocycles"
+  },
+  {
+   "code": "VJ1",
+   "manufacturer": "Heuliez Bus"
+  },
+  {
+   "code": "VK8",
+   "manufacturer": "Venturi Automobiles"
+  },
+  {
+   "code": "VL4",
+   "manufacturer": "Bluecar"
+  },
+  {
+   "code": "VLU",
+   "manufacturer": "Scania Production Angers"
+  },
+  {
+   "code": "VMK",
+   "manufacturer": "Renault Sport Spider"
+  },
+  {
+   "code": "VN1",
+   "manufacturer": "Renault SOVAB"
+  },
+  {
+   "code": "VNE",
+   "manufacturer": "Iveco Bus"
+  },
+  {
+   "code": "VNK",
+   "manufacturer": "Toyota Motor Manufacturing France"
+  },
+  {
+   "code": "VNV",
+   "manufacturer": "Nissan"
+  },
+  {
+   "code": "VPS",
+   "manufacturer": "MLT Automotive"
+  },
+  {
+   "code": "VR1",
+   "manufacturer": "DS Automobiles"
+  },
+  {
+   "code": "VR3",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "VR7",
+   "manufacturer": "Citroën"
+  },
+  {
+   "code": "VS1",
+   "manufacturer": "Pegaso"
+  },
+  {
+   "code": "VS5",
+   "manufacturer": "Renault España"
+  },
+  {
+   "code": "VS6",
+   "manufacturer": "Ford Espana"
+  },
+  {
+   "code": "VS7",
+   "manufacturer": "Citroën"
+  },
+  {
+   "code": "VS8",
+   "manufacturer": "Peugeot"
+  },
+  {
+   "code": "VS9",
+   "manufacturer": "Comarth"
+  },
+  {
+   "code": "VSC",
+   "manufacturer": "Mercedes-Benz Espana SA"
+  },
+  {
+   "code": "VSE",
+   "manufacturer": "Santana Motor"
+  },
+  {
+   "code": "VSK",
+   "manufacturer": "Nissan Motor Iberica SA, Nissan"
+  },
+  {
+   "code": "VSS",
+   "manufacturer": "SEAT"
+  },
+  {
+   "code": "VSX",
+   "manufacturer": "Opel Automobile Espana, SA"
+  },
+  {
+   "code": "VTD",
+   "manufacturer": "Montesa Honda"
+  },
+  {
+   "code": "VTH",
+   "manufacturer": "Derbi"
+  },
+  {
+   "code": "VTL",
+   "manufacturer": "Yamaha Motor España SA"
+  },
+  {
+   "code": "VTM",
+   "manufacturer": "Montesa Honda"
+  },
+  {
+   "code": "VTR",
+   "manufacturer": "Gas Gas"
+  },
+  {
+   "code": "VTT",
+   "manufacturer": "Suzuki Motor España"
+  },
+  {
+   "code": "VV9",
+   "manufacturer": "Tauro Sport Auto"
+  },
+  {
+   "code": "VWA",
+   "manufacturer": "Nissan Vehiculos Industriales SA, Nissan Commercial Vehicles"
+  },
+  {
+   "code": "VX1",
+   "manufacturer": "Zastava Automobiles"
+  },
+  {
+   "code": "VXE",
+   "manufacturer": "Opel Automobile GmbH"
+  },
+  {
+   "code": "VXK",
+   "manufacturer": "Opel Automobile GmbH"
+  },
+  {
+   "code": "VYC",
+   "manufacturer": "Lancia"
+  },
+  {
+   "code": "W04",
+   "manufacturer": "Buick Regal"
+  },
+  {
+   "code": "W06",
+   "manufacturer": "Cadillac Catera"
+  },
+  {
+   "code": "W08",
+   "manufacturer": "Saturn Astra"
+  },
+  {
+   "code": "W09",
+   "manufacturer": "Bitter Cars"
+  },
+  {
+   "code": "W0L",
+   "manufacturer": "Adam Opel AG"
+  },
+  {
+   "code": "W0S",
+   "manufacturer": "Opel Special Vehicles"
+  },
+  {
+   "code": "W0V",
+   "manufacturer": "Opel Automobile Gmbh"
+  },
+  {
+   "code": "W1A",
+   "manufacturer": "Smart"
+  },
+  {
+   "code": "W1H",
+   "manufacturer": "Freightliner Econic"
+  },
+  {
+   "code": "W1K",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1N",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1T",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1V",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1W",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1X",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1Y",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W1Z",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "W2W",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "W2X",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "W2Y",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "W2Z",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WAC",
+   "manufacturer": "Audi"
+  },
+  {
+   "code": "WAG",
+   "manufacturer": "Neoplan"
+  },
+  {
+   "code": "WAP",
+   "manufacturer": "Alpina"
+  },
+  {
+   "code": "WAU",
+   "manufacturer": "Audi"
+  },
+  {
+   "code": "WB1",
+   "manufacturer": "BMW Motorrad"
+  },
+  {
+   "code": "WB3",
+   "manufacturer": "BMW Motorrad Motorcycles made in India"
+  },
+  {
+   "code": "WB4",
+   "manufacturer": "BMW Motorrad Motorscooters made in China"
+  },
+  {
+   "code": "WB5",
+   "manufacturer": "BMW i"
+  },
+  {
+   "code": "WB6",
+   "manufacturer": "BMW M"
+  },
+  {
+   "code": "WBA",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "WBS",
+   "manufacturer": "BMW M"
+  },
+  {
+   "code": "WBX",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "WBY",
+   "manufacturer": "BMW i"
+  },
+  {
+   "code": "WCD",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WD0",
+   "manufacturer": "Dodge Sprinter"
+  },
+  {
+   "code": "WD1",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WD2",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WD3",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WD4",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WD5",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WD6",
+   "manufacturer": "Freightliner Unimog"
+  },
+  {
+   "code": "WD7",
+   "manufacturer": "Freightliner Unimog"
+  },
+  {
+   "code": "WD8",
+   "manufacturer": "Dodge Sprinter"
+  },
+  {
+   "code": "WDA",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WDB",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WDC",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WDD",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WDF",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WDP",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WDR",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WDW",
+   "manufacturer": "Dodge Sprinter"
+  },
+  {
+   "code": "WDX",
+   "manufacturer": "Dodge Sprinter"
+  },
+  {
+   "code": "WDY",
+   "manufacturer": "Freightliner Sprinter"
+  },
+  {
+   "code": "WDZ",
+   "manufacturer": "Mercedes-Benz"
+  },
+  {
+   "code": "WEB",
+   "manufacturer": "EvoBus"
+  },
+  {
+   "code": "WEL",
+   "manufacturer": "e.GO Mobile AG"
+  },
+  {
+   "code": "WF0",
+   "manufacturer": "Ford of Europe"
+  },
+  {
+   "code": "WF1",
+   "manufacturer": "Merkur"
+  },
+  {
+   "code": "WJM",
+   "manufacturer": "Iveco"
+  },
+  {
+   "code": "WJR",
+   "manufacturer": "Irmscher"
+  },
+  {
+   "code": "WKK",
+   "manufacturer": "Setra"
+  },
+  {
+   "code": "WMA",
+   "manufacturer": "MAN"
+  },
+  {
+   "code": "WME",
+   "manufacturer": "Smart"
+  },
+  {
+   "code": "WMW",
+   "manufacturer": "Mini"
+  },
+  {
+   "code": "WMX",
+   "manufacturer": "Mercedes-AMG"
+  },
+  {
+   "code": "WMZ",
+   "manufacturer": "Mini"
+  },
+  {
+   "code": "WNA",
+   "manufacturer": "Next.e.GO Mobile SE"
+  },
+  {
+   "code": "WP0",
+   "manufacturer": "Porsche"
+  },
+  {
+   "code": "WP1",
+   "manufacturer": "Porsche"
+  },
+  {
+   "code": "WS5",
+   "manufacturer": "StreetScooter"
+  },
+  {
+   "code": "WU1",
+   "manufacturer": "Audi Sport GmbH"
+  },
+  {
+   "code": "WUA",
+   "manufacturer": "Audi"
+  },
+  {
+   "code": "WV1",
+   "manufacturer": "Volkswagen Commercial Vehicles"
+  },
+  {
+   "code": "WV2",
+   "manufacturer": "Volkswagen Commercial Vehicles"
+  },
+  {
+   "code": "WVG",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "WVM",
+   "manufacturer": "Arbeitsgemeinschaft VW-MAN"
+  },
+  {
+   "code": "WVP",
+   "manufacturer": "Viseon Bus"
+  },
+  {
+   "code": "WVW",
+   "manufacturer": "Volkswagen"
+  },
+  {
+   "code": "WZ1",
+   "manufacturer": "Toyota Supra"
+  },
+  {
+   "code": "X1E",
+   "manufacturer": "KAvZ"
+  },
+  {
+   "code": "X1M",
+   "manufacturer": "PAZ"
+  },
+  {
+   "code": "X4X",
+   "manufacturer": "BMW"
+  },
+  {
+   "code": "X7L",
+   "manufacturer": "Renault Russia"
+  },
+  {
+   "code": "X8J",
+   "manufacturer": "IMZ-Ural"
+  },
+  {
+   "code": "X96",
+   "manufacturer": "GAZ"
+  },
+  {
+   "code": "X9F",
+   "manufacturer": "Ford Motor Company ZAO"
+  },
+  {
+   "code": "X9L",
+   "manufacturer": "GM-AvtoVAZ"
+  },
+  {
+   "code": "X9P",
+   "manufacturer": "Volvo Vostok ZAO"
+  },
+  {
+   "code": "X9X",
+   "manufacturer": "Great Wall Motors"
+  },
+  {
+   "code": "XBB",
+   "manufacturer": "Great Wall Motors"
+  },
+  {
+   "code": "XL9",
+   "manufacturer": "Autobusfabriek Bova BV"
+  },
+  {
+   "code": "XLB",
+   "manufacturer": "Volvo Car B.V./NedCar B.V"
+  },
+  {
+   "code": "XLE",
+   "manufacturer": "Scania Nederland B.V"
+  },
+  {
+   "code": "XLR",
+   "manufacturer": "DAF Trucks"
+  },
+  {
+   "code": "XLV",
+   "manufacturer": "DAF Bus"
+  },
+  {
+   "code": "XMC",
+   "manufacturer": "NedCar B.V"
+  },
+  {
+   "code": "XMG",
+   "manufacturer": "VDL Bus International"
+  },
+  {
+   "code": "XNC",
+   "manufacturer": "NedCar B.V"
+  },
+  {
+   "code": "XNL",
+   "manufacturer": "VDL Bus & Coach"
+  },
+  {
+   "code": "XP7",
+   "manufacturer": "Tesla Europe"
+  },
+  {
+   "code": "XTA",
+   "manufacturer": "AvtoVAZ"
+  },
+  {
+   "code": "XTB",
+   "manufacturer": "AZLK"
+  },
+  {
+   "code": "XTC",
+   "manufacturer": "KAMAZ"
+  },
+  {
+   "code": "XTE",
+   "manufacturer": "ZAZ"
+  },
+  {
+   "code": "XTF",
+   "manufacturer": "GolAZ"
+  },
+  {
+   "code": "XTH",
+   "manufacturer": "GAZ"
+  },
+  {
+   "code": "XTT",
+   "manufacturer": "UAZ"
+  },
+  {
+   "code": "XTY",
+   "manufacturer": "LiAZ"
+  },
+  {
+   "code": "XU1",
+   "manufacturer": "UAZ"
+  },
+  {
+   "code": "XUF",
+   "manufacturer": "General Motors Russia"
+  },
+  {
+   "code": "XUU",
+   "manufacturer": "Chevrolet"
+  },
+  {
+   "code": "XW7",
+   "manufacturer": "Toyota Motor Manufacturing Russia"
+  },
+  {
+   "code": "XW8",
+   "manufacturer": "Volkswagen Group Rus"
+  },
+  {
+   "code": "XWB",
+   "manufacturer": "UzDaewoo"
+  },
+  {
+   "code": "XWE",
+   "manufacturer": "Hyundai Motor Company"
+  },
+  {
+   "code": "Y6D",
+   "manufacturer": "ZAZ"
+  },
+  {
+   "code": "Y6J",
+   "manufacturer": "Bogdan group"
+  },
+  {
+   "code": "Y6U",
+   "manufacturer": "Škoda Auto"
+  },
+  {
+   "code": "Y7B",
+   "manufacturer": "Bogdan group"
+  },
+  {
+   "code": "Y7C",
+   "manufacturer": "Great Wall Motors"
+  },
+  {
+   "code": "YAR",
+   "manufacturer": "Toyota Motor Europe"
+  },
+  {
+   "code": "YB3",
+   "manufacturer": "Volvo Trucks"
+  },
+  {
+   "code": "YB6",
+   "manufacturer": "Jonckheere"
+  },
+  {
+   "code": "YC1",
+   "manufacturer": "Honda"
+  },
+  {
+   "code": "YE2",
+   "manufacturer": "Van Hool"
+  },
+  {
+   "code": "YH2",
+   "manufacturer": "Lynx (snowmobile)"
+  },
+  {
+   "code": "YH4",
+   "manufacturer": "Fisker Automotive"
+  },
+  {
+   "code": "YK1",
+   "manufacturer": "Saab"
+  },
+  {
+   "code": "YK7",
+   "manufacturer": "Sisu Auto"
+  },
+  {
+   "code": "YS2",
+   "manufacturer": "Scania"
+  },
+  {
+   "code": "YS3",
+   "manufacturer": "Saab"
+  },
+  {
+   "code": "YS4",
+   "manufacturer": "Scania"
+  },
+  {
+   "code": "YSC",
+   "manufacturer": "Cadillac BLS"
+  },
+  {
+   "code": "YSM",
+   "manufacturer": "Polestar"
+  },
+  {
+   "code": "YT9",
+   "manufacturer": "Gin 1 Cars"
+  },
+  {
+   "code": "YTM",
+   "manufacturer": "Jakob Mining Vehicles"
+  },
+  {
+   "code": "YTN",
+   "manufacturer": "Saab NEVS"
+  },
+  {
+   "code": "YU7",
+   "manufacturer": "Husaberg"
+  },
+  {
+   "code": "YV1",
+   "manufacturer": "Volvo Cars"
+  },
+  {
+   "code": "YV2",
+   "manufacturer": "Volvo Trucks"
+  },
+  {
+   "code": "YV3",
+   "manufacturer": "Volvo Buses"
+  },
+  {
+   "code": "YV4",
+   "manufacturer": "Volvo Cars"
+  },
+  {
+   "code": "YV5",
+   "manufacturer": "Volvo Trucks"
+  },
+  {
+   "code": "YYC",
+   "manufacturer": "Think Nordic"
+  },
+  {
+   "code": "Z6F",
+   "manufacturer": "Ford Sollers"
+  },
+  {
+   "code": "Z8N",
+   "manufacturer": "Nissan Manufacturing Rus"
+  },
+  {
+   "code": "Z8T",
+   "manufacturer": "PCMA Rus"
+  },
+  {
+   "code": "Z94",
+   "manufacturer": "Hyundai Motor Manufacturing Rus"
+  },
+  {
+   "code": "Z9M",
+   "manufacturer": "Mercedes-Benz Trucks Vostok"
+  },
+  {
+   "code": "ZA9",
+   "manufacturer": "Lamborghini"
+  },
+  {
+   "code": "ZAA",
+   "manufacturer": "Autobianchi"
+  },
+  {
+   "code": "ZAC",
+   "manufacturer": "Jeep"
+  },
+  {
+   "code": "ZAM",
+   "manufacturer": "Maserati"
+  },
+  {
+   "code": "ZAP",
+   "manufacturer": "Piaggio"
+  },
+  {
+   "code": "ZAR",
+   "manufacturer": "Alfa Romeo"
+  },
+  {
+   "code": "ZAS",
+   "manufacturer": "Alfa Romeo"
+  },
+  {
+   "code": "ZBA",
+   "manufacturer": "BMW For South africa"
+  },
+  {
+   "code": "ZBB",
+   "manufacturer": "Gruppo Bertone"
+  },
+  {
+   "code": "ZBM",
+   "manufacturer": "BMW For Philippines"
+  },
+  {
+   "code": "ZBN",
+   "manufacturer": "Benelli"
+  },
+  {
+   "code": "ZBP",
+   "manufacturer": "BMW For Malaysia"
+  },
+  {
+   "code": "ZBT",
+   "manufacturer": "BMW For Thailand"
+  },
+  {
+   "code": "ZBW",
+   "manufacturer": "Rayton-Fissore Magnum"
+  },
+  {
+   "code": "ZC2",
+   "manufacturer": "Chrysler TC by Maserati"
+  },
+  {
+   "code": "ZCF",
+   "manufacturer": "Iveco"
+  },
+  {
+   "code": "ZCG",
+   "manufacturer": "Cagiva"
+  },
+  {
+   "code": "ZD0",
+   "manufacturer": "Yamaha Motor Italia SpA"
+  },
+  {
+   "code": "ZD3",
+   "manufacturer": "Betamotor S.p.A"
+  },
+  {
+   "code": "ZD4",
+   "manufacturer": "Aprilia"
+  },
+  {
+   "code": "ZDC",
+   "manufacturer": "Honda Italia Industriale S.p.A"
+  },
+  {
+   "code": "ZDM",
+   "manufacturer": "Ducati Motor Holding"
+  },
+  {
+   "code": "ZDT",
+   "manufacturer": "De Tomaso Modena SpA"
+  },
+  {
+   "code": "ZES",
+   "manufacturer": "Bimota"
+  },
+  {
+   "code": "ZF4",
+   "manufacturer": "Qvale"
+  },
+  {
+   "code": "ZFA",
+   "manufacturer": "Fiat"
+  },
+  {
+   "code": "ZFB",
+   "manufacturer": "Fiat"
+  },
+  {
+   "code": "ZFC",
+   "manufacturer": "Ram 1200"
+  },
+  {
+   "code": "ZFF",
+   "manufacturer": "Ferrari"
+  },
+  {
+   "code": "ZFM",
+   "manufacturer": "Fantic Motor"
+  },
+  {
+   "code": "ZFR",
+   "manufacturer": "Pininfarina"
+  },
+  {
+   "code": "ZGA",
+   "manufacturer": "Iveco Bus"
+  },
+  {
+   "code": "ZGU",
+   "manufacturer": "Moto Guzzi"
+  },
+  {
+   "code": "ZHU",
+   "manufacturer": "Husqvarna Motorcycles"
+  },
+  {
+   "code": "ZHW",
+   "manufacturer": "Lamborghini"
+  },
+  {
+   "code": "ZJM",
+   "manufacturer": "Malaguti"
+  },
+  {
+   "code": "ZJN",
+   "manufacturer": "Innocenti"
+  },
+  {
+   "code": "ZJT",
+   "manufacturer": "Italjet"
+  },
+  {
+   "code": "ZK5",
+   "manufacturer": "Hyundai Automobili Italia Importazioni"
+  },
+  {
+   "code": "ZKH",
+   "manufacturer": "Husqvarna Motorcycles Srl"
+  },
+  {
+   "code": "ZLA",
+   "manufacturer": "Lancia"
+  },
+  {
+   "code": "ZLM",
+   "manufacturer": "Moto Morini srl"
+  },
+  {
+   "code": "ZLV",
+   "manufacturer": "Laverda"
+  },
+  {
+   "code": "ZN0",
+   "manufacturer": "SWM Motorcycles S.r.l"
+  },
+  {
+   "code": "ZN3",
+   "manufacturer": "Iveco Defence"
+  },
+  {
+   "code": "ZN6",
+   "manufacturer": "Maserati"
+  },
+  {
+   "code": "ZNN",
+   "manufacturer": "Energica Motor Company"
+  },
+  {
+   "code": "ZPB",
+   "manufacturer": "Lamborghini"
+  },
+  {
+   "code": "ZZ1",
+   "manufacturer": "Tomos"
+  }
+ ]
+}
