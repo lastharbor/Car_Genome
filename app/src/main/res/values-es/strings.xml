@@ -531,4 +531,6 @@
     <string name="schedule_delete_confirm_body">Este plan de mantenimiento se eliminará.</string>
     <string name="record_delete_confirm_title">¿Eliminar registro?</string>
     <string name="record_delete_confirm_body">Este registro de servicio se eliminará.</string>
+    <string name="event_delete_confirm_title">¿Eliminar evento?</string>
+    <string name="event_delete_confirm_body">Este evento programado se eliminará.</string>
 </resources>

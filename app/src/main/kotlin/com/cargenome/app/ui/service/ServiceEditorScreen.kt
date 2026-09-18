@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -96,6 +97,7 @@ fun ServiceEditorScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val locale = LocalConfiguration.current.locales[0]
+    var confirmDelete by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) onSaved()
@@ -290,7 +292,7 @@ fun ServiceEditorScreen(
                 if (state.isEditing) {
                     item {
                         OutlinedButton(
-                            onClick = viewModel::delete,
+                            onClick = { confirmDelete = true },
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(
@@ -302,6 +304,32 @@ fun ServiceEditorScreen(
                 }
             }
         }
+    }
+
+    if (confirmDelete) {
+        AlertDialog(
+            onDismissRequest = { confirmDelete = false },
+            title = { Text(stringResource(R.string.record_delete_confirm_title)) },
+            text = { Text(stringResource(R.string.record_delete_confirm_body)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        confirmDelete = false
+                        viewModel.delete()
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.action_delete),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmDelete = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
     }
 }
 

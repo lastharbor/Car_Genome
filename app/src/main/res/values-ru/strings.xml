@@ -536,5 +536,7 @@
     <string name="schedule_delete_confirm_body">Регламент ТО будет удален.</string>
     <string name="record_delete_confirm_title">Удалить запись?</string>
     <string name="record_delete_confirm_body">Запись о ТО будет удалена.</string>
+    <string name="event_delete_confirm_title">Удалить мероприятие?</string>
+    <string name="event_delete_confirm_body">Запланированное мероприятие будет удалено.</string>
 </resources>
 

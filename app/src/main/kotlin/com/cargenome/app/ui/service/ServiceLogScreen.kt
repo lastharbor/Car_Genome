@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -133,6 +134,7 @@ fun ServiceLogScreen(
     var showAddEventDialog by remember { mutableStateOf(false) }
     var eventToEdit by remember { mutableStateOf<MaintenanceEventEntity?>(null) }
     var eventToComplete by remember { mutableStateOf<MaintenanceEventEntity?>(null) }
+    var eventToDelete by remember { mutableStateOf<MaintenanceEventEntity?>(null) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -311,7 +313,7 @@ fun ServiceLogScreen(
                                     vehicle = vehicle,
                                     onComplete = { eventToComplete = event },
                                     onEdit = { eventToEdit = event },
-                                    onDelete = { viewModel.deleteEvent(event.id) },
+                                    onDelete = { eventToDelete = event },
                                 )
                             }
                         } else {
@@ -363,7 +365,7 @@ fun ServiceLogScreen(
                                     vehicle = vehicle,
                                     onComplete = { eventToComplete = event },
                                     onEdit = { eventToEdit = event },
-                                    onDelete = { viewModel.deleteEvent(event.id) },
+                                    onDelete = { eventToDelete = event },
                                 )
                             }
                         }
@@ -388,7 +390,7 @@ fun ServiceLogScreen(
                                     vehicle = vehicle,
                                     onComplete = { eventToComplete = event },
                                     onEdit = { eventToEdit = event },
-                                    onDelete = { viewModel.deleteEvent(event.id) },
+                                    onDelete = { eventToDelete = event },
                                 )
                             }
                         }
@@ -505,6 +507,30 @@ fun ServiceLogScreen(
                 },
             )
         }
+    }
+
+    eventToDelete?.let { event ->
+        AlertDialog(
+            onDismissRequest = { eventToDelete = null },
+            title = { Text(stringResource(R.string.event_delete_confirm_title)) },
+            text = { Text(stringResource(R.string.event_delete_confirm_body)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val id = event.id
+                        eventToDelete = null
+                        viewModel.deleteEvent(id)
+                    },
+                ) {
+                    Text(text = stringResource(R.string.action_delete), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { eventToDelete = null }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
     }
 }
 

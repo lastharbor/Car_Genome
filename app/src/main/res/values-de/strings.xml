@@ -532,4 +532,6 @@
     <string name="schedule_delete_confirm_body">Dieser Wartungsplan wird gelöscht.</string>
     <string name="record_delete_confirm_title">Eintrag löschen?</string>
     <string name="record_delete_confirm_body">Dieser Serviceeintrag wird gelöscht.</string>
+    <string name="event_delete_confirm_title">Termin löschen?</string>
+    <string name="event_delete_confirm_body">Dieser geplante Termin wird gelöscht.</string>
 </resources>

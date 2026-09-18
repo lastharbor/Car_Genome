@@ -413,7 +413,7 @@ private fun ConsumptionTrendCard(
     val textMeasurer = rememberTextMeasurer()
     val textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, color = textColor)
 
-    SectionCard(stringResource(R.string.analytics_consumption_trend)) {
+    SectionCard("${stringResource(R.string.analytics_consumption_trend)} (${stringResource(unit.shortRes())})") {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             val (minVal, maxVal, range) = remember(history, average) {
                 val values = history.map { it.consumptionValue }
@@ -498,20 +498,49 @@ private fun ConsumptionTrendCard(
                 }
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = "${stringResource(R.string.analytics_consumption_trend)} (${stringResource(unit.shortRes())})",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                average?.let {
+            if (history.isNotEmpty()) {
+                val firstDate = Format.date(history.first().date, locale)
+                val lastDate = Format.date(history.last().date, locale)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 44.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = firstDate,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    if (firstDate != lastDate) {
+                        Text(
+                            text = lastDate,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+
+            average?.let {
+                Row(
+                    modifier = Modifier.padding(start = 44.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Canvas(modifier = Modifier.size(width = 16.dp, height = 2.dp)) {
+                        drawLine(
+                            color = avgLineColor,
+                            start = Offset.Zero,
+                            end = Offset(size.width, 0f),
+                            strokeWidth = 2.dp.toPx(),
+                            pathEffect = dashEffect,
+                        )
+                    }
                     Text(
                         text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(it, locale)} ${stringResource(unit.shortRes())}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = avgLineColor,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }

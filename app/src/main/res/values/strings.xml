@@ -534,5 +534,7 @@
     <string name="schedule_delete_confirm_body">This maintenance schedule will be deleted.</string>
     <string name="record_delete_confirm_title">Delete Record?</string>
     <string name="record_delete_confirm_body">This service record will be deleted.</string>
+    <string name="event_delete_confirm_title">Delete Event?</string>
+    <string name="event_delete_confirm_body">This maintenance event will be deleted.</string>
 </resources>
 
