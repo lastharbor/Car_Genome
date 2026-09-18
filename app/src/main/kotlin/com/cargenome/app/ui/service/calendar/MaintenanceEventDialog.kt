@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.cargenome.app.R
 import com.cargenome.app.data.db.entity.MaintenanceEventEntity
+import com.cargenome.app.data.db.entity.MaintenanceScheduleEntity
 import com.cargenome.app.data.db.entity.ServiceCategory
 import com.cargenome.app.data.db.entity.VehicleEntity
 import com.cargenome.app.ui.common.DateField
@@ -76,6 +77,9 @@ fun MaintenanceEventDialog(
     initialDate: LocalDate,
     vehicle: VehicleEntity,
     eventToEdit: MaintenanceEventEntity? = null,
+    availableSchedules: List<MaintenanceScheduleEntity> = emptyList(),
+    initialScheduleId: Long? = null,
+    initialTargetOdometerKm: Double? = null,
     onDismiss: () -> Unit,
     onSave: (
         title: String,
@@ -87,10 +91,28 @@ fun MaintenanceEventDialog(
         shop: String?,
         notes: String?,
         remindAdvanceDays: Int,
+        scheduleId: Long?,
     ) -> Unit,
 ) {
-    var title by remember { mutableStateOf(eventToEdit?.title.orEmpty()) }
-    var category by remember { mutableStateOf(eventToEdit?.category ?: ServiceCategory.RoutineService) }
+    var selectedScheduleId by remember { mutableStateOf(eventToEdit?.scheduleId ?: initialScheduleId) }
+    val prefilledSchedule = remember(selectedScheduleId) {
+        availableSchedules.find { it.id == selectedScheduleId }
+    }
+
+    var title by remember {
+        mutableStateOf(
+            eventToEdit?.title
+                ?: prefilledSchedule?.title
+                .orEmpty(),
+        )
+    }
+    var category by remember {
+        mutableStateOf(
+            eventToEdit?.category
+                ?: prefilledSchedule?.category
+                ?: ServiceCategory.RoutineService,
+        )
+    }
     var scheduledDate by remember { mutableStateOf(eventToEdit?.scheduledDate ?: initialDate) }
 
     val defaultFutureTime = remember { java.time.LocalTime.now().plusMinutes(5) }
@@ -103,7 +125,7 @@ fun MaintenanceEventDialog(
 
     var odometerText by remember {
         mutableStateOf(
-            eventToEdit?.targetOdometerKm
+            (eventToEdit?.targetOdometerKm ?: initialTargetOdometerKm)
                 ?.let { vehicle.distanceUnit.fromKilometres(it) }
                 ?.let { "%.0f".format(it) }
                 .orEmpty(),
@@ -142,6 +164,40 @@ fun MaintenanceEventDialog(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
+                // Link to schedule (if schedules exist)
+                if (availableSchedules.isNotEmpty()) {
+                    Text(
+                        text = stringResource(R.string.event_link_schedule_label),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        FilterChip(
+                            selected = selectedScheduleId == null,
+                            onClick = { selectedScheduleId = null },
+                            label = { Text(stringResource(R.string.event_no_schedule), style = MaterialTheme.typography.labelSmall) },
+                        )
+                        availableSchedules.forEach { sched ->
+                            FilterChip(
+                                selected = selectedScheduleId == sched.id,
+                                onClick = {
+                                    if (selectedScheduleId == sched.id) {
+                                        selectedScheduleId = null
+                                    } else {
+                                        selectedScheduleId = sched.id
+                                        title = sched.title
+                                        category = sched.category
+                                    }
+                                },
+                                label = { Text(sched.title, style = MaterialTheme.typography.labelSmall) },
+                            )
+                        }
+                    }
+                }
+
                 // Quick presets
                 Text(
                     text = stringResource(R.string.event_presets_label),
@@ -355,6 +411,7 @@ fun MaintenanceEventDialog(
                             shop.trim().takeIf { it.isNotBlank() },
                             notes.trim().takeIf { it.isNotBlank() },
                             remindAdvanceDays,
+                            selectedScheduleId,
                         )
                     }
                 },

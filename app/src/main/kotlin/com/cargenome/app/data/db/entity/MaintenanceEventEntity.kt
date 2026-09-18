@@ -30,16 +30,24 @@ import java.time.LocalDate
             childColumns = ["serviceRecordId"],
             onDelete = ForeignKey.SET_NULL,
         ),
+        ForeignKey(
+            entity = MaintenanceScheduleEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["scheduleId"],
+            onDelete = ForeignKey.SET_NULL,
+        ),
     ],
     indices = [
         Index(value = ["vehicleId"]),
         Index(value = ["scheduledDate"]),
         Index(value = ["serviceRecordId"]),
+        Index(value = ["scheduleId"]),
     ],
 )
 data class MaintenanceEventEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,
+    val scheduleId: Long? = null,
 
     val title: String,
     val category: ServiceCategory = ServiceCategory.RoutineService,

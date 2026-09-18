@@ -88,6 +88,14 @@ fun CompleteMaintenanceEventDialog(
                     color = MaterialTheme.colorScheme.primary,
                 )
 
+                if (event.scheduleId != null) {
+                    Text(
+                        text = stringResource(R.string.event_complete_resets_schedule_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+
                 // Checkbox: Create history record
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

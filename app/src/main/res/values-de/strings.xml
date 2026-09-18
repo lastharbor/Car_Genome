@@ -534,4 +534,18 @@
     <string name="record_delete_confirm_body">Dieser Serviceeintrag wird gelöscht.</string>
     <string name="event_delete_confirm_title">Termin löschen?</string>
     <string name="event_delete_confirm_body">Dieser geplante Termin wird gelöscht.</string>
+    <string name="service_overview_title">Wartungsstatus</string>
+    <string name="service_overview_urgent">Wartung erforderlich</string>
+    <string name="service_overview_all_good">Alle Wartungsarbeiten aktuell</string>
+    <string name="service_overview_next_event">Nächster Termin</string>
+    <string name="service_overview_closest_schedule">Nächster Service: %1$s (in %2$s)</string>
+    <string name="service_action_schedule">Planen</string>
+    <string name="service_action_to_calendar">Zum Kalender</string>
+    <string name="service_action_to_schedule">Wartungsplan</string>
+    <string name="service_action_plan_next">Nächsten Service planen</string>
+    <string name="schedule_already_planned">Geplant für %1$s</string>
+    <string name="calendar_suggest_schedule">Wartung empfohlen</string>
+    <string name="event_link_schedule_label">Mit Wartungsplan verknüpfen</string>
+    <string name="event_no_schedule">Eigenes Ereignis (ohne Plan)</string>
+    <string name="event_complete_resets_schedule_hint">✓ Wartungszähler wird automatisch aktualisiert</string>
 </resources>

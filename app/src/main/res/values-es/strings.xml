@@ -533,4 +533,18 @@
     <string name="record_delete_confirm_body">Este registro de servicio se eliminará.</string>
     <string name="event_delete_confirm_title">¿Eliminar evento?</string>
     <string name="event_delete_confirm_body">Este evento programado se eliminará.</string>
+    <string name="service_overview_title">Estado de mantenimiento</string>
+    <string name="service_overview_urgent">Mantenimiento requerido</string>
+    <string name="service_overview_all_good">Todo el mantenimiento al día</string>
+    <string name="service_overview_next_event">Próxima cita</string>
+    <string name="service_overview_closest_schedule">Próximo servicio: %1$s (en %2$s)</string>
+    <string name="service_action_schedule">Programar</string>
+    <string name="service_action_to_calendar">Al calendario</string>
+    <string name="service_action_to_schedule">Plan</string>
+    <string name="service_action_plan_next">Programar próximo servicio</string>
+    <string name="schedule_already_planned">Programado para el %1$s</string>
+    <string name="calendar_suggest_schedule">Recomendado programar</string>
+    <string name="event_link_schedule_label">Vincular al plan de mantenimiento</string>
+    <string name="event_no_schedule">Evento propio (sin plan)</string>
+    <string name="event_complete_resets_schedule_hint">✓ El contador del plan se actualizará automáticamente</string>
 </resources>

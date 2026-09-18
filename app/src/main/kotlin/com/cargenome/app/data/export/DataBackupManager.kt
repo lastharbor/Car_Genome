@@ -121,6 +121,7 @@ data class OdometerReadingBackupDto(
 data class MaintenanceEventBackupDto(
     val id: Long,
     val vehicleId: Long,
+    val scheduleId: Long? = null,
     val title: String,
     val category: String,
     val scheduledDate: String,
@@ -461,6 +462,7 @@ class DataBackupManager @Inject constructor(
     private fun MaintenanceEventEntity.toDto() = MaintenanceEventBackupDto(
         id = id,
         vehicleId = vehicleId,
+        scheduleId = scheduleId,
         title = title,
         category = category.name,
         scheduledDate = scheduledDate.toString(),
@@ -479,6 +481,7 @@ class DataBackupManager @Inject constructor(
     private fun MaintenanceEventBackupDto.toEntity() = MaintenanceEventEntity(
         id = id,
         vehicleId = vehicleId,
+        scheduleId = scheduleId,
         title = title,
         category = runCatching { ServiceCategory.valueOf(category) }.getOrDefault(ServiceCategory.RoutineService),
         scheduledDate = runCatching { LocalDate.parse(scheduledDate) }.getOrDefault(LocalDate.now()),

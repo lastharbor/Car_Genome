@@ -59,13 +59,36 @@ data class ServiceLogUiState(
         get() {
             val today = LocalDate.now()
             return events.filter { !it.isCompleted && !it.scheduledDate.isBefore(today) }
+                .sortedWith(compareBy<MaintenanceEventEntity> { it.scheduledDate }.thenBy { it.scheduledTimeMinutes ?: 1440 })
         }
 
     val overdueEvents: List<MaintenanceEventEntity>
         get() {
             val today = LocalDate.now()
             return events.filter { !it.isCompleted && it.scheduledDate.isBefore(today) }
+                .sortedWith(compareBy<MaintenanceEventEntity> { it.scheduledDate }.thenBy { it.scheduledTimeMinutes ?: 1440 })
         }
+
+    val urgentSchedules: List<ScheduleStatus>
+        get() = schedules.filter { it.isOverdue || it.isDueSoon }
+
+    val activeEventsByScheduleId: Map<Long, MaintenanceEventEntity>
+        get() {
+            val today = LocalDate.now()
+            return events
+                .filter { !it.isCompleted && it.scheduleId != null && !it.scheduledDate.isBefore(today) }
+                .groupBy { it.scheduleId!! }
+                .mapValues { (_, evts) -> evts.minBy { it.scheduledDate } }
+        }
+
+    val unscheduledUrgentSchedules: List<ScheduleStatus>
+        get() {
+            val activeIds = activeEventsByScheduleId.keys
+            return urgentSchedules.filter { it.schedule.id !in activeIds }
+        }
+
+    val nextUpcomingEvent: MaintenanceEventEntity?
+        get() = upcomingEvents.minByOrNull { it.scheduledDate }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -158,11 +181,13 @@ class ServiceLogViewModel @Inject constructor(
         shop: String?,
         notes: String?,
         remindAdvanceDays: Int,
+        scheduleId: Long? = null,
     ) {
         viewModelScope.launch {
             val targetVehicleId = vehicleId
             val event = MaintenanceEventEntity(
                 vehicleId = targetVehicleId,
+                scheduleId = scheduleId,
                 title = title,
                 category = category,
                 scheduledDate = scheduledDate,

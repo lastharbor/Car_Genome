@@ -59,7 +59,7 @@ abstract class CarGenomeDatabase : RoomDatabase() {
     abstract fun vinCacheDao(): VinCacheDao
 
     companion object {
-        const val VERSION = 4
+        const val VERSION = 5
         const val NAME = "cargenome.db"
 
         val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
@@ -104,6 +104,13 @@ abstract class CarGenomeDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_events_vehicleId` ON `maintenance_events` (`vehicleId`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_events_scheduledDate` ON `maintenance_events` (`scheduledDate`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_events_serviceRecordId` ON `maintenance_events` (`serviceRecordId`)")
+            }
+        }
+
+        val MIGRATION_4_5 = object : androidx.room.migration.Migration(4, 5) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `maintenance_events` ADD COLUMN `scheduleId` INTEGER REFERENCES `maintenance_schedules`(`id`) ON DELETE SET NULL")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_events_scheduleId` ON `maintenance_events` (`scheduleId`)")
             }
         }
     }

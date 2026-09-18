@@ -536,5 +536,19 @@
     <string name="record_delete_confirm_body">This service record will be deleted.</string>
     <string name="event_delete_confirm_title">Delete Event?</string>
     <string name="event_delete_confirm_body">This maintenance event will be deleted.</string>
+    <string name="service_overview_title">Maintenance Status</string>
+    <string name="service_overview_urgent">Attention Required</string>
+    <string name="service_overview_all_good">All maintenance up to date</string>
+    <string name="service_overview_next_event">Next appointment</string>
+    <string name="service_overview_closest_schedule">Next service: %1$s (in %2$s)</string>
+    <string name="service_action_schedule">Schedule</string>
+    <string name="service_action_to_calendar">To Calendar</string>
+    <string name="service_action_to_schedule">Schedule</string>
+    <string name="service_action_plan_next">Schedule next service</string>
+    <string name="schedule_already_planned">Scheduled for %1$s</string>
+    <string name="calendar_suggest_schedule">Recommended to schedule</string>
+    <string name="event_link_schedule_label">Link to schedule</string>
+    <string name="event_no_schedule">Custom event (no schedule)</string>
+    <string name="event_complete_resets_schedule_hint">✓ Maintenance schedule counter will be automatically reset</string>
 </resources>
 

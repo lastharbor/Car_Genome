@@ -167,6 +167,7 @@ class ServiceRepository @Inject constructor(
                 partsCostMinor = partsCostMinor.coerceAtLeast(0L),
                 shop = shop?.takeIf { it.isNotBlank() } ?: event.shop,
                 notes = notes?.takeIf { it.isNotBlank() } ?: event.notes,
+                scheduleId = event.scheduleId,
             )
             createdRecordId = addRecord(record)
         }

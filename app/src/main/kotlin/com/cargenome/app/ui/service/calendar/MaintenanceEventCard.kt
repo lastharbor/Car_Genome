@@ -81,11 +81,23 @@ fun MaintenanceEventCard(
                         text = event.title,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     )
-                    TagBadge(
-                        text = stringResource(event.category.labelRes()),
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        textColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TagBadge(
+                            text = stringResource(event.category.labelRes()),
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            textColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                        if (event.scheduleId != null) {
+                            TagBadge(
+                                text = "✓ " + stringResource(R.string.service_action_to_schedule),
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                textColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            )
+                        }
+                    }
                 }
 
                 Spacer(Modifier.width(8.dp))

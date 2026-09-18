@@ -538,5 +538,19 @@
     <string name="record_delete_confirm_body">Запись о ТО будет удалена.</string>
     <string name="event_delete_confirm_title">Удалить мероприятие?</string>
     <string name="event_delete_confirm_body">Запланированное мероприятие будет удалено.</string>
+    <string name="service_overview_title">Статус обслуживания</string>
+    <string name="service_overview_urgent">Требуется обслуживание</string>
+    <string name="service_overview_all_good">Все регламентные работы в норме</string>
+    <string name="service_overview_next_event">Ближайшая запись</string>
+    <string name="service_overview_closest_schedule">Ближайшее ТО: %1$s (через %2$s)</string>
+    <string name="service_action_schedule">Запланировать</string>
+    <string name="service_action_to_calendar">В календарь</string>
+    <string name="service_action_to_schedule">Регламент</string>
+    <string name="service_action_plan_next">Запланировать следующее ТО</string>
+    <string name="schedule_already_planned">Запланировано на %1$s</string>
+    <string name="calendar_suggest_schedule">Рекомендуется запланировать ТО</string>
+    <string name="event_link_schedule_label">Привязать к регламенту ТО</string>
+    <string name="event_no_schedule">Своё мероприятие (без регламента)</string>
+    <string name="event_complete_resets_schedule_hint">✓ Счетчик регламента ТО будет автоматически обновлен</string>
 </resources>
 

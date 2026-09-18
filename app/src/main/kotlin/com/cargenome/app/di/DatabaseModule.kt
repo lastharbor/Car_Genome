@@ -31,6 +31,7 @@ object DatabaseModule {
                 CarGenomeDatabase.MIGRATION_1_2,
                 CarGenomeDatabase.MIGRATION_2_3,
                 CarGenomeDatabase.MIGRATION_3_4,
+                CarGenomeDatabase.MIGRATION_4_5,
             )
             .build()
 

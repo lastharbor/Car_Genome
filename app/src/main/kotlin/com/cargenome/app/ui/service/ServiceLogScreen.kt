@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -47,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -57,11 +59,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cargenome.app.R
 import com.cargenome.app.data.db.entity.MaintenanceEventEntity
+import com.cargenome.app.data.db.entity.MaintenanceScheduleEntity
 import com.cargenome.app.data.db.entity.ServiceRecordEntity
 import com.cargenome.app.data.db.entity.VehicleEntity
 import com.cargenome.app.data.db.entity.totalCostMinor
 import com.cargenome.app.domain.service.ScheduleDueStatus
 import com.cargenome.app.domain.service.ScheduleStatus
+import java.time.LocalDate
 import com.cargenome.app.ui.common.DetailRow
 import com.cargenome.app.ui.common.EmptyVehiclesTabCard
 import com.cargenome.app.ui.common.Format
@@ -132,9 +136,16 @@ fun ServiceLogScreen(
     }
 
     var showAddEventDialog by remember { mutableStateOf(false) }
+    var scheduleToPlan by remember { mutableStateOf<MaintenanceScheduleEntity?>(null) }
+    var initialTargetOdometerKm by remember { mutableStateOf<Double?>(null) }
     var eventToEdit by remember { mutableStateOf<MaintenanceEventEntity?>(null) }
     var eventToComplete by remember { mutableStateOf<MaintenanceEventEntity?>(null) }
     var eventToDelete by remember { mutableStateOf<MaintenanceEventEntity?>(null) }
+
+    val onGoToCalendarDate: (LocalDate) -> Unit = { targetDate ->
+        viewModel.selectDate(targetDate)
+        viewModel.selectTab(ServiceTab.Calendar)
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -182,12 +193,26 @@ fun ServiceLogScreen(
                     Tab(
                         selected = state.selectedTab == ServiceTab.Calendar,
                         onClick = { viewModel.selectTab(ServiceTab.Calendar) },
-                        text = { Text(stringResource(R.string.service_tab_calendar)) },
+                        text = {
+                            val count = state.upcomingEvents.size
+                            if (count > 0) {
+                                Text("${stringResource(R.string.service_tab_calendar)} ($count)")
+                            } else {
+                                Text(stringResource(R.string.service_tab_calendar))
+                            }
+                        },
                     )
                     Tab(
                         selected = state.selectedTab == ServiceTab.Schedule,
                         onClick = { viewModel.selectTab(ServiceTab.Schedule) },
-                        text = { Text(stringResource(R.string.service_tab_schedule)) },
+                        text = {
+                            val count = state.urgentSchedules.size
+                            if (count > 0) {
+                                Text("${stringResource(R.string.service_tab_schedule)} ($count)")
+                            } else {
+                                Text(stringResource(R.string.service_tab_schedule))
+                            }
+                        },
                     )
                 }
             }
@@ -251,6 +276,25 @@ fun ServiceLogScreen(
 
                 when (state.selectedTab) {
                     ServiceTab.Records -> {
+                        item {
+                            MaintenanceOverviewCard(
+                                state = state,
+                                vehicle = vehicle,
+                                onPlanSchedule = { schedule, targetKm ->
+                                    scheduleToPlan = schedule
+                                    initialTargetOdometerKm = targetKm
+                                    showAddEventDialog = true
+                                },
+                                onGoToCalendar = onGoToCalendarDate,
+                                onMarkScheduleDone = { schedId ->
+                                    onMarkScheduleDone(vehicle.id, schedId)
+                                },
+                                onGoToSchedule = {
+                                    viewModel.selectTab(ServiceTab.Schedule)
+                                },
+                            )
+                        }
+
                         if (state.records.isEmpty()) {
                             if (!state.isLoading) item { EmptyRecordsCard() }
                         } else {
@@ -263,7 +307,16 @@ fun ServiceLogScreen(
                                 ServiceRecordRow(
                                     record = record,
                                     vehicle = vehicle,
+                                    schedules = state.schedules.map { it.schedule },
                                     onClick = { onOpenRecord(vehicle.id, record.id) },
+                                    onPlanNext = { schedule ->
+                                        scheduleToPlan = schedule
+                                        val targetKm = (record.odometerKm ?: state.currentOdometerKm)?.let { cur ->
+                                            schedule.intervalKm?.let { iv -> cur + iv }
+                                        }
+                                        initialTargetOdometerKm = targetKm
+                                        showAddEventDialog = true
+                                    },
                                 )
                             }
                         }
@@ -275,6 +328,21 @@ fun ServiceLogScreen(
                                 NotificationPermissionCard(
                                     onRequestPermission = {
                                         permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                                    },
+                                )
+                            }
+                        }
+
+                        // Urgent schedules suggestion card
+                        if (state.unscheduledUrgentSchedules.isNotEmpty()) {
+                            item {
+                                CalendarScheduleSuggestionsCard(
+                                    urgentSchedules = state.unscheduledUrgentSchedules,
+                                    vehicle = vehicle,
+                                    onPlanSchedule = { schedule, targetKm ->
+                                        scheduleToPlan = schedule
+                                        initialTargetOdometerKm = targetKm
+                                        showAddEventDialog = true
                                     },
                                 )
                             }
@@ -422,11 +490,22 @@ fun ServiceLogScreen(
                                 key = { it.schedule.id },
                                 contentType = { "schedule_item" },
                             ) { scheduleStatus ->
+                                val plannedEvent = state.activeEventsByScheduleId[scheduleStatus.schedule.id]
                                 ScheduleItemCard(
                                     status = scheduleStatus,
                                     vehicle = vehicle,
+                                    plannedEvent = plannedEvent,
                                     onMarkDone = { onMarkScheduleDone(vehicle.id, scheduleStatus.schedule.id) },
                                     onEdit = { onEditSchedule(vehicle.id, scheduleStatus.schedule.id) },
+                                    onPlanEvent = {
+                                        scheduleToPlan = scheduleStatus.schedule
+                                        val targetKm = (scheduleStatus.schedule.lastPerformedOdometerKm ?: state.currentOdometerKm)?.let { cur ->
+                                            scheduleStatus.schedule.intervalKm?.let { iv -> cur + iv }
+                                        }
+                                        initialTargetOdometerKm = targetKm
+                                        showAddEventDialog = true
+                                    },
+                                    onGoToCalendar = onGoToCalendarDate,
                                 )
                             }
                         }
@@ -441,8 +520,15 @@ fun ServiceLogScreen(
         MaintenanceEventDialog(
             initialDate = state.selectedDate,
             vehicle = currentVehicle,
-            onDismiss = { showAddEventDialog = false },
-            onSave = { title, cat, date, time, odo, cost, shop, notes, remind ->
+            availableSchedules = state.schedules.map { it.schedule },
+            initialScheduleId = scheduleToPlan?.id,
+            initialTargetOdometerKm = initialTargetOdometerKm,
+            onDismiss = {
+                showAddEventDialog = false
+                scheduleToPlan = null
+                initialTargetOdometerKm = null
+            },
+            onSave = { title, cat, date, time, odo, cost, shop, notes, remind, scheduleId ->
                 viewModel.addEvent(
                     title = title,
                     category = cat,
@@ -453,8 +539,11 @@ fun ServiceLogScreen(
                     shop = shop,
                     notes = notes,
                     remindAdvanceDays = remind,
+                    scheduleId = scheduleId,
                 )
                 showAddEventDialog = false
+                scheduleToPlan = null
+                initialTargetOdometerKm = null
             },
         )
     }
@@ -465,8 +554,11 @@ fun ServiceLogScreen(
                 initialDate = event.scheduledDate,
                 vehicle = currentVehicle,
                 eventToEdit = event,
+                availableSchedules = state.schedules.map { it.schedule },
+                initialScheduleId = event.scheduleId,
+                initialTargetOdometerKm = event.targetOdometerKm,
                 onDismiss = { eventToEdit = null },
-                onSave = { title, cat, date, time, odo, cost, shop, notes, remind ->
+                onSave = { title, cat, date, time, odo, cost, shop, notes, remind, scheduleId ->
                     viewModel.updateEvent(
                         event.copy(
                             title = title,
@@ -478,6 +570,7 @@ fun ServiceLogScreen(
                             shop = shop,
                             notes = notes,
                             remindAdvanceDays = remind,
+                            scheduleId = scheduleId,
                         ),
                     )
                     eventToEdit = null
@@ -630,9 +723,14 @@ private fun ServiceSpendSummaryCard(state: ServiceLogUiState, vehicle: VehicleEn
 private fun ServiceRecordRow(
     record: ServiceRecordEntity,
     vehicle: VehicleEntity,
+    schedules: List<MaintenanceScheduleEntity>,
     onClick: () -> Unit,
+    onPlanNext: (MaintenanceScheduleEntity) -> Unit,
 ) {
     val locale = LocalConfiguration.current.locales[0]
+    val linkedSchedule = remember(record.scheduleId, schedules) {
+        record.scheduleId?.let { id -> schedules.find { it.id == id } }
+    }
 
     Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -672,10 +770,28 @@ private fun ServiceRecordRow(
                 Text(it, style = MaterialTheme.typography.bodyMedium)
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TagBadge(text = stringResource(record.category.labelRes()))
-                if (record.scheduleId != null) {
-                    TagBadge(text = "\u2713 " + stringResource(R.string.service_tab_schedule))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TagBadge(text = stringResource(record.category.labelRes()))
+                    if (record.scheduleId != null) {
+                        TagBadge(text = "\u2713 " + (linkedSchedule?.title ?: stringResource(R.string.service_action_to_schedule)))
+                    }
+                }
+
+                if (linkedSchedule != null) {
+                    TextButton(onClick = { onPlanNext(linkedSchedule) }) {
+                        Text(
+                            text = stringResource(R.string.service_action_plan_next),
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    }
                 }
             }
         }
@@ -686,8 +802,11 @@ private fun ServiceRecordRow(
 private fun ScheduleItemCard(
     status: ScheduleStatus,
     vehicle: VehicleEntity,
+    plannedEvent: MaintenanceEventEntity?,
     onMarkDone: () -> Unit,
     onEdit: () -> Unit,
+    onPlanEvent: () -> Unit,
+    onGoToCalendar: (LocalDate) -> Unit,
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val schedule = status.schedule
@@ -750,6 +869,26 @@ private fun ScheduleItemCard(
                 }
                 if (intervalParts.isNotEmpty()) {
                     TagBadge(text = intervalParts.joinToString(" / "))
+                }
+            }
+
+            // Planned event chip if already scheduled in Calendar
+            if (plannedEvent != null) {
+                val dateStr = Format.date(plannedEvent.scheduledDate, locale)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "📅 " + stringResource(R.string.schedule_already_planned, dateStr),
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    AssistChip(
+                        onClick = { onGoToCalendar(plannedEvent.scheduledDate) },
+                        label = { Text(stringResource(R.string.service_action_to_calendar)) },
+                    )
                 }
             }
 
@@ -816,9 +955,273 @@ private fun ScheduleItemCard(
                 TextButton(onClick = onEdit) {
                     Text(stringResource(R.string.action_edit))
                 }
+                if (plannedEvent == null) {
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = onPlanEvent) {
+                        Text(stringResource(R.string.service_action_schedule))
+                    }
+                }
                 Spacer(Modifier.width(8.dp))
                 Button(onClick = onMarkDone) {
                     Text(stringResource(R.string.schedule_mark_done))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MaintenanceOverviewCard(
+    state: ServiceLogUiState,
+    vehicle: VehicleEntity,
+    onPlanSchedule: (MaintenanceScheduleEntity, Double?) -> Unit,
+    onGoToCalendar: (LocalDate) -> Unit,
+    onMarkScheduleDone: (Long) -> Unit,
+    onGoToSchedule: () -> Unit,
+) {
+    val locale = LocalConfiguration.current.locales[0]
+    val urgent = state.urgentSchedules
+    val nextEvent = state.nextUpcomingEvent
+    val activeEvents = state.activeEventsByScheduleId
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = if (urgent.isNotEmpty()) {
+                MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+            } else {
+                MaterialTheme.colorScheme.surfaceContainer
+            },
+        ),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.service_overview_title),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+                if (state.schedules.isNotEmpty()) {
+                    TextButton(onClick = onGoToSchedule) {
+                        Text(stringResource(R.string.service_tab_schedule), style = MaterialTheme.typography.labelMedium)
+                    }
+                }
+            }
+
+            if (urgent.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.service_overview_urgent),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = MaterialTheme.colorScheme.error,
+                )
+
+                urgent.forEach { status ->
+                    val schedule = status.schedule
+                    val planned = activeEvents[schedule.id]
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = schedule.title,
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.weight(1f),
+                            )
+                            TagBadge(
+                                text = if (status.isOverdue) {
+                                    stringResource(R.string.schedule_status_overdue)
+                                } else {
+                                    stringResource(R.string.schedule_status_due_soon)
+                                },
+                                textColor = if (status.isOverdue) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary,
+                                containerColor = if (status.isOverdue) {
+                                    MaterialTheme.colorScheme.errorContainer
+                                } else {
+                                    MaterialTheme.colorScheme.tertiaryContainer
+                                },
+                            )
+                        }
+
+                        val diffParts = mutableListOf<String>()
+                        status.remainingKm?.let { diffKm ->
+                            val dist = Format.distance(abs(diffKm), vehicle.distanceUnit, locale)
+                            val unitStr = stringResource(vehicle.distanceUnit.shortRes(), dist)
+                            if (diffKm <= 0) {
+                                diffParts.add(stringResource(R.string.schedule_overdue_by_km, unitStr))
+                            } else {
+                                diffParts.add(stringResource(R.string.schedule_due_in_km, unitStr))
+                            }
+                        }
+                        status.remainingDays?.let { diffDays ->
+                            val absD = abs(diffDays)
+                            if (diffDays < 0) {
+                                diffParts.add(stringResource(R.string.schedule_overdue_by_days, absD))
+                            } else {
+                                diffParts.add(stringResource(R.string.schedule_due_in_days, absD))
+                            }
+                        }
+                        if (diffParts.isNotEmpty()) {
+                            Text(
+                                text = diffParts.joinToString(" · "),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            if (planned != null) {
+                                val dateStr = Format.date(planned.scheduledDate, locale)
+                                Text(
+                                    text = stringResource(R.string.schedule_already_planned, dateStr),
+                                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                AssistChip(
+                                    onClick = { onGoToCalendar(planned.scheduledDate) },
+                                    label = { Text(stringResource(R.string.service_action_to_calendar)) },
+                                )
+                            } else {
+                                Spacer(Modifier.weight(1f))
+                                val targetKm = (schedule.lastPerformedOdometerKm ?: state.currentOdometerKm)?.let { cur ->
+                                    schedule.intervalKm?.let { iv -> cur + iv }
+                                }
+                                AssistChip(
+                                    onClick = { onPlanSchedule(schedule, targetKm) },
+                                    label = { Text(stringResource(R.string.service_action_schedule)) },
+                                )
+                                AssistChip(
+                                    onClick = { onMarkScheduleDone(schedule.id) },
+                                    label = { Text(stringResource(R.string.schedule_mark_done)) },
+                                )
+                            }
+                        }
+                    }
+                }
+            } else if (state.schedules.isNotEmpty()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = "\u2713 " + stringResource(R.string.service_overview_all_good),
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                        color = Color(0xFF2E7D32),
+                    )
+                }
+
+                val closest = state.schedules.minByOrNull { status ->
+                    val km = status.remainingKm?.coerceAtLeast(0.0) ?: Double.MAX_VALUE
+                    val days = (status.remainingDays?.coerceAtLeast(0) ?: Int.MAX_VALUE).toDouble() * 100
+                    km + days
+                }
+                if (closest != null) {
+                    val remainingStr = closest.remainingKm?.takeIf { it > 0 }?.let {
+                        stringResource(
+                            vehicle.distanceUnit.shortRes(),
+                            Format.distance(it, vehicle.distanceUnit, locale),
+                        )
+                    } ?: closest.remainingDays?.takeIf { it > 0 }?.let {
+                        stringResource(R.string.schedule_due_in_days, it)
+                    }.orEmpty()
+
+                    if (remainingStr.isNotBlank()) {
+                        Text(
+                            text = stringResource(R.string.service_overview_closest_schedule, closest.schedule.title, remainingStr),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+
+            if (nextEvent != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val dateFormatted = Format.date(nextEvent.scheduledDate, locale)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.service_overview_next_event),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Text(
+                            text = "${nextEvent.title} · $dateFormatted",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                    AssistChip(
+                        onClick = { onGoToCalendar(nextEvent.scheduledDate) },
+                        label = { Text(stringResource(R.string.service_action_to_calendar)) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CalendarScheduleSuggestionsCard(
+    urgentSchedules: List<ScheduleStatus>,
+    vehicle: VehicleEntity,
+    onPlanSchedule: (MaintenanceScheduleEntity, Double?) -> Unit,
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.35f),
+        ),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.calendar_suggest_schedule),
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+            )
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                urgentSchedules.forEach { status ->
+                    val sched = status.schedule
+                    AssistChip(
+                        onClick = {
+                            val targetKm = sched.lastPerformedOdometerKm?.let { cur ->
+                                sched.intervalKm?.let { iv -> cur + iv }
+                            }
+                            onPlanSchedule(sched, targetKm)
+                        },
+                        label = { Text("+ ${sched.title}") },
+                    )
                 }
             }
         }
