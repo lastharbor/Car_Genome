@@ -550,5 +550,33 @@
     <string name="event_link_schedule_label">Link to schedule</string>
     <string name="event_no_schedule">Custom event (no schedule)</string>
     <string name="event_complete_resets_schedule_hint">✓ Maintenance schedule counter will be automatically reset</string>
+
+    <!-- App Updates -->
+    <string name="settings_section_about_updates">About &amp; Updates</string>
+    <string name="settings_current_version">Version %1$s (build %2$d)</string>
+    <string name="settings_check_updates">Check for updates</string>
+    <string name="settings_checking_updates">Checking for updates…</string>
+    <string name="settings_auto_check_updates">Auto-check for updates</string>
+    <string name="settings_auto_check_updates_desc">Automatically check GitHub Releases on launch</string>
+    <string name="settings_updates_up_to_date">You are using the latest version</string>
+    <string name="settings_last_check">Last checked: %1$s</string>
+    <string name="settings_update_available">Update available: v%1$s</string>
+    <string name="update_dialog_title">Update Available</string>
+    <string name="update_type_major">🚀 Major Update</string>
+    <string name="update_type_minor">✨ New Features (Minor)</string>
+    <string name="update_type_patch">🛠 Bug Fixes (Patch)</string>
+    <string name="update_version_diff">Current version: %1$s → New: %2$s</string>
+    <string name="update_file_size">File size: %1$s MB</string>
+    <string name="update_changelog_title">What\'s new in this version:</string>
+    <string name="update_downloading_progress">Downloading: %1$d%%</string>
+    <string name="update_permission_required_desc">To install the update, please enable install permissions for CarGenome in Android security settings</string>
+    <string name="update_download_ready">Update downloaded and ready to install</string>
+    <string name="update_download_failed">Download failed: %1$s</string>
+    <string name="update_action_download">Download &amp; Update</string>
+    <string name="update_action_downloading">Downloading…</string>
+    <string name="update_action_install">Install</string>
+    <string name="update_action_grant_permission">Permission Settings</string>
+    <string name="update_action_retry">Retry</string>
+    <string name="update_action_later">Later</string>
 </resources>
 

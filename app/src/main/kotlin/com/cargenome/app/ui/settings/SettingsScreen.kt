@@ -31,6 +31,14 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.font.FontWeight
+import com.cargenome.app.ui.update.AppUpdateDialog
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -124,6 +132,9 @@ fun SettingsScreen(
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     val event by viewModel.event.collectAsStateWithLifecycle()
+    val isCheckingUpdate by viewModel.isCheckingUpdate.collectAsStateWithLifecycle()
+    val availableUpdate by viewModel.availableUpdate.collectAsStateWithLifecycle()
+    val updateDownloadState by viewModel.updateDownloadState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -866,6 +877,105 @@ fun SettingsScreen(
                         }
                     }
                 }
+
+                item {
+                    SectionCard(title = stringResource(R.string.settings_section_about_updates)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "CarGenome",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    Text(
+                                        text = stringResource(
+                                            R.string.settings_current_version,
+                                            BuildConfig.VERSION_NAME,
+                                            BuildConfig.VERSION_CODE,
+                                        ),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                                Surface(
+                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    shape = RoundedCornerShape(8.dp),
+                                ) {
+                                    Text(
+                                        text = "GitHub Releases",
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Medium,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    )
+                                }
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                                    Text(
+                                        text = stringResource(R.string.settings_auto_check_updates),
+                                        style = MaterialTheme.typography.labelLarge,
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.settings_auto_check_updates_desc),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                                Switch(
+                                    checked = settings.autoCheckUpdates,
+                                    onCheckedChange = { viewModel.setAutoCheckUpdates(it) },
+                                )
+                            }
+
+                            if (settings.lastUpdateCheckTimestamp != null) {
+                                val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()) }
+                                val formattedDate = remember(settings.lastUpdateCheckTimestamp) {
+                                    dateFormat.format(Date(settings.lastUpdateCheckTimestamp!!))
+                                }
+                                Text(
+                                    text = stringResource(R.string.settings_last_check, formattedDate),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+
+                            Button(
+                                onClick = { viewModel.checkForUpdates(isManual = true) },
+                                enabled = !isCheckingUpdate,
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                if (isCheckingUpdate) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(18.dp),
+                                        strokeWidth = 2.dp,
+                                        color = MaterialTheme.colorScheme.onPrimary,
+                                    )
+                                    Spacer(Modifier.size(8.dp))
+                                    Text(stringResource(R.string.settings_checking_updates))
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.SystemUpdate,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp),
+                                    )
+                                    Spacer(Modifier.size(8.dp))
+                                    Text(stringResource(R.string.settings_check_updates))
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -969,6 +1079,18 @@ fun SettingsScreen(
                     Text(stringResource(R.string.action_cancel))
                 }
             },
+        )
+    }
+
+    availableUpdate?.let { updateInfo ->
+        AppUpdateDialog(
+            updateInfo = updateInfo,
+            downloadState = updateDownloadState,
+            canInstallPackages = viewModel.canInstallPackages(),
+            onStartDownload = { viewModel.startUpdateDownload(updateInfo) },
+            onInstall = { apkFile -> viewModel.installApk(context, apkFile) },
+            onOpenInstallSettings = { viewModel.openInstallPermissionSettings(context) },
+            onDismiss = { viewModel.dismissUpdateDialog() },
         )
     }
 }

@@ -9,4 +9,7 @@
     <cache-path
         name="camera"
         path="camera/" />
+    <cache-path
+        name="updates"
+        path="updates/" />
 </paths>

@@ -40,6 +40,7 @@ class SettingsViewModel @Inject constructor(
     private val reminderScheduler: MaintenanceReminderScheduler,
     private val cloudSyncManager: CloudSyncManager,
     private val premiumManager: com.cargenome.app.domain.premium.PremiumManager,
+    private val appUpdateManager: com.cargenome.app.domain.update.AppUpdateManager,
 ) : ViewModel() {
 
     val settings: StateFlow<AppSettings> = settingsRepo.settings.stateIn(
@@ -47,6 +48,20 @@ class SettingsViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = AppSettings(),
     )
+
+    private val _isCheckingUpdate = MutableStateFlow(false)
+    val isCheckingUpdate: StateFlow<Boolean> = _isCheckingUpdate.asStateFlow()
+
+    private val _availableUpdate = MutableStateFlow<com.cargenome.app.domain.update.AppUpdateInfo?>(null)
+    val availableUpdate: StateFlow<com.cargenome.app.domain.update.AppUpdateInfo?> = _availableUpdate.asStateFlow()
+
+    private val _updateDownloadState = MutableStateFlow<com.cargenome.app.domain.update.UpdateDownloadState>(
+        com.cargenome.app.domain.update.UpdateDownloadState.Idle,
+    )
+    val updateDownloadState: StateFlow<com.cargenome.app.domain.update.UpdateDownloadState> = _updateDownloadState.asStateFlow()
+
+    private val _updateStatusMessage = MutableStateFlow<String?>(null)
+    val updateStatusMessage: StateFlow<String?> = _updateStatusMessage.asStateFlow()
 
     private val _isSyncing = MutableStateFlow(false)
     val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
@@ -263,6 +278,57 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setAutoCheckUpdates(enabled: Boolean) {
+        viewModelScope.launch { settingsRepo.setAutoCheckUpdates(enabled) }
+    }
+
+    fun checkForUpdates(isManual: Boolean = true) {
+        viewModelScope.launch {
+            _isCheckingUpdate.value = true
+            _updateStatusMessage.value = null
+            appUpdateManager.checkForUpdate().onSuccess { info ->
+                settingsRepo.setLastUpdateCheckTimestamp(System.currentTimeMillis())
+                if (info != null) {
+                    _availableUpdate.value = info
+                    _updateStatusMessage.value = null
+                } else {
+                    _availableUpdate.value = null
+                    if (isManual) {
+                        _event.value = SettingsEvent.Success(R.string.settings_updates_up_to_date)
+                    }
+                }
+            }.onFailure { err ->
+                if (isManual) {
+                    _event.value = SettingsEvent.Error(R.string.update_download_failed, err.localizedMessage ?: "")
+                }
+            }
+            _isCheckingUpdate.value = false
+        }
+    }
+
+    fun startUpdateDownload(info: com.cargenome.app.domain.update.AppUpdateInfo) {
+        viewModelScope.launch {
+            appUpdateManager.downloadApk(info).collect { state ->
+                _updateDownloadState.value = state
+            }
+        }
+    }
+
+    fun dismissUpdateDialog() {
+        _availableUpdate.value = null
+        _updateDownloadState.value = com.cargenome.app.domain.update.UpdateDownloadState.Idle
+    }
+
+    fun canInstallPackages(): Boolean = appUpdateManager.canInstallPackages()
+
+    fun openInstallPermissionSettings(context: android.content.Context) {
+        appUpdateManager.openInstallPermissionSettings(context)
+    }
+
+    fun installApk(context: android.content.Context, apkFile: java.io.File) {
+        appUpdateManager.installApk(context, apkFile)
     }
 }
 

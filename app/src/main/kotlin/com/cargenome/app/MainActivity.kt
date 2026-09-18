@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cargenome.app.data.settings.AppSettings
@@ -28,6 +30,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var reminderScheduler: MaintenanceReminderScheduler
+
+    @Inject
+    lateinit var appUpdateManager: com.cargenome.app.domain.update.AppUpdateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -64,12 +69,56 @@ class MainActivity : ComponentActivity() {
                 ThemeMode.Dark -> true
             }
 
+            var startupUpdateInfo by androidx.compose.runtime.remember {
+                androidx.compose.runtime.mutableStateOf<com.cargenome.app.domain.update.AppUpdateInfo?>(null)
+            }
+            var startupDownloadState by androidx.compose.runtime.remember {
+                androidx.compose.runtime.mutableStateOf<com.cargenome.app.domain.update.UpdateDownloadState>(
+                    com.cargenome.app.domain.update.UpdateDownloadState.Idle,
+                )
+            }
+            val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
+
+            androidx.compose.runtime.LaunchedEffect(settings.autoCheckUpdates) {
+                if (settings.autoCheckUpdates) {
+                    val result = appUpdateManager.checkForUpdate()
+                    result.getOrNull()?.let { info ->
+                        startupUpdateInfo = info
+                    }
+                }
+            }
+
             CarGenomeTheme(
                 darkTheme = darkTheme,
                 dynamicColor = settings.dynamicColor,
                 amoled = settings.amoledDark,
             ) {
                 CarGenomeApp(settingsRepository = settingsRepository)
+
+                startupUpdateInfo?.let { updateInfo ->
+                    com.cargenome.app.ui.update.AppUpdateDialog(
+                        updateInfo = updateInfo,
+                        downloadState = startupDownloadState,
+                        canInstallPackages = appUpdateManager.canInstallPackages(),
+                        onStartDownload = {
+                            coroutineScope.launch {
+                                appUpdateManager.downloadApk(updateInfo).collect {
+                                    startupDownloadState = it
+                                }
+                            }
+                        },
+                        onInstall = { apkFile ->
+                            appUpdateManager.installApk(this@MainActivity, apkFile)
+                        },
+                        onOpenInstallSettings = {
+                            appUpdateManager.openInstallPermissionSettings(this@MainActivity)
+                        },
+                        onDismiss = {
+                            startupUpdateInfo = null
+                            startupDownloadState = com.cargenome.app.domain.update.UpdateDownloadState.Idle
+                        },
+                    )
+                }
             }
         }
     }

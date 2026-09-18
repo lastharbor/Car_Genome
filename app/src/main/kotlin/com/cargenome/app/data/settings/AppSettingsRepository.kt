@@ -40,6 +40,8 @@ data class AppSettings(
     val lastSyncTimestamp: Long? = null,
     val autoSyncEnabled: Boolean = false,
     val isPremiumPurchased: Boolean = false,
+    val autoCheckUpdates: Boolean = true,
+    val lastUpdateCheckTimestamp: Long? = null,
 ) {
     val isPremiumActive: Boolean
         get() {
@@ -72,6 +74,8 @@ class AppSettingsRepository @Inject constructor(
         val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
         val AUTO_SYNC_ENABLED = booleanPreferencesKey("auto_sync_enabled")
         val IS_PREMIUM_PURCHASED = booleanPreferencesKey("is_premium_purchased")
+        val AUTO_CHECK_UPDATES = booleanPreferencesKey("auto_check_updates")
+        val LAST_UPDATE_CHECK_TIMESTAMP = longPreferencesKey("last_update_check_timestamp")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { preferences ->
@@ -98,6 +102,8 @@ class AppSettingsRepository @Inject constructor(
         val lastSyncTimestamp = preferences[Keys.LAST_SYNC_TIMESTAMP]
         val autoSyncEnabled = preferences[Keys.AUTO_SYNC_ENABLED] ?: false
         val isPurchased = preferences[Keys.IS_PREMIUM_PURCHASED] ?: false
+        val autoCheckUpdates = preferences[Keys.AUTO_CHECK_UPDATES] ?: true
+        val lastUpdateCheck = preferences[Keys.LAST_UPDATE_CHECK_TIMESTAMP]
 
         AppSettings(
             themeMode = themeMode,
@@ -116,6 +122,8 @@ class AppSettingsRepository @Inject constructor(
             lastSyncTimestamp = lastSyncTimestamp,
             autoSyncEnabled = autoSyncEnabled,
             isPremiumPurchased = isPurchased,
+            autoCheckUpdates = autoCheckUpdates,
+            lastUpdateCheckTimestamp = lastUpdateCheck,
         )
     }
 
@@ -188,6 +196,20 @@ class AppSettingsRepository @Inject constructor(
 
     suspend fun setPremiumPurchased(purchased: Boolean) {
         context.dataStore.edit { it[Keys.IS_PREMIUM_PURCHASED] = purchased }
+    }
+
+    suspend fun setAutoCheckUpdates(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.AUTO_CHECK_UPDATES] = enabled }
+    }
+
+    suspend fun setLastUpdateCheckTimestamp(timestamp: Long?) {
+        context.dataStore.edit { prefs ->
+            if (timestamp != null) {
+                prefs[Keys.LAST_UPDATE_CHECK_TIMESTAMP] = timestamp
+            } else {
+                prefs.remove(Keys.LAST_UPDATE_CHECK_TIMESTAMP)
+            }
+        }
     }
 }
 

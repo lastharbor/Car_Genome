@@ -32,6 +32,9 @@ android {
         testInstrumentationRunner = "com.cargenome.app.CarGenomeTestRunner"
 
         buildConfigField("boolean", "IS_PREMIUM", "false")
+        buildConfigField("String", "GITHUB_REPO_OWNER", "\"lastharbor\"")
+        buildConfigField("String", "GITHUB_REPO_NAME", "\"Car_Genome\"")
+        buildConfigField("String", "GITHUB_UPDATE_TOKEN", "\"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\"")
     }
 
     androidResources {
@@ -70,8 +73,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            if (hasReleaseKeystore) {
-                signingConfig = signingConfigs.getByName("release")
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
             }
         }
     }
