@@ -12,6 +12,7 @@ import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 
 /** A car plus the few running totals the garage list shows next to it. */
+@androidx.compose.runtime.Immutable
 data class VehicleSummary(
     @Embedded val vehicle: VehicleEntity,
     val currentOdometerKm: Double?,

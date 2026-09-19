@@ -127,21 +127,20 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        reminderScheduler.runImmediately()
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            enableHighRefreshRate()
+        lifecycleScope.launch(Dispatchers.IO) {
+            reminderScheduler.schedulePeriodicCheck()
         }
     }
 
     private fun enableHighRefreshRate() {
+        // On Google Pixel devices, the OS manages LTPO adaptive refresh rate (Smooth Display) natively.
+        // Forcing preferredDisplayModeId or window attributes on Pixel causes the display HAL to desync with
+        // Choreographer, producing touch latency and micro-stutters.
+        if (Build.MANUFACTURER.equals("Google", ignoreCase = true)) {
+            return
+        }
+
         val currentDisplay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display
         } else {
