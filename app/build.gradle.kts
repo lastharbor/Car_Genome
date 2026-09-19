@@ -39,8 +39,8 @@ android {
         applicationId = "com.cargenome.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 6
-        versionName = "1.1.4"
+        versionCode = 7
+        versionName = "1.1.5"
 
         testInstrumentationRunner = "com.cargenome.app.CarGenomeTestRunner"
 

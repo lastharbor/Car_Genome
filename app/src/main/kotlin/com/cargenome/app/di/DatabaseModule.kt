@@ -40,9 +40,12 @@ object DatabaseModule {
 
     private fun checkAndPerformRestore(context: Context) {
         try {
-            val restoreDir = File(context.getExternalFilesDir(null), "restore")
+            val candidateDirs = listOfNotNull(
+                File(context.getExternalFilesDir(null), "restore"),
+                File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "CarGenome_Restore"),
+            )
+            val restoreDir = candidateDirs.firstOrNull { File(it, "cargenome.db").exists() } ?: return
             val restoreDb = File(restoreDir, "cargenome.db")
-            if (!restoreDb.exists()) return
 
             val targetDb = context.getDatabasePath(CarGenomeDatabase.NAME)
             val parentDir = targetDb.parentFile

@@ -140,7 +140,7 @@ fun SettingsScreen(
     val appContext = context.applicationContext
 
     var showClearDialog by remember { mutableStateOf(false) }
-    var showPromoDialog by remember { mutableStateOf(openPremiumOnLaunch) }
+    var showPromoDialog by remember { mutableStateOf(false) }
     var promoCodeInput by remember { mutableStateOf("") }
     var showPremiumBackupDialog by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
