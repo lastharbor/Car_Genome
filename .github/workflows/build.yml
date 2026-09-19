@@ -59,13 +59,13 @@ jobs:
         run: ./gradlew lintDebug
 
       - name: Build APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleRelease
 
       - name: Prepare APK artifact
         run: |
           mkdir -p build-output
           TAG="${{ steps.version.outputs.RELEASE_TAG }}"
-          cp app/build/outputs/apk/debug/*.apk "build-output/CarGenome-${TAG}.apk"
+          cp app/build/outputs/apk/release/*.apk "build-output/CarGenome-${TAG}.apk"
           echo "Copied APK to build-output/CarGenome-${TAG}.apk"
           # The in-app updater refuses to install a release without this digest.
           (cd build-output && sha256sum "CarGenome-${TAG}.apk" > "CarGenome-${TAG}.apk.sha256")

@@ -3,7 +3,9 @@ package com.cargenome.app.ui.analytics
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -349,32 +351,37 @@ private fun CategorySpendCard(
                         .fillMaxSize()
                         .padding(8.dp)
                         .pointerInput(categories) {
-                            detectTapGestures { offset ->
-                                val defaultStroke = 24.dp.toPx()
-                                val minDim = kotlin.math.min(size.width, size.height).toFloat()
-                                val radius = (minDim - defaultStroke - 8.dp.toPx()) / 2f
-                                val center = Offset(size.width / 2f, size.height / 2f)
-                                val dx = offset.x - center.x
-                                val dy = offset.y - center.y
-                                val dist = hypot(dx, dy)
+                            awaitEachGesture {
+                                awaitFirstDown(requireUnconsumed = false)
+                                val up = waitForUpOrCancellation()
+                                if (up != null) {
+                                    val offset = up.position
+                                    val defaultStroke = 24.dp.toPx()
+                                    val minDim = kotlin.math.min(size.width, size.height).toFloat()
+                                    val radius = (minDim - defaultStroke - 8.dp.toPx()) / 2f
+                                    val center = Offset(size.width / 2f, size.height / 2f)
+                                    val dx = offset.x - center.x
+                                    val dy = offset.y - center.y
+                                    val dist = hypot(dx, dy)
 
-                                if (dist in (radius - defaultStroke)..(radius + defaultStroke)) {
-                                    var angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat() + 90f
-                                    if (angle < 0f) angle += 360f
-                                    var currentAngle = 0f
-                                    var tappedKey: String? = null
-                                    for (cat in categories) {
-                                        val sweep = cat.percentage * 3.6f
-                                        if (angle >= currentAngle && angle <= currentAngle + sweep) {
-                                            tappedKey = cat.key
-                                            break
+                                    if (dist in (radius - defaultStroke)..(radius + defaultStroke)) {
+                                        var angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat() + 90f
+                                        if (angle < 0f) angle += 360f
+                                        var currentAngle = 0f
+                                        var tappedKey: String? = null
+                                        for (cat in categories) {
+                                            val sweep = cat.percentage * 3.6f
+                                            if (angle >= currentAngle && angle <= currentAngle + sweep) {
+                                                tappedKey = cat.key
+                                                break
+                                            }
+                                            currentAngle += sweep
                                         }
-                                        currentAngle += sweep
+                                        selectedCategoryKey = if (selectedCategoryKey == tappedKey) null else tappedKey
+                                    } else if (dist < radius - defaultStroke) {
+                                        // Tap center to reset
+                                        selectedCategoryKey = null
                                     }
-                                    selectedCategoryKey = if (selectedCategoryKey == tappedKey) null else tappedKey
-                                } else if (dist < radius - defaultStroke) {
-                                    // Tap center to reset
-                                    selectedCategoryKey = null
                                 }
                             }
                         },
@@ -537,100 +544,123 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
     val highlightColor = MaterialTheme.colorScheme.tertiary
     val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val textMeasurer = rememberTextMeasurer()
-    val textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, color = textColor)
     val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(6f, 6f)) }
-    val tickLayouts = remember(maxSpend, vehicle.currencyCode, locale, textMeasurer, textStyle) {
-        listOf(
-            textMeasurer.measure(Format.money(maxSpend, vehicle.currencyCode, locale), textStyle),
-            textMeasurer.measure(Format.money(maxSpend / 2L, vehicle.currencyCode, locale), textStyle),
-            textMeasurer.measure(Format.money(0L, vehicle.currencyCode, locale), textStyle),
-        )
-    }
+    val maxLabel = remember(maxSpend, vehicle.currencyCode, locale) { Format.money(maxSpend, vehicle.currencyCode, locale) }
+    val midLabel = remember(maxSpend, vehicle.currencyCode, locale) { Format.money(maxSpend / 2L, vehicle.currencyCode, locale) }
+    val zeroLabel = remember(vehicle.currencyCode, locale) { Format.money(0L, vehicle.currencyCode, locale) }
 
     SectionCard(stringResource(R.string.analytics_monthly_spend)) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Canvas(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .padding(top = 12.dp, bottom = 4.dp)
-                    .pointerInput(monthlySpends) {
-                        detectTapGestures { offset ->
-                            val yAxisWidth = 60.dp.toPx()
-                            val chartWidth = size.width - yAxisWidth
-                            val barCount = monthlySpends.size
-                            val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
-                            val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
-
-                            var hitIdx: Int? = null
-                            monthlySpends.forEachIndexed { idx, _ ->
-                                val x = yAxisWidth + spacing + idx * (barWidth + spacing)
-                                if (offset.x in (x - spacing / 2f)..(x + barWidth + spacing / 2f)) {
-                                    hitIdx = idx
-                                }
-                            }
-                            selectedMonthIndex = if (selectedMonthIndex == hitIdx) null else hitIdx
-                        }
-                    },
+                    .padding(top = 12.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                val yAxisWidth = 60.dp.toPx()
-                val chartWidth = size.width - yAxisWidth
-                val chartHeight = size.height - 12.dp.toPx()
-
-                // Y-axis ticks (top, mid, bottom)
-                val yPositions = floatArrayOf(0f, chartHeight / 2f, chartHeight)
-                tickLayouts.forEachIndexed { i, measured ->
-                    val y = yPositions[i]
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(yAxisWidth, y),
-                        end = Offset(size.width, y),
-                        strokeWidth = 1.dp.toPx(),
-                        pathEffect = dashEffect,
+                Column(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    Text(
+                        text = maxLabel,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                        color = textColor,
+                        maxLines = 1,
                     )
-                    drawText(
-                        textLayoutResult = measured,
-                        topLeft = Offset(
-                            (yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f),
-                            (y - measured.size.height / 2f).coerceAtLeast(0f),
-                        ),
+                    Text(
+                        text = midLabel,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                        color = textColor,
+                        maxLines = 1,
+                    )
+                    Text(
+                        text = zeroLabel,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                        color = textColor,
+                        maxLines = 1,
                     )
                 }
+                Spacer(Modifier.width(6.dp))
+                Canvas(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .pointerInput(monthlySpends) {
+                            awaitEachGesture {
+                                awaitFirstDown(requireUnconsumed = false)
+                                val up = waitForUpOrCancellation()
+                                if (up != null) {
+                                    val offset = up.position
+                                    val chartWidth = size.width.toFloat()
+                                    val barCount = monthlySpends.size
+                                    val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
+                                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
 
-                val barCount = monthlySpends.size
-                val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
-                val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
-                val barCornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
-                val dotRadius = 3.dp.toPx()
-                val dotOffset = 5.dp.toPx()
+                                    var hitIdx: Int? = null
+                                    monthlySpends.forEachIndexed { idx, _ ->
+                                        val x = spacing + idx * (barWidth + spacing)
+                                        if (offset.x in (x - spacing / 2f)..(x + barWidth + spacing / 2f)) {
+                                            hitIdx = idx
+                                        }
+                                    }
+                                    selectedMonthIndex = if (selectedMonthIndex == hitIdx) null else hitIdx
+                                }
+                            }
+                        },
+                ) {
+                    val chartWidth = size.width
+                    val chartHeight = size.height - 12.dp.toPx()
 
-                monthlySpends.forEachIndexed { index, item ->
-                    val x = yAxisWidth + spacing + index * (barWidth + spacing)
-                    val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
-                    val y = chartHeight - barHeight
-                    val isSelected = selectedMonthIndex == index
-                    val hasSelection = selectedMonthIndex != null
-
-                    val fill = when {
-                        isSelected -> highlightColor
-                        hasSelection -> barColorDimmed
-                        else -> barColor
+                    // Y-axis ticks
+                    val yPositions = floatArrayOf(0f, chartHeight / 2f, chartHeight)
+                    for (y in yPositions) {
+                        drawLine(
+                            color = gridColor,
+                            start = Offset(0f, y),
+                            end = Offset(chartWidth, y),
+                            strokeWidth = 1.dp.toPx(),
+                            pathEffect = dashEffect,
+                        )
                     }
 
-                    if (barHeight > 0f) {
-                        drawRoundRect(
-                            color = fill,
-                            topLeft = Offset(x, y),
-                            size = Size(barWidth, barHeight),
-                            cornerRadius = barCornerRadius,
-                        )
-                        if (isSelected) {
-                            drawCircle(
-                                color = highlightColor,
-                                radius = dotRadius,
-                                center = Offset(x + barWidth / 2f, (y - dotOffset).coerceAtLeast(dotRadius)),
+                    val barCount = monthlySpends.size
+                    val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
+                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
+                    val barCornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
+                    val dotRadius = 3.dp.toPx()
+                    val dotOffset = 5.dp.toPx()
+
+                    monthlySpends.forEachIndexed { index, item ->
+                        val x = spacing + index * (barWidth + spacing)
+                        val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
+                        val y = chartHeight - barHeight
+                        val isSelected = selectedMonthIndex == index
+                        val hasSelection = selectedMonthIndex != null
+
+                        val fill = when {
+                            isSelected -> highlightColor
+                            hasSelection -> barColorDimmed
+                            else -> barColor
+                        }
+
+                        if (barHeight > 0f) {
+                            drawRoundRect(
+                                color = fill,
+                                topLeft = Offset(x, y),
+                                size = Size(barWidth, barHeight),
+                                cornerRadius = barCornerRadius,
                             )
+                            if (isSelected) {
+                                drawCircle(
+                                    color = highlightColor,
+                                    radius = dotRadius,
+                                    center = Offset(x + barWidth / 2f, (y - dotOffset).coerceAtLeast(dotRadius)),
+                                )
+                            }
                         }
                     }
                 }
@@ -640,7 +670,7 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 60.dp),
+                    .padding(start = 66.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 val first = monthlySpends.first().yearMonth
@@ -731,8 +761,8 @@ private fun ConsumptionTrendCard(
     val highlightColor = MaterialTheme.colorScheme.tertiary
     val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val textMeasurer = rememberTextMeasurer()
-    val textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, color = textColor)
+    val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(10f, 10f)) }
+    val trendPath = remember { Path() }
 
     SectionCard("${stringResource(R.string.analytics_consumption_trend)} (${stringResource(unit.shortRes())})") {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -744,147 +774,156 @@ private fun ConsumptionTrendCard(
                 Triple(min, max, (max - min).coerceAtLeast(0.5))
             }
             val midVal = (minVal + maxVal) / 2.0
-            val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(10f, 10f)) }
-            val trendPath = remember { Path() }
-            val tickLayouts = remember(minVal, midVal, maxVal, locale, textMeasurer, textStyle) {
-                listOf(
-                    textMeasurer.measure(Format.consumption(maxVal, locale), textStyle),
-                    textMeasurer.measure(Format.consumption(midVal, locale), textStyle),
-                    textMeasurer.measure(Format.consumption(minVal, locale), textStyle),
-                )
-            }
+            val maxLabel = remember(maxVal, locale) { Format.consumption(maxVal, locale) }
+            val midLabel = remember(midVal, locale) { Format.consumption(midVal, locale) }
+            val minLabel = remember(minVal, locale) { Format.consumption(minVal, locale) }
 
-            Canvas(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .padding(8.dp)
-                    .pointerInput(history) {
-                        detectTapGestures { offset ->
-                            val yAxisWidth = 44.dp.toPx()
-                            val pad = 12f
-                            val chartW = size.width - yAxisWidth - pad * 2
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    modifier = Modifier
+                        .width(44.dp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    Text(maxLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                    Text(midLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                    Text(minLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                }
+                Spacer(Modifier.width(6.dp))
+                Canvas(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .pointerInput(history) {
+                            awaitEachGesture {
+                                awaitFirstDown(requireUnconsumed = false)
+                                val up = waitForUpOrCancellation()
+                                if (up != null) {
+                                    val offset = up.position
+                                    val pad = 12f
+                                    val chartW = size.width - pad * 2
 
-                            var bestIdx: Int? = null
-                            var bestDist = Float.MAX_VALUE
-                            history.forEachIndexed { i, _ ->
-                                val x = if (history.size <= 1) {
-                                    yAxisWidth + pad + chartW / 2f
-                                } else {
-                                    yAxisWidth + pad + (i.toFloat() / (history.size - 1) * chartW)
-                                }
-                                val d = kotlin.math.abs(offset.x - x)
-                                if (d < bestDist && d < 36.dp.toPx()) {
-                                    bestDist = d
-                                    bestIdx = i
+                                    var bestIdx: Int? = null
+                                    var bestDist = Float.MAX_VALUE
+                                    history.forEachIndexed { i, _ ->
+                                        val x = if (history.size <= 1) {
+                                            pad + chartW / 2f
+                                        } else {
+                                            pad + (i.toFloat() / (history.size - 1) * chartW)
+                                        }
+                                        val d = kotlin.math.abs(offset.x - x)
+                                        if (d < bestDist && d < 36.dp.toPx()) {
+                                            bestDist = d
+                                            bestIdx = i
+                                        }
+                                    }
+                                    selectedPointIndex = if (selectedPointIndex == bestIdx) null else bestIdx
                                 }
                             }
-                            selectedPointIndex = if (selectedPointIndex == bestIdx) null else bestIdx
+                        },
+                ) {
+                    val pad = 12f
+                    val chartW = size.width - pad * 2
+                    val chartH = size.height - pad * 2
+
+                    // Grid lines
+                    val yPositions = floatArrayOf(pad, pad + chartH / 2f, pad + chartH)
+                    for (y in yPositions) {
+                        drawLine(
+                            color = gridColor,
+                            start = Offset(0f, y),
+                            end = Offset(size.width, y),
+                            strokeWidth = 1.dp.toPx(),
+                            pathEffect = dashEffect,
+                        )
+                    }
+
+                    val n = history.size
+                    var selX = 0f
+                    var selY = 0f
+                    val hasSel = selectedPointIndex != null && selectedPointIndex in history.indices
+
+                    trendPath.rewind()
+                    for (i in 0 until n) {
+                        val ptVal = history[i].consumptionValue
+                        val px = if (n <= 1) {
+                            pad + chartW / 2f
+                        } else {
+                            pad + (i.toFloat() / (n - 1) * chartW)
                         }
-                    },
-            ) {
-                val yAxisWidth = 44.dp.toPx()
-                val pad = 12f
-                val chartW = size.width - yAxisWidth - pad * 2
-                val chartH = size.height - pad * 2
+                        val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
+                            .coerceIn(pad, pad + chartH)
 
-                val yPositions = floatArrayOf(pad, pad + chartH / 2f, pad + chartH)
-                tickLayouts.forEachIndexed { i, measured ->
-                    val y = yPositions[i]
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(yAxisWidth, y),
-                        end = Offset(size.width, y),
-                        strokeWidth = 1.dp.toPx(),
-                        pathEffect = dashEffect,
-                    )
-                    drawText(
-                        textLayoutResult = measured,
-                        topLeft = Offset(
-                            (yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f),
-                            (y - measured.size.height / 2f).coerceAtLeast(0f),
-                        ),
-                    )
-                }
+                        if (i == 0) {
+                            trendPath.moveTo(px, py)
+                        } else {
+                            trendPath.lineTo(px, py)
+                        }
 
-                val n = history.size
-                var selX = 0f
-                var selY = 0f
-                val hasSel = selectedPointIndex != null && selectedPointIndex in history.indices
-
-                trendPath.rewind()
-                for (i in 0 until n) {
-                    val ptVal = history[i].consumptionValue
-                    val px = if (n <= 1) {
-                        yAxisWidth + pad + chartW / 2f
-                    } else {
-                        yAxisWidth + pad + (i.toFloat() / (n - 1) * chartW)
-                    }
-                    val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
-                        .coerceIn(pad, pad + chartH)
-
-                    if (i == 0) {
-                        trendPath.moveTo(px, py)
-                    } else {
-                        trendPath.lineTo(px, py)
+                        if (selectedPointIndex == i) {
+                            selX = px
+                            selY = py
+                        }
                     }
 
-                    if (selectedPointIndex == i) {
-                        selX = px
-                        selY = py
+                    // Average guideline
+                    if (average != null) {
+                        val avgY = (pad + chartH - ((average - minVal) / range * chartH).toFloat())
+                            .coerceIn(pad, pad + chartH)
+                        drawLine(
+                            color = avgLineColor.copy(alpha = 0.6f),
+                            start = Offset(pad, avgY),
+                            end = Offset(pad + chartW, avgY),
+                            strokeWidth = 2.dp.toPx(),
+                            pathEffect = dashEffect,
+                        )
                     }
-                }
 
-                // Average guideline
-                if (average != null) {
-                    val avgY = (pad + chartH - ((average - minVal) / range * chartH).toFloat())
-                        .coerceIn(pad, pad + chartH)
-                    drawLine(
-                        color = avgLineColor.copy(alpha = 0.6f),
-                        start = Offset(yAxisWidth + pad, avgY),
-                        end = Offset(yAxisWidth + pad + chartW, avgY),
-                        strokeWidth = 2.dp.toPx(),
-                        pathEffect = dashEffect,
-                    )
-                }
-
-                // Line connecting points
-                if (n >= 2) {
-                    drawPath(trendPath, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
-                }
-
-                // Selected point vertical indicator line
-                if (hasSel) {
-                    drawLine(
-                        color = highlightColor.copy(alpha = 0.7f),
-                        start = Offset(selX, pad),
-                        end = Offset(selX, pad + chartH),
-                        strokeWidth = 1.5.dp.toPx(),
-                        pathEffect = dashEffect,
-                    )
-                }
-
-                val selHaloRadius = 10.dp.toPx()
-                val selPointRadius = 5.dp.toPx()
-                val normalPointRadius = 4.dp.toPx()
-                val selHaloColor = highlightColor.copy(alpha = 0.25f)
-
-                for (i in 0 until n) {
-                    val ptVal = history[i].consumptionValue
-                    val px = if (n <= 1) {
-                        yAxisWidth + pad + chartW / 2f
-                    } else {
-                        yAxisWidth + pad + (i.toFloat() / (n - 1) * chartW)
+                    // Line connecting points
+                    if (n >= 2) {
+                        drawPath(trendPath, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
                     }
-                    val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
-                        .coerceIn(pad, pad + chartH)
-                    val ptOffset = Offset(px, py)
 
-                    if (selectedPointIndex == i) {
-                        drawCircle(selHaloColor, radius = selHaloRadius, center = ptOffset)
-                        drawCircle(highlightColor, radius = selPointRadius, center = ptOffset)
-                    } else {
-                        drawCircle(lineColor, radius = normalPointRadius, center = ptOffset)
+                    // Selected point vertical indicator line
+                    if (hasSel) {
+                        drawLine(
+                            color = highlightColor.copy(alpha = 0.7f),
+                            start = Offset(selX, pad),
+                            end = Offset(selX, pad + chartH),
+                            strokeWidth = 1.5.dp.toPx(),
+                            pathEffect = dashEffect,
+                        )
+                    }
+
+                    val selHaloRadius = 10.dp.toPx()
+                    val selPointRadius = 5.dp.toPx()
+                    val normalPointRadius = 4.dp.toPx()
+                    val selHaloColor = highlightColor.copy(alpha = 0.25f)
+
+                    for (i in 0 until n) {
+                        val ptVal = history[i].consumptionValue
+                        val px = if (n <= 1) {
+                            pad + chartW / 2f
+                        } else {
+                            pad + (i.toFloat() / (n - 1) * chartW)
+                        }
+                        val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
+                            .coerceIn(pad, pad + chartH)
+                        val ptOffset = Offset(px, py)
+
+                        if (selectedPointIndex == i) {
+                            drawCircle(selHaloColor, radius = selHaloRadius, center = ptOffset)
+                            drawCircle(highlightColor, radius = selPointRadius, center = ptOffset)
+                        } else {
+                            drawCircle(lineColor, radius = normalPointRadius, center = ptOffset)
+                        }
                     }
                 }
             }
@@ -895,7 +934,7 @@ private fun ConsumptionTrendCard(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 44.dp),
+                        .padding(start = 50.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
