@@ -61,7 +61,13 @@ class AppUpdateManager @Inject constructor(
             val response = okHttpClient.newCall(requestBuilder.build()).execute()
             android.util.Log.d("AppUpdateManager", "Response code: ${response.code}")
             if (!response.isSuccessful) {
-                return@runCatching null
+                val errorMsg = when (response.code) {
+                    404 -> "Репозиторий не найден или является приватным (HTTP 404)"
+                    401, 403 -> "Доступ к GitHub API ограничен или требует авторизации (HTTP ${response.code})"
+                    else -> "Ошибка запроса к GitHub API: HTTP ${response.code}"
+                }
+                android.util.Log.e("AppUpdateManager", errorMsg)
+                throw java.io.IOException(errorMsg)
             }
 
             val bodyString = response.body.string()
