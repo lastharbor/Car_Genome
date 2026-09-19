@@ -178,6 +178,10 @@
     <string name="analytics_diff_more">+%1$s выше среднего</string>
     <string name="analytics_diff_less">-%1$s экономичнее среднего</string>
     <string name="analytics_selected_slice">Выбрано</string>
+    <string name="analytics_best_consumption">Лучший: %1$s</string>
+    <string name="analytics_worst_consumption">Худший: %1$s</string>
+    <string name="analytics_trend_need_records">Для графика расхода нужно минимум 2 полные заправки</string>
+    <string name="analytics_reset_selection">Сбросить</string>
 
     <string name="expense_title">Прочие расходы</string>
     <string name="expense_add">Добавить расход</string>

@@ -36,3 +36,7 @@ scripts/keys/
 # Local internal documentation (kept on local machine)
 WIKI.md
 docs/
+*.tar
+databases/
+files/
+scripts/check_build.py

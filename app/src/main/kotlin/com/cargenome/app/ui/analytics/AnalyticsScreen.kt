@@ -1,5 +1,7 @@
 package com.cargenome.app.ui.analytics
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,11 +34,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.LocalGasStation
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +52,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,21 +62,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -86,10 +95,8 @@ import com.cargenome.app.domain.analytics.VehicleAnalyticsData
 import com.cargenome.app.domain.model.ConsumptionUnit
 import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.domain.model.VolumeUnit
-import com.cargenome.app.ui.common.DetailRow
 import com.cargenome.app.ui.common.EmptyVehiclesTabCard
 import com.cargenome.app.ui.common.Format
-import com.cargenome.app.ui.common.SectionCard
 import com.cargenome.app.ui.common.displayName
 import com.cargenome.app.ui.common.shortRes
 import com.cargenome.app.ui.common.suffixRes
@@ -99,18 +106,22 @@ import kotlin.math.atan2
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 
-private val CategoryColors = listOf(
-    Color(0xFF2196F3), // Blue
-    Color(0xFF4CAF50), // Green
-    Color(0xFFFF9800), // Orange
-    Color(0xFFE91E63), // Pink
-    Color(0xFF9C27B0), // Purple
-    Color(0xFF00BCD4), // Cyan
-    Color(0xFFFF5722), // Deep Orange
-    Color(0xFF607D8B), // Blue Grey
-    Color(0xFF795548), // Brown
-    Color(0xFFFFEB3B), // Yellow
-)
+// Curated harmonic palette for vehicle spending categories
+private fun categoryColor(key: String): Color = when (key.lowercase()) {
+    "fuel" -> Color(0xFFFF7043)        // Deep Coral / Orange
+    "service" -> Color(0xFF3F51B5)     // Indigo
+    "insurance" -> Color(0xFF00897B)   // Teal
+    "wash" -> Color(0xFF0288D1)        // Blue
+    "parking" -> Color(0xFFFFA000)     // Amber
+    "tyres" -> Color(0xFF8E24AA)       // Purple
+    "tax" -> Color(0xFFE53935)         // Crimson Red
+    "toll" -> Color(0xFF43A047)        // Emerald Green
+    "accessories" -> Color(0xFF6D4C41) // Warm Bronze
+    "credit" -> Color(0xFF00ACC1)      // Cyan
+    "fine" -> Color(0xFFFF5722)        // Orange Red
+    "registration" -> Color(0xFF5C6BC0)// Slate Indigo
+    else -> Color(0xFF607D8B)          // Blue Grey
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -130,7 +141,7 @@ fun AnalyticsScreen(
                     Column {
                         Text(
                             text = stringResource(R.string.analytics_title),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         )
                         state.vehicle?.displayName()?.let { name ->
                             Text(
@@ -173,7 +184,7 @@ fun AnalyticsScreen(
                     top = padding.calculateTopPadding() + 8.dp,
                     bottom = padding.calculateBottomPadding() + 96.dp,
                 ),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 if (vehicle == null) {
                     if (!state.isLoading) {
@@ -192,18 +203,24 @@ fun AnalyticsScreen(
                 if (data.totalSpendMinor == 0L && data.trackedDistanceKm == 0.0) {
                     if (!state.isLoading) item(key = "empty", contentType = "empty") { EmptyAnalyticsCard() }
                 } else {
-                    item(key = "cost_overview", contentType = "cost_overview") { CostOverviewCard(data, vehicle) }
+                    item(key = "cost_overview", contentType = "cost_overview") {
+                        CostOverviewCard(data, vehicle)
+                    }
 
                     if (data.categorySpends.isNotEmpty()) {
-                        item(key = "category_spends", contentType = "category_spends") { CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount) }
+                        item(key = "category_spends", contentType = "category_spends") {
+                            CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount)
+                        }
                     }
 
                     if (data.monthlySpends.isNotEmpty()) {
-                        item(key = "monthly_spends", contentType = "monthly_spends") { MonthlySpendCard(data.monthlySpends, vehicle) }
+                        item(key = "monthly_spends", contentType = "monthly_spends") {
+                            MonthlySpendCard(data.monthlySpends, vehicle)
+                        }
                     }
 
-                    if (data.consumptionHistory.size >= 2) {
-                        item(key = "consumption_trend", contentType = "consumption_trend") { ConsumptionTrendCard(data.consumptionHistory, vehicle, data.averageConsumption) }
+                    item(key = "consumption_trend", contentType = "consumption_trend") {
+                        ConsumptionTrendCard(data.consumptionHistory, vehicle, data.averageConsumption)
                     }
                 }
             }
@@ -217,43 +234,77 @@ private fun TimeRangeSelector(
     onSelectRange: (AnalyticsTimeRange) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    val haptic = LocalHapticFeedback.current
+    Surface(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        tonalElevation = 1.dp,
     ) {
-        AnalyticsTimeRange.entries.forEach { range ->
-            val label = when (range) {
-                AnalyticsTimeRange.ALL_TIME -> stringResource(R.string.analytics_range_all)
-                AnalyticsTimeRange.YEAR_1 -> stringResource(R.string.analytics_range_year)
-                AnalyticsTimeRange.MONTHS_6 -> stringResource(R.string.analytics_range_6m)
-                AnalyticsTimeRange.MONTHS_3 -> stringResource(R.string.analytics_range_3m)
-            }
-            val selected = range == selectedRange
-            FilterChip(
-                selected = selected,
-                onClick = { onSelectRange(range) },
-                label = {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            AnalyticsTimeRange.entries.forEach { range ->
+                val label = when (range) {
+                    AnalyticsTimeRange.ALL_TIME -> stringResource(R.string.analytics_range_all)
+                    AnalyticsTimeRange.YEAR_1 -> stringResource(R.string.analytics_range_year)
+                    AnalyticsTimeRange.MONTHS_6 -> stringResource(R.string.analytics_range_6m)
+                    AnalyticsTimeRange.MONTHS_3 -> stringResource(R.string.analytics_range_3m)
+                }
+                val isSelected = range == selectedRange
+                val backgroundColor by animateColorAsState(
+                    targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                    label = "pill_bg",
+                )
+                val textColor by animateColorAsState(
+                    targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+                    label = "pill_text",
+                )
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(backgroundColor)
+                        .clickable {
+                            if (!isSelected) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onSelectRange(range)
+                            }
+                        }
+                        .padding(vertical = 10.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
                     Text(
                         text = label,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        ),
+                        color = textColor,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
-                },
-                modifier = Modifier.weight(1f),
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
-            )
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun EmptyAnalyticsCard() {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(stringResource(R.string.analytics_empty_title), style = MaterialTheme.typography.titleMedium)
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    ) {
+        Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                stringResource(R.string.analytics_empty_title),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            )
             Text(
                 text = stringResource(R.string.analytics_empty_body),
                 style = MaterialTheme.typography.bodyMedium,
@@ -269,57 +320,207 @@ private fun CostOverviewCard(data: VehicleAnalyticsData, vehicle: VehicleEntity)
     val distSuffix = stringResource(vehicle.distanceUnit.suffixRes())
     val consUnit = vehicle.consumptionUnit()
 
-    SectionCard(stringResource(R.string.analytics_total_cost)) {
-        DetailRow(
-            label = stringResource(R.string.analytics_total_cost),
-            value = Format.money(data.totalSpendMinor, vehicle.currencyCode, locale),
-        )
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            // Hero Total Ownership Cost Banner
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = stringResource(R.string.analytics_total_cost).uppercase(),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        letterSpacing = 1.2.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    text = Format.money(data.totalSpendMinor, vehicle.currencyCode, locale),
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (data.totalEntriesCount > 0) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                        ) {
+                            Text(
+                                text = pluralStringResource(
+                                    R.plurals.analytics_entries_count,
+                                    data.totalEntriesCount,
+                                    data.totalEntriesCount,
+                                ),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                            )
+                        }
+                    }
+                    data.costPerDayMinor?.let { perDay ->
+                        Text(
+                            text = "•   ${Format.money(perDay, vehicle.currencyCode, locale)} / день",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
 
-        data.totalCostPerKmMinor?.let { perKm ->
-            val perDist = (perKm * vehicle.distanceUnit.kilometresPerUnit).toLong()
-            DetailRow(
-                label = stringResource(R.string.analytics_cost_per_km),
-                value = "${Format.money(perDist, vehicle.currencyCode, locale)} / $distSuffix",
-            )
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
+
+            // 2x2 Glanceable Metric Grid
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                // Metric 1: Average Consumption
+                MetricTile(
+                    icon = Icons.Default.LocalGasStation,
+                    iconTint = Color(0xFFFF7043),
+                    iconBg = Color(0xFFFF7043).copy(alpha = 0.12f),
+                    title = stringResource(R.string.fuel_average),
+                    value = data.averageConsumption?.let {
+                        "${Format.consumption(it, locale)} ${stringResource(consUnit.shortRes())}"
+                    } ?: "—",
+                    subtitle = data.bestConsumption?.let {
+                        stringResource(R.string.analytics_best_consumption, Format.consumption(it, locale))
+                    },
+                    modifier = Modifier.weight(1f),
+                )
+
+                // Metric 2: Cost Per Distance
+                val perKmText = data.totalCostPerKmMinor?.let { perKm ->
+                    val perDist = (perKm * vehicle.distanceUnit.kilometresPerUnit).toLong()
+                    "${Format.money(perDist, vehicle.currencyCode, locale)} / $distSuffix"
+                } ?: "—"
+                val fuelPerKmText = data.fuelCostPerKmMinor?.let { perKm ->
+                    val perDist = (perKm * vehicle.distanceUnit.kilometresPerUnit).toLong()
+                    "Топливо: ${Format.money(perDist, vehicle.currencyCode, locale)}"
+                }
+                MetricTile(
+                    icon = Icons.Default.Speed,
+                    iconTint = MaterialTheme.colorScheme.primary,
+                    iconBg = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                    title = stringResource(R.string.analytics_cost_per_km),
+                    value = perKmText,
+                    subtitle = fuelPerKmText,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                // Metric 3: Monthly Average
+                MetricTile(
+                    icon = Icons.Default.CalendarMonth,
+                    iconTint = Color(0xFF00897B),
+                    iconBg = Color(0xFF00897B).copy(alpha = 0.12f),
+                    title = stringResource(R.string.analytics_avg_monthly),
+                    value = if (data.averageMonthlySpendMinor > 0L) {
+                        Format.money(data.averageMonthlySpendMinor, vehicle.currencyCode, locale)
+                    } else "—",
+                    subtitle = if (data.monthlySpends.isNotEmpty()) "${data.monthlySpends.size} мес." else null,
+                    modifier = Modifier.weight(1f),
+                )
+
+                // Metric 4: Tracked Distance
+                MetricTile(
+                    icon = Icons.Default.DirectionsCar,
+                    iconTint = Color(0xFF3F51B5),
+                    iconBg = Color(0xFF3F51B5).copy(alpha = 0.12f),
+                    title = stringResource(R.string.analytics_distance_tracked),
+                    value = if (data.trackedDistanceKm > 0) {
+                        stringResource(
+                            vehicle.distanceUnit.shortRes(),
+                            Format.distance(data.trackedDistanceKm, vehicle.distanceUnit, locale),
+                        )
+                    } else "—",
+                    subtitle = null,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
+    }
+}
 
-        data.fuelCostPerKmMinor?.let { perKm ->
-            val perDist = (perKm * vehicle.distanceUnit.kilometresPerUnit).toLong()
-            DetailRow(
-                label = stringResource(R.string.analytics_fuel_cost_per_km),
-                value = "${Format.money(perDist, vehicle.currencyCode, locale)} / $distSuffix",
-            )
-        }
-
-        if (data.averageMonthlySpendMinor > 0L) {
-            DetailRow(
-                label = stringResource(R.string.analytics_avg_monthly),
-                value = Format.money(data.averageMonthlySpendMinor, vehicle.currencyCode, locale),
-            )
-        }
-
-        data.costPerDayMinor?.let { perDay ->
-            DetailRow(
-                label = stringResource(R.string.analytics_cost_per_day),
-                value = "${Format.money(perDay, vehicle.currencyCode, locale)} / день",
-            )
-        }
-
-        if (data.trackedDistanceKm > 0) {
-            DetailRow(
-                label = stringResource(R.string.analytics_distance_tracked),
-                value = stringResource(
-                    vehicle.distanceUnit.shortRes(),
-                    Format.distance(data.trackedDistanceKm, vehicle.distanceUnit, locale),
+@Composable
+private fun MetricTile(
+    icon: ImageVector,
+    iconTint: Color,
+    iconBg: Color,
+    title: String,
+    value: String,
+    subtitle: String?,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .background(iconBg, RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = iconTint,
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
                 ),
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
-        }
-
-        data.averageConsumption?.let { avg ->
-            DetailRow(
-                label = stringResource(R.string.fuel_average),
-                value = "${Format.consumption(avg, locale)} ${stringResource(consUnit.shortRes())}",
-            )
+            if (subtitle != null) {
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
@@ -332,18 +533,56 @@ private fun CategorySpendCard(
     totalEntriesCount: Int = 0,
 ) {
     val locale = LocalConfiguration.current.locales[0]
+    val haptic = LocalHapticFeedback.current
     var selectedCategoryKey by remember(categories) { mutableStateOf<String?>(null) }
     val selectedCat = remember(categories, selectedCategoryKey) {
         categories.find { it.key == selectedCategoryKey }
     }
 
-    SectionCard(stringResource(R.string.analytics_category_breakdown)) {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            // Interactive Donut chart with centered summary
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.analytics_category_breakdown),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+                if (selectedCategoryKey != null) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                selectedCategoryKey = null
+                            },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.analytics_reset_selection),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        )
+                    }
+                }
+            }
+
+            // Modern Gapped Donut Chart
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(210.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Canvas(
@@ -377,9 +616,10 @@ private fun CategorySpendCard(
                                             }
                                             currentAngle += sweep
                                         }
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                         selectedCategoryKey = if (selectedCategoryKey == tappedKey) null else tappedKey
                                     } else if (dist < radius - defaultStroke) {
-                                        // Tap center to reset
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                         selectedCategoryKey = null
                                     }
                                 }
@@ -390,15 +630,16 @@ private fun CategorySpendCard(
                     val selectedStroke = 30.dp.toPx()
                     val radius = (size.minDimension - selectedStroke - 4.dp.toPx()) / 2f
                     val center = Offset(size.width / 2f, size.height / 2f)
+                    val gapAngle = if (categories.size > 1) 2.5f else 0f
 
                     var startAngle = -90f
-                    categories.forEachIndexed { index, cat ->
-                        val sweepAngle = cat.percentage * 3.6f
+                    categories.forEach { cat ->
+                        val sweepAngle = (cat.percentage * 3.6f - gapAngle).coerceAtLeast(0.5f)
                         val isSelected = selectedCategoryKey == cat.key
                         val hasAnySelection = selectedCategoryKey != null
-                        val rawColor = CategoryColors[index % CategoryColors.size]
+                        val rawColor = categoryColor(cat.key)
                         val color = if (hasAnySelection && !isSelected) {
-                            rawColor.copy(alpha = 0.35f)
+                            rawColor.copy(alpha = 0.28f)
                         } else {
                             rawColor
                         }
@@ -406,44 +647,56 @@ private fun CategorySpendCard(
 
                         drawArc(
                             color = color,
-                            startAngle = startAngle,
+                            startAngle = startAngle + gapAngle / 2f,
                             sweepAngle = sweepAngle,
                             useCenter = false,
                             topLeft = Offset(center.x - radius, center.y - radius),
                             size = Size(radius * 2, radius * 2),
-                            style = Stroke(width = stroke, cap = StrokeCap.Butt),
+                            style = Stroke(width = stroke, cap = StrokeCap.Round),
                         )
-                        startAngle += sweepAngle
+                        startAngle += cat.percentage * 3.6f
                     }
                 }
 
-                // Center information text
+                // Donut Center Hub
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable { selectedCategoryKey = null }
-                        .padding(12.dp),
+                        .clickable {
+                            if (selectedCategoryKey != null) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                selectedCategoryKey = null
+                            }
+                        }
+                        .padding(16.dp),
                 ) {
                     if (selectedCat != null) {
                         Text(
                             text = categoryDisplayName(selectedCat.key),
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = categoryColor(selectedCat.key),
+                            fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
                         Text(
                             text = Format.money(selectedCat.amountMinor, vehicle.currencyCode, locale),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
                         )
-                        Text(
-                            text = "${selectedCat.percentage.roundToInt()}% (${selectedCat.count})",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = categoryColor(selectedCat.key).copy(alpha = 0.15f),
+                            modifier = Modifier.padding(top = 2.dp),
+                        ) {
+                            Text(
+                                text = "${selectedCat.percentage.roundToInt()}% (${selectedCat.count})",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = categoryColor(selectedCat.key),
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            )
+                        }
                     } else {
                         Text(
                             text = stringResource(R.string.analytics_total_cost),
@@ -453,13 +706,12 @@ private fun CategorySpendCard(
                         )
                         Text(
                             text = Format.money(totalSpendMinor, vehicle.currencyCode, locale),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
                         )
                         if (totalEntriesCount > 0) {
                             Text(
                                 text = pluralStringResource(R.plurals.analytics_entries_count, totalEntriesCount, totalEntriesCount),
-                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center,
                             )
@@ -468,64 +720,98 @@ private fun CategorySpendCard(
                 }
             }
 
-            // Category legend (clickable to highlight / inspect)
-            categories.forEachIndexed { index, cat ->
-                val color = CategoryColors[index % CategoryColors.size]
-                val label = categoryDisplayName(cat.key)
-                val money = Format.money(cat.amountMinor, vehicle.currencyCode, locale)
-                val pct = "${cat.percentage.roundToInt()}%"
-                val isSelected = selectedCategoryKey == cat.key
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
 
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable {
-                            selectedCategoryKey = if (selectedCategoryKey == cat.key) null else cat.key
-                        },
-                    color = if (isSelected) {
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-                    } else {
-                        Color.Transparent
-                    },
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Row(
+            // Proportional Interactive Legend List
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                categories.forEach { cat ->
+                    val color = categoryColor(cat.key)
+                    val label = categoryDisplayName(cat.key)
+                    val money = Format.money(cat.amountMinor, vehicle.currencyCode, locale)
+                    val pct = "${cat.percentage.roundToInt()}%"
+                    val isSelected = selectedCategoryKey == cat.key
+
+                    Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                selectedCategoryKey = if (selectedCategoryKey == cat.key) null else cat.key
+                            },
+                        color = if (isSelected) {
+                            MaterialTheme.colorScheme.surfaceVariant
+                        } else {
+                            Color.Transparent
+                        },
+                        shape = RoundedCornerShape(10.dp),
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(if (isSelected) 12.dp else 10.dp)
+                                            .background(color, CircleShape),
+                                    )
+                                    Text(
+                                        text = label,
+                                        style = if (isSelected) {
+                                            MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                                        } else {
+                                            MaterialTheme.typography.bodyMedium
+                                        },
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                    if (cat.count > 0) {
+                                        Text(
+                                            text = "(${cat.count})",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = "$money  •  $pct",
+                                    style = if (isSelected) {
+                                        MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                                    } else {
+                                        MaterialTheme.typography.bodyMedium
+                                    },
+                                    color = if (isSelected) color else MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
+                            // Visual proportion bar
                             Box(
                                 modifier = Modifier
-                                    .size(if (isSelected) 14.dp else 10.dp)
-                                    .background(color, CircleShape),
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = label,
-                                style = if (isSelected) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.bodyMedium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f, fill = false),
-                            )
-                            if (cat.count > 0) {
-                                Spacer(Modifier.width(4.dp))
-                                Text(
-                                    text = "(${cat.count})",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1,
+                                    .fillMaxWidth()
+                                    .height(4.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth(fraction = (cat.percentage / 100f).coerceIn(0.01f, 1f))
+                                        .fillMaxHeight()
+                                        .clip(RoundedCornerShape(2.dp))
+                                        .background(if (isSelected) color else color.copy(alpha = 0.85f)),
                                 )
                             }
                         }
-                        Text(
-                            text = "$money ($pct)",
-                            style = if (isSelected) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.bodyMedium,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
                     }
                 }
             }
@@ -536,185 +822,43 @@ private fun CategorySpendCard(
 @Composable
 private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: VehicleEntity) {
     val locale = LocalConfiguration.current.locales[0]
+    val haptic = LocalHapticFeedback.current
     val maxSpend = remember(monthlySpends) { monthlySpends.maxOf { it.amountMinor }.coerceAtLeast(1L) }
     var selectedMonthIndex by remember(monthlySpends) { mutableStateOf<Int?>(null) }
 
     val barColor = MaterialTheme.colorScheme.primary
-    val barColorDimmed = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+    val barColorDimmed = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
     val highlightColor = MaterialTheme.colorScheme.tertiary
-    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+    val slotTrackColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
     val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(6f, 6f)) }
     val maxLabel = remember(maxSpend, vehicle.currencyCode, locale) { Format.money(maxSpend, vehicle.currencyCode, locale) }
     val midLabel = remember(maxSpend, vehicle.currencyCode, locale) { Format.money(maxSpend / 2L, vehicle.currencyCode, locale) }
-    val zeroLabel = remember(vehicle.currencyCode, locale) { Format.money(0L, vehicle.currencyCode, locale) }
 
-    SectionCard(stringResource(R.string.analytics_monthly_spend)) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    val selectedItem = selectedMonthIndex?.let { monthlySpends.getOrNull(it) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            // Dynamic Integrated Header (No Layout Shift)
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .padding(top = 12.dp, bottom = 4.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.End,
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = maxLabel,
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
-                        color = textColor,
-                        maxLines = 1,
+                        text = stringResource(R.string.analytics_monthly_spend),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     )
-                    Text(
-                        text = midLabel,
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
-                        color = textColor,
-                        maxLines = 1,
-                    )
-                    Text(
-                        text = zeroLabel,
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
-                        color = textColor,
-                        maxLines = 1,
-                    )
-                }
-                Spacer(Modifier.width(6.dp))
-                Canvas(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .pointerInput(monthlySpends) {
-                            awaitEachGesture {
-                                awaitFirstDown(requireUnconsumed = false)
-                                val up = waitForUpOrCancellation()
-                                if (up != null) {
-                                    val offset = up.position
-                                    val chartWidth = size.width.toFloat()
-                                    val barCount = monthlySpends.size
-                                    val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
-                                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
-
-                                    var hitIdx: Int? = null
-                                    monthlySpends.forEachIndexed { idx, _ ->
-                                        val x = spacing + idx * (barWidth + spacing)
-                                        if (offset.x in (x - spacing / 2f)..(x + barWidth + spacing / 2f)) {
-                                            hitIdx = idx
-                                        }
-                                    }
-                                    selectedMonthIndex = if (selectedMonthIndex == hitIdx) null else hitIdx
-                                }
-                            }
-                        },
-                ) {
-                    val chartWidth = size.width
-                    val chartHeight = size.height - 12.dp.toPx()
-
-                    // Y-axis ticks (zero heap allocation)
-                    val strokeW = 1.dp.toPx()
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, 0f),
-                        end = Offset(chartWidth, 0f),
-                        strokeWidth = strokeW,
-                        pathEffect = dashEffect,
-                    )
-                    val midY = chartHeight / 2f
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, midY),
-                        end = Offset(chartWidth, midY),
-                        strokeWidth = strokeW,
-                        pathEffect = dashEffect,
-                    )
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, chartHeight),
-                        end = Offset(chartWidth, chartHeight),
-                        strokeWidth = strokeW,
-                        pathEffect = dashEffect,
-                    )
-
-                    val barCount = monthlySpends.size
-                    val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
-                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
-                    val barCornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
-                    val dotRadius = 3.dp.toPx()
-                    val dotOffset = 5.dp.toPx()
-
-                    monthlySpends.forEachIndexed { index, item ->
-                        val x = spacing + index * (barWidth + spacing)
-                        val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
-                        val y = chartHeight - barHeight
-                        val isSelected = selectedMonthIndex == index
-                        val hasSelection = selectedMonthIndex != null
-
-                        val fill = when {
-                            isSelected -> highlightColor
-                            hasSelection -> barColorDimmed
-                            else -> barColor
-                        }
-
-                        if (barHeight > 0f) {
-                            drawRoundRect(
-                                color = fill,
-                                topLeft = Offset(x, y),
-                                size = Size(barWidth, barHeight),
-                                cornerRadius = barCornerRadius,
-                            )
-                            if (isSelected) {
-                                drawCircle(
-                                    color = highlightColor,
-                                    radius = dotRadius,
-                                    center = Offset(x + barWidth / 2f, (y - dotOffset).coerceAtLeast(dotRadius)),
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Month labels (first and last)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 66.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                val first = monthlySpends.first().yearMonth
-                val last = monthlySpends.last().yearMonth
-                Text(
-                    text = "${first.monthValue}/${first.year}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Text(
-                    text = "${last.monthValue}/${last.year}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            // Interactive inspection detail banner
-            val selectedItem = selectedMonthIndex?.let { monthlySpends.getOrNull(it) }
-            if (selectedItem != null) {
-                Surface(
-                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { selectedMonthIndex = null },
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
+                    if (selectedItem != null) {
                         val monthTitle = remember(selectedItem.yearMonth, locale) {
                             try {
                                 DateTimeFormatter.ofPattern("LLLL yyyy", locale).format(selectedItem.yearMonth)
@@ -723,37 +867,196 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                                 "${selectedItem.yearMonth.monthValue}/${selectedItem.yearMonth.year}"
                             }
                         }
-                        Column {
-                            Text(
-                                text = monthTitle,
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                            )
-                            Text(
-                                text = "${Format.money(selectedItem.amountMinor, vehicle.currencyCode, locale)} • ${selectedItem.percentageOfTotal.roundToInt()}% • ${pluralStringResource(R.plurals.analytics_entries_count, selectedItem.count, selectedItem.count)}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
+                        Text(
+                            text = "$monthTitle: ${Format.money(selectedItem.amountMinor, vehicle.currencyCode, locale)} (${selectedItem.percentageOfTotal.roundToInt()}%)",
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = highlightColor,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    } else {
+                        val avgSpend = remember(monthlySpends) {
+                            if (monthlySpends.isNotEmpty()) monthlySpends.sumOf { it.amountMinor } / monthlySpends.size else 0L
                         }
-                        IconButton(
-                            onClick = { selectedMonthIndex = null },
-                            modifier = Modifier.size(24.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear",
-                                modifier = Modifier.size(16.dp),
+                        Text(
+                            text = "${stringResource(R.string.analytics_avg_monthly)}: ${Format.money(avgSpend, vehicle.currencyCode, locale)}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = textColor,
+                        )
+                    }
+                }
+                if (selectedMonthIndex != null) {
+                    IconButton(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            selectedMonthIndex = null
+                        },
+                        modifier = Modifier.size(28.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear",
+                            tint = textColor,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
+                }
+            }
+
+            // Interactive Bar Chart with Continuous Gesture Scrubbing
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp)
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Y-Axis labels
+                Column(
+                    modifier = Modifier
+                        .width(52.dp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    Text(text = maxLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                    Text(text = midLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                    Text(text = "0", style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                }
+                Spacer(Modifier.width(8.dp))
+
+                // Canvas
+                Canvas(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .pointerInput(monthlySpends) {
+                            awaitEachGesture {
+                                val down = awaitFirstDown(requireUnconsumed = false)
+                                fun updateTouch(touchX: Float) {
+                                    val chartWidth = size.width.toFloat()
+                                    val barCount = monthlySpends.size
+                                    val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(3.dp.toPx(), 8.dp.toPx())
+                                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(4.dp.toPx())
+
+                                    var hitIdx: Int? = null
+                                    monthlySpends.forEachIndexed { idx, _ ->
+                                        val x = spacing + idx * (barWidth + spacing)
+                                        if (touchX in (x - spacing / 2f)..(x + barWidth + spacing / 2f)) {
+                                            hitIdx = idx
+                                        }
+                                    }
+                                    if (hitIdx != selectedMonthIndex && hitIdx != null) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                    }
+                                    selectedMonthIndex = hitIdx
+                                }
+                                updateTouch(down.position.x)
+                                while (true) {
+                                    val event = awaitPointerEvent()
+                                    val current = event.changes.firstOrNull { it.id == down.id } ?: break
+                                    if (!current.pressed) break
+                                    updateTouch(current.position.x)
+                                }
+                            }
+                        },
+                ) {
+                    val chartWidth = size.width
+                    val chartHeight = size.height - 20.dp.toPx()
+
+                    // Grid lines
+                    val strokeW = 1.dp.toPx()
+                    drawLine(color = gridColor, start = Offset(0f, 0f), end = Offset(chartWidth, 0f), strokeWidth = strokeW, pathEffect = dashEffect)
+                    drawLine(color = gridColor, start = Offset(0f, chartHeight / 2f), end = Offset(chartWidth, chartHeight / 2f), strokeWidth = strokeW, pathEffect = dashEffect)
+                    drawLine(color = gridColor, start = Offset(0f, chartHeight), end = Offset(chartWidth, chartHeight), strokeWidth = strokeW)
+
+                    val barCount = monthlySpends.size
+                    val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(3.dp.toPx(), 8.dp.toPx())
+                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(4.dp.toPx())
+                    val barCornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
+
+                    monthlySpends.forEachIndexed { index, item ->
+                        val x = spacing + index * (barWidth + spacing)
+                        val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
+                        val y = chartHeight - barHeight
+                        val isSelected = selectedMonthIndex == index
+                        val hasSelection = selectedMonthIndex != null
+
+                        // Background slot track
+                        drawRoundRect(
+                            color = slotTrackColor,
+                            topLeft = Offset(x, 0f),
+                            size = Size(barWidth, chartHeight),
+                            cornerRadius = barCornerRadius,
+                        )
+
+                        // Bar fill
+                        if (barHeight > 0f) {
+                            val fillBrush = if (isSelected) {
+                                Brush.verticalGradient(
+                                    colors = listOf(highlightColor, highlightColor.copy(alpha = 0.75f)),
+                                    startY = y,
+                                    endY = chartHeight,
+                                )
+                            } else if (hasSelection) {
+                                Brush.verticalGradient(
+                                    colors = listOf(barColorDimmed, barColorDimmed.copy(alpha = 0.5f)),
+                                    startY = y,
+                                    endY = chartHeight,
+                                )
+                            } else {
+                                Brush.verticalGradient(
+                                    colors = listOf(barColor, barColor.copy(alpha = 0.7f)),
+                                    startY = y,
+                                    endY = chartHeight,
+                                )
+                            }
+
+                            drawRoundRect(
+                                brush = fillBrush,
+                                topLeft = Offset(x, y),
+                                size = Size(barWidth, barHeight),
+                                cornerRadius = barCornerRadius,
                             )
+
+                            if (isSelected) {
+                                // Glowing top cap marker
+                                drawCircle(
+                                    color = highlightColor,
+                                    radius = 3.5.dp.toPx(),
+                                    center = Offset(x + barWidth / 2f, (y - 5.dp.toPx()).coerceAtLeast(3.5.dp.toPx())),
+                                )
+                            }
                         }
                     }
                 }
-            } else {
-                Text(
-                    text = stringResource(R.string.analytics_tap_hint),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.padding(start = 8.dp),
-                )
+            }
+
+            // Month Labels on X-axis
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 60.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                val first = monthlySpends.first().yearMonth
+                val last = monthlySpends.last().yearMonth
+                val firstStr = try {
+                    DateTimeFormatter.ofPattern("LLL yy", locale).format(first)
+                } catch (_: Exception) { "${first.monthValue}/${first.year}" }
+                val lastStr = try {
+                    DateTimeFormatter.ofPattern("LLL yy", locale).format(last)
+                } catch (_: Exception) { "${last.monthValue}/${last.year}" }
+
+                Text(text = firstStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+                if (monthlySpends.size > 2) {
+                    val mid = monthlySpends[monthlySpends.size / 2].yearMonth
+                    val midStr = try {
+                        DateTimeFormatter.ofPattern("LLL yy", locale).format(mid)
+                    } catch (_: Exception) { "${mid.monthValue}/${mid.year}" }
+                    Text(text = midStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+                }
+                Text(text = lastStr, style = MaterialTheme.typography.bodySmall, color = textColor)
             }
         }
     }
@@ -766,197 +1069,295 @@ private fun ConsumptionTrendCard(
     average: Double?,
 ) {
     val locale = LocalConfiguration.current.locales[0]
+    val haptic = LocalHapticFeedback.current
     val unit = vehicle.consumptionUnit()
     var selectedPointIndex by remember(history) { mutableStateOf<Int?>(null) }
 
-    val lineColor = MaterialTheme.colorScheme.primary
-    val avgLineColor = MaterialTheme.colorScheme.error
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val avgLineColor = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
     val highlightColor = MaterialTheme.colorScheme.tertiary
-    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(10f, 10f)) }
+    val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(8f, 8f)) }
     val trendPath = remember { Path() }
+    val areaPath = remember { Path() }
 
-    SectionCard("${stringResource(R.string.analytics_consumption_trend)} (${stringResource(unit.shortRes())})") {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            val (minVal, maxVal, range) = remember(history, average) {
-                val values = history.map { it.consumptionValue }
-                val allValues = if (average != null) values + average else values
-                val min = allValues.minOrNull() ?: 0.0
-                val max = allValues.maxOrNull() ?: 1.0
-                Triple(min, max, (max - min).coerceAtLeast(0.5))
-            }
-            val midVal = (minVal + maxVal) / 2.0
-            val maxLabel = remember(maxVal, locale) { Format.consumption(maxVal, locale) }
-            val midLabel = remember(midVal, locale) { Format.consumption(midVal, locale) }
-            val minLabel = remember(minVal, locale) { Format.consumption(minVal, locale) }
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            val selectedPoint = selectedPointIndex?.let { history.getOrNull(it) }
 
+            // Dynamic Header (No Layout Shift)
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .padding(8.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column(
-                    modifier = Modifier
-                        .width(44.dp)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.End,
-                ) {
-                    Text(maxLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
-                    Text(midLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
-                    Text(minLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
-                }
-                Spacer(Modifier.width(6.dp))
-                Canvas(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .pointerInput(history) {
-                            awaitEachGesture {
-                                awaitFirstDown(requireUnconsumed = false)
-                                val up = waitForUpOrCancellation()
-                                if (up != null) {
-                                    val offset = up.position
-                                    val pad = 12f
-                                    val chartW = size.width - pad * 2
-
-                                    var bestIdx: Int? = null
-                                    var bestDist = Float.MAX_VALUE
-                                    history.forEachIndexed { i, _ ->
-                                        val x = if (history.size <= 1) {
-                                            pad + chartW / 2f
-                                        } else {
-                                            pad + (i.toFloat() / (history.size - 1) * chartW)
-                                        }
-                                        val d = kotlin.math.abs(offset.x - x)
-                                        if (d < bestDist && d < 36.dp.toPx()) {
-                                            bestDist = d
-                                            bestIdx = i
-                                        }
-                                    }
-                                    selectedPointIndex = if (selectedPointIndex == bestIdx) null else bestIdx
-                                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "${stringResource(R.string.analytics_consumption_trend)} (${stringResource(unit.shortRes())})",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    )
+                    if (selectedPoint != null) {
+                        val delta = selectedPoint.deltaFromAverage
+                        val deltaText = if (delta != null && kotlin.math.abs(delta) > 0.05) {
+                            val deltaFormatted = Format.consumption(kotlin.math.abs(delta), locale)
+                            if (delta > 0) {
+                                stringResource(R.string.analytics_diff_more, deltaFormatted)
+                            } else {
+                                stringResource(R.string.analytics_diff_less, deltaFormatted)
                             }
+                        } else null
+
+                        Text(
+                            text = "${Format.date(selectedPoint.date, locale)} • ${Format.consumption(selectedPoint.consumptionValue, locale)} ${stringResource(unit.shortRes())}${if (deltaText != null) " ($deltaText)" else ""}",
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = highlightColor,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    } else if (average != null) {
+                        Text(
+                            text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(average, locale)} ${stringResource(unit.shortRes())} • ${history.size} заправок",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = textColor,
+                        )
+                    }
+                }
+                if (selectedPointIndex != null) {
+                    IconButton(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            selectedPointIndex = null
                         },
-                ) {
-                    val pad = 12f
-                    val chartW = size.width - pad * 2
-                    val chartH = size.height - pad * 2
-
-                    // Grid lines (zero heap allocation)
-                    val strokeW = 1.dp.toPx()
-                    val chartWEnd = size.width
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, pad),
-                        end = Offset(chartWEnd, pad),
-                        strokeWidth = strokeW,
-                        pathEffect = dashEffect,
-                    )
-                    val midGridY = pad + chartH / 2f
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, midGridY),
-                        end = Offset(chartWEnd, midGridY),
-                        strokeWidth = strokeW,
-                        pathEffect = dashEffect,
-                    )
-                    val bottomGridY = pad + chartH
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, bottomGridY),
-                        end = Offset(chartWEnd, bottomGridY),
-                        strokeWidth = strokeW,
-                        pathEffect = dashEffect,
-                    )
-
-                    val n = history.size
-                    var selX = 0f
-                    var selY = 0f
-                    val hasSel = selectedPointIndex != null && selectedPointIndex in history.indices
-
-                    trendPath.rewind()
-                    for (i in 0 until n) {
-                        val ptVal = history[i].consumptionValue
-                        val px = if (n <= 1) {
-                            pad + chartW / 2f
-                        } else {
-                            pad + (i.toFloat() / (n - 1) * chartW)
-                        }
-                        val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
-                            .coerceIn(pad, pad + chartH)
-
-                        if (i == 0) {
-                            trendPath.moveTo(px, py)
-                        } else {
-                            trendPath.lineTo(px, py)
-                        }
-
-                        if (selectedPointIndex == i) {
-                            selX = px
-                            selY = py
-                        }
-                    }
-
-                    // Average guideline
-                    if (average != null) {
-                        val avgY = (pad + chartH - ((average - minVal) / range * chartH).toFloat())
-                            .coerceIn(pad, pad + chartH)
-                        drawLine(
-                            color = avgLineColor.copy(alpha = 0.6f),
-                            start = Offset(pad, avgY),
-                            end = Offset(pad + chartW, avgY),
-                            strokeWidth = 2.dp.toPx(),
-                            pathEffect = dashEffect,
+                        modifier = Modifier.size(28.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear",
+                            tint = textColor,
+                            modifier = Modifier.size(18.dp),
                         )
-                    }
-
-                    // Line connecting points
-                    if (n >= 2) {
-                        drawPath(trendPath, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
-                    }
-
-                    // Selected point vertical indicator line
-                    if (hasSel) {
-                        drawLine(
-                            color = highlightColor.copy(alpha = 0.7f),
-                            start = Offset(selX, pad),
-                            end = Offset(selX, pad + chartH),
-                            strokeWidth = 1.5.dp.toPx(),
-                            pathEffect = dashEffect,
-                        )
-                    }
-
-                    val selHaloRadius = 10.dp.toPx()
-                    val selPointRadius = 5.dp.toPx()
-                    val normalPointRadius = 4.dp.toPx()
-                    val selHaloColor = highlightColor.copy(alpha = 0.25f)
-
-                    for (i in 0 until n) {
-                        val ptVal = history[i].consumptionValue
-                        val px = if (n <= 1) {
-                            pad + chartW / 2f
-                        } else {
-                            pad + (i.toFloat() / (n - 1) * chartW)
-                        }
-                        val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
-                            .coerceIn(pad, pad + chartH)
-                        val ptOffset = Offset(px, py)
-
-                        if (selectedPointIndex == i) {
-                            drawCircle(selHaloColor, radius = selHaloRadius, center = ptOffset)
-                            drawCircle(highlightColor, radius = selPointRadius, center = ptOffset)
-                        } else {
-                            drawCircle(lineColor, radius = normalPointRadius, center = ptOffset)
-                        }
                     }
                 }
             }
 
-            if (history.isNotEmpty()) {
+            if (history.size < 2) {
+                // Graceful single/zero point state
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocalGasStation,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(20.dp),
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.analytics_trend_need_records),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            } else {
+                // Interactive Cubic Bézier Spline Area Chart
+                val (minVal, maxVal, range) = remember(history, average) {
+                    val values = history.map { it.consumptionValue }
+                    val allValues = if (average != null) values + average else values
+                    val min = allValues.minOrNull() ?: 0.0
+                    val max = allValues.maxOrNull() ?: 1.0
+                    Triple(min, max, (max - min).coerceAtLeast(0.5))
+                }
+                val midVal = (minVal + maxVal) / 2.0
+                val maxLabel = remember(maxVal, locale) { Format.consumption(maxVal, locale) }
+                val midLabel = remember(midVal, locale) { Format.consumption(midVal, locale) }
+                val minLabel = remember(minVal, locale) { Format.consumption(minVal, locale) }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    // Y-Axis labels
+                    Column(
+                        modifier = Modifier
+                            .width(42.dp)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.End,
+                    ) {
+                        Text(maxLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                        Text(midLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                        Text(minLabel, style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), color = textColor, maxLines = 1)
+                    }
+                    Spacer(Modifier.width(8.dp))
+
+                    Canvas(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .pointerInput(history) {
+                                awaitEachGesture {
+                                    val down = awaitFirstDown(requireUnconsumed = false)
+                                    fun updateTouch(touchX: Float) {
+                                        val pad = 12f
+                                        val chartW = size.width - pad * 2
+                                        var bestIdx: Int? = null
+                                        var bestDist = Float.MAX_VALUE
+                                        history.forEachIndexed { i, _ ->
+                                            val x = pad + (i.toFloat() / (history.size - 1) * chartW)
+                                            val d = kotlin.math.abs(touchX - x)
+                                            if (d < bestDist && d < 48.dp.toPx()) {
+                                                bestDist = d
+                                                bestIdx = i
+                                            }
+                                        }
+                                        if (bestIdx != selectedPointIndex && bestIdx != null) {
+                                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                        }
+                                        selectedPointIndex = bestIdx
+                                    }
+                                    updateTouch(down.position.x)
+                                    while (true) {
+                                        val event = awaitPointerEvent()
+                                        val current = event.changes.firstOrNull { it.id == down.id } ?: break
+                                        if (!current.pressed) break
+                                        updateTouch(current.position.x)
+                                    }
+                                }
+                            },
+                    ) {
+                        val pad = 12f
+                        val chartW = size.width - pad * 2
+                        val chartH = size.height - pad * 2
+                        val chartBottom = pad + chartH
+
+                        // Grid lines
+                        val strokeW = 1.dp.toPx()
+                        drawLine(color = gridColor, start = Offset(0f, pad), end = Offset(size.width, pad), strokeWidth = strokeW, pathEffect = dashEffect)
+                        drawLine(color = gridColor, start = Offset(0f, pad + chartH / 2f), end = Offset(size.width, pad + chartH / 2f), strokeWidth = strokeW, pathEffect = dashEffect)
+                        drawLine(color = gridColor, start = Offset(0f, chartBottom), end = Offset(size.width, chartBottom), strokeWidth = strokeW)
+
+                        val n = history.size
+                        val points = mutableListOf<Offset>()
+                        for (i in 0 until n) {
+                            val ptVal = history[i].consumptionValue
+                            val px = pad + (i.toFloat() / (n - 1) * chartW)
+                            val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat()).coerceIn(pad, chartBottom)
+                            points.add(Offset(px, py))
+                        }
+
+                        // Build smooth Cubic Bézier curve
+                        trendPath.rewind()
+                        areaPath.rewind()
+
+                        if (points.isNotEmpty()) {
+                            trendPath.moveTo(points[0].x, points[0].y)
+                            areaPath.moveTo(points[0].x, chartBottom)
+                            areaPath.lineTo(points[0].x, points[0].y)
+
+                            for (i in 1 until points.size) {
+                                val pPrev = points[i - 1]
+                                val pCurr = points[i]
+                                val cp1X = pPrev.x + (pCurr.x - pPrev.x) / 2f
+                                val cp1Y = pPrev.y
+                                val cp2X = pCurr.x - (pCurr.x - pPrev.x) / 2f
+                                val cp2Y = pCurr.y
+                                trendPath.cubicTo(cp1X, cp1Y, cp2X, cp2Y, pCurr.x, pCurr.y)
+                                areaPath.cubicTo(cp1X, cp1Y, cp2X, cp2Y, pCurr.x, pCurr.y)
+                            }
+
+                            areaPath.lineTo(points.last().x, chartBottom)
+                            areaPath.close()
+
+                            // Gradient area under curve
+                            drawPath(
+                                path = areaPath,
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(primaryColor.copy(alpha = 0.28f), Color.Transparent),
+                                    startY = pad,
+                                    endY = chartBottom,
+                                ),
+                            )
+
+                            // Average reference guideline
+                            if (average != null) {
+                                val avgY = (pad + chartH - ((average - minVal) / range * chartH).toFloat()).coerceIn(pad, chartBottom)
+                                drawLine(
+                                    color = avgLineColor,
+                                    start = Offset(0f, avgY),
+                                    end = Offset(size.width, avgY),
+                                    strokeWidth = 1.5.dp.toPx(),
+                                    pathEffect = dashEffect,
+                                )
+                            }
+
+                            // Spline curve stroke
+                            drawPath(
+                                path = trendPath,
+                                color = primaryColor,
+                                style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round),
+                            )
+
+                            // Scrubber vertical cursor line
+                            val activeIndex = selectedPointIndex
+                            if (activeIndex != null && activeIndex in points.indices) {
+                                val activePt = points[activeIndex]
+                                drawLine(
+                                    color = highlightColor.copy(alpha = 0.6f),
+                                    start = Offset(activePt.x, pad),
+                                    end = Offset(activePt.x, chartBottom),
+                                    strokeWidth = 1.5.dp.toPx(),
+                                    pathEffect = dashEffect,
+                                )
+                            }
+
+                            // Draw data points
+                            val selHaloRadius = 11.dp.toPx()
+                            val selPointRadius = 5.dp.toPx()
+                            val normalPointRadius = 3.5.dp.toPx()
+
+                            points.forEachIndexed { i, pt ->
+                                if (i == activeIndex) {
+                                    // Outer glowing halo
+                                    drawCircle(highlightColor.copy(alpha = 0.22f), radius = selHaloRadius, center = pt)
+                                    // Solid outer ring
+                                    drawCircle(highlightColor, radius = selPointRadius, center = pt)
+                                    // Crisp inner core
+                                    drawCircle(Color.White, radius = 2.dp.toPx(), center = pt)
+                                } else {
+                                    drawCircle(primaryColor, radius = normalPointRadius, center = pt)
+                                    drawCircle(Color.White, radius = 1.5.dp.toPx(), center = pt)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // X-axis Dates
                 val firstDate = Format.date(history.first().date, locale)
                 val lastDate = Format.date(history.last().date, locale)
                 Row(
@@ -965,100 +1366,9 @@ private fun ConsumptionTrendCard(
                         .padding(start = 50.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        text = firstDate,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    Text(text = firstDate, style = MaterialTheme.typography.bodySmall, color = textColor)
                     if (firstDate != lastDate) {
-                        Text(
-                            text = lastDate,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                }
-            }
-
-            // Interactive inspection banner for selected point
-            val selectedPoint = selectedPointIndex?.let { history.getOrNull(it) }
-            if (selectedPoint != null) {
-                Surface(
-                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { selectedPointIndex = null },
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Column {
-                            Text(
-                                text = "${Format.date(selectedPoint.date, locale)}: ${Format.consumption(selectedPoint.consumptionValue, locale)} ${stringResource(unit.shortRes())}",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                            )
-                            val delta = selectedPoint.deltaFromAverage
-                            if (delta != null && kotlin.math.abs(delta) > 0.05) {
-                                val deltaFormatted = Format.consumption(kotlin.math.abs(delta), locale)
-                                val deltaText = if (delta > 0) {
-                                    stringResource(R.string.analytics_diff_more, deltaFormatted)
-                                } else {
-                                    stringResource(R.string.analytics_diff_less, deltaFormatted)
-                                }
-                                Text(
-                                    text = deltaText,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = if (delta > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                            selectedPoint.odometerKm?.let { odo ->
-                                Text(
-                                    text = stringResource(
-                                        vehicle.distanceUnit.shortRes(),
-                                        Format.distance(odo, vehicle.distanceUnit, locale),
-                                    ),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-                        IconButton(
-                            onClick = { selectedPointIndex = null },
-                            modifier = Modifier.size(24.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear",
-                                modifier = Modifier.size(16.dp),
-                            )
-                        }
-                    }
-                }
-            } else {
-                average?.let {
-                    Row(
-                        modifier = Modifier.padding(start = 44.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Canvas(modifier = Modifier.size(width = 16.dp, height = 2.dp)) {
-                            drawLine(
-                                color = avgLineColor,
-                                start = Offset.Zero,
-                                end = Offset(size.width, 0f),
-                                strokeWidth = 2.dp.toPx(),
-                                pathEffect = dashEffect,
-                            )
-                        }
-                        Text(
-                            text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(it, locale)} ${stringResource(unit.shortRes())}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        Text(text = lastDate, style = MaterialTheme.typography.bodySmall, color = textColor)
                     }
                 }
             }
