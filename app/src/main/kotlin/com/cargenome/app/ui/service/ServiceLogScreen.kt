@@ -270,14 +270,14 @@ fun ServiceLogScreen(
             ) {
                 if (vehicle == null) {
                     if (!state.isLoading) {
-                        item { EmptyVehiclesTabCard(onAddVehicle = onAddVehicle) }
+                        item(key = "empty_vehicles", contentType = "empty_vehicles") { EmptyVehiclesTabCard(onAddVehicle = onAddVehicle) }
                     }
                     return@LazyColumn
                 }
 
                 when (state.selectedTab) {
                     ServiceTab.Records -> {
-                        item(key = "maintenance_overview") {
+                        item(key = "maintenance_overview", contentType = "maintenance_overview") {
                             MaintenanceOverviewCard(
                                 state = state,
                                 vehicle = vehicle,
@@ -297,9 +297,9 @@ fun ServiceLogScreen(
                         }
 
                         if (state.records.isEmpty()) {
-                            if (!state.isLoading) item(key = "empty_records") { EmptyRecordsCard() }
+                            if (!state.isLoading) item(key = "empty_records", contentType = "empty_records") { EmptyRecordsCard() }
                         } else {
-                            item(key = "service_spend_summary") { ServiceSpendSummaryCard(state, vehicle) }
+                            item(key = "service_spend_summary", contentType = "service_spend_summary") { ServiceSpendSummaryCard(state, vehicle) }
                             items(
                                 items = state.records,
                                 key = { it.id },

@@ -134,13 +134,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun enableHighRefreshRate() {
-        // On Google Pixel devices, the OS manages LTPO adaptive refresh rate (Smooth Display) natively.
-        // Forcing preferredDisplayModeId or window attributes on Pixel causes the display HAL to desync with
-        // Choreographer, producing touch latency and micro-stutters.
-        if (Build.MANUFACTURER.equals("Google", ignoreCase = true)) {
-            return
-        }
-
         val currentDisplay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display
         } else {
@@ -154,7 +147,7 @@ class MainActivity : ComponentActivity() {
             .maxByOrNull { it.refreshRate }
             ?: currentDisplay.supportedModes.maxByOrNull { it.refreshRate }
 
-        if (bestMode != null) {
+        if (bestMode != null && bestMode.refreshRate >= 90f) {
             val params = window.attributes
             var changed = false
             if (params.preferredDisplayModeId != bestMode.modeId) {
@@ -168,6 +161,15 @@ class MainActivity : ComponentActivity() {
             }
             if (changed) {
                 window.attributes = params
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                try {
+                    window.setFrameRateBoostOnTouchEnabled(true)
+                    window.setFrameRatePowerSavingsBalanced(false)
+                    window.decorView.setRequestedFrameRate(bestMode.refreshRate)
+                } catch (_: Throwable) {
+                }
             }
         }
     }

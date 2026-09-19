@@ -177,12 +177,12 @@ fun AnalyticsScreen(
             ) {
                 if (vehicle == null) {
                     if (!state.isLoading) {
-                        item { EmptyVehiclesTabCard(onAddVehicle = onAddVehicle) }
+                        item(key = "empty_vehicles", contentType = "empty_vehicles") { EmptyVehiclesTabCard(onAddVehicle = onAddVehicle) }
                     }
                     return@LazyColumn
                 }
 
-                item(key = "time_range") {
+                item(key = "time_range", contentType = "time_range") {
                     TimeRangeSelector(
                         selectedRange = state.selectedTimeRange,
                         onSelectRange = viewModel::setTimeRange,
@@ -190,20 +190,20 @@ fun AnalyticsScreen(
                 }
 
                 if (data.totalSpendMinor == 0L && data.trackedDistanceKm == 0.0) {
-                    if (!state.isLoading) item(key = "empty") { EmptyAnalyticsCard() }
+                    if (!state.isLoading) item(key = "empty", contentType = "empty") { EmptyAnalyticsCard() }
                 } else {
-                    item(key = "cost_overview") { CostOverviewCard(data, vehicle) }
+                    item(key = "cost_overview", contentType = "cost_overview") { CostOverviewCard(data, vehicle) }
 
                     if (data.categorySpends.isNotEmpty()) {
-                        item(key = "category_spends") { CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount) }
+                        item(key = "category_spends", contentType = "category_spends") { CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount) }
                     }
 
                     if (data.monthlySpends.isNotEmpty()) {
-                        item(key = "monthly_spends") { MonthlySpendCard(data.monthlySpends, vehicle) }
+                        item(key = "monthly_spends", contentType = "monthly_spends") { MonthlySpendCard(data.monthlySpends, vehicle) }
                     }
 
                     if (data.consumptionHistory.size >= 2) {
-                        item(key = "consumption_trend") { ConsumptionTrendCard(data.consumptionHistory, vehicle, data.averageConsumption) }
+                        item(key = "consumption_trend", contentType = "consumption_trend") { ConsumptionTrendCard(data.consumptionHistory, vehicle, data.averageConsumption) }
                     }
                 }
             }
@@ -615,17 +615,30 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                     val chartWidth = size.width
                     val chartHeight = size.height - 12.dp.toPx()
 
-                    // Y-axis ticks
-                    val yPositions = floatArrayOf(0f, chartHeight / 2f, chartHeight)
-                    for (y in yPositions) {
-                        drawLine(
-                            color = gridColor,
-                            start = Offset(0f, y),
-                            end = Offset(chartWidth, y),
-                            strokeWidth = 1.dp.toPx(),
-                            pathEffect = dashEffect,
-                        )
-                    }
+                    // Y-axis ticks (zero heap allocation)
+                    val strokeW = 1.dp.toPx()
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(0f, 0f),
+                        end = Offset(chartWidth, 0f),
+                        strokeWidth = strokeW,
+                        pathEffect = dashEffect,
+                    )
+                    val midY = chartHeight / 2f
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(0f, midY),
+                        end = Offset(chartWidth, midY),
+                        strokeWidth = strokeW,
+                        pathEffect = dashEffect,
+                    )
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(0f, chartHeight),
+                        end = Offset(chartWidth, chartHeight),
+                        strokeWidth = strokeW,
+                        pathEffect = dashEffect,
+                    )
 
                     val barCount = monthlySpends.size
                     val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
@@ -833,17 +846,32 @@ private fun ConsumptionTrendCard(
                     val chartW = size.width - pad * 2
                     val chartH = size.height - pad * 2
 
-                    // Grid lines
-                    val yPositions = floatArrayOf(pad, pad + chartH / 2f, pad + chartH)
-                    for (y in yPositions) {
-                        drawLine(
-                            color = gridColor,
-                            start = Offset(0f, y),
-                            end = Offset(size.width, y),
-                            strokeWidth = 1.dp.toPx(),
-                            pathEffect = dashEffect,
-                        )
-                    }
+                    // Grid lines (zero heap allocation)
+                    val strokeW = 1.dp.toPx()
+                    val chartWEnd = size.width
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(0f, pad),
+                        end = Offset(chartWEnd, pad),
+                        strokeWidth = strokeW,
+                        pathEffect = dashEffect,
+                    )
+                    val midGridY = pad + chartH / 2f
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(0f, midGridY),
+                        end = Offset(chartWEnd, midGridY),
+                        strokeWidth = strokeW,
+                        pathEffect = dashEffect,
+                    )
+                    val bottomGridY = pad + chartH
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(0f, bottomGridY),
+                        end = Offset(chartWEnd, bottomGridY),
+                        strokeWidth = strokeW,
+                        pathEffect = dashEffect,
+                    )
 
                     val n = history.size
                     var selX = 0f

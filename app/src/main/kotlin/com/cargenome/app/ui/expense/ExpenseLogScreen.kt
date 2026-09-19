@@ -108,9 +108,9 @@ fun ExpenseLogScreen(
                 if (vehicle == null) return@LazyColumn
 
                 if (state.expenses.isEmpty()) {
-                    if (!state.isLoading) item { EmptyExpenseCard() }
+                    if (!state.isLoading) item(key = "empty_expense", contentType = "empty_expense") { EmptyExpenseCard() }
                 } else {
-                    item {
+                    item(key = "expense_summary", contentType = "expense_summary") {
                         SectionCard(stringResource(R.string.expense_title)) {
                             DetailRow(
                                 label = stringResource(R.string.service_summary_total),

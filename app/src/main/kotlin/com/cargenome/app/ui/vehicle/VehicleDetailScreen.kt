@@ -199,14 +199,14 @@ fun VehicleDetailScreen(
                     return@LazyColumn
                 }
 
-                item(key = "mileage") {
+                item(key = "mileage", contentType = "mileage") {
                     MileageCard(
                         vehicle = vehicle,
                         currentKm = state.currentOdometerKm,
                         onClick = { onOpenOdometerLog(vehicle.id) },
                     )
                 }
-                item(key = "expenses") {
+                item(key = "expenses", contentType = "expenses") {
                     Card(
                         onClick = { onOpenExpenses(vehicle.id) },
                         modifier = Modifier.fillMaxWidth(),
@@ -240,8 +240,8 @@ fun VehicleDetailScreen(
                         }
                     }
                 }
-                item(key = "spec") { SpecificationCard(vehicle) }
-                item(key = "insurance") {
+                item(key = "spec", contentType = "spec") { SpecificationCard(vehicle) }
+                item(key = "insurance", contentType = "insurance") {
                     InsuranceCard(
                         vehicle = vehicle,
                         onAddOrEdit = { showInsuranceDialog = true },
@@ -251,15 +251,15 @@ fun VehicleDetailScreen(
                     )
                 }
                 state.nextMaintenanceEvent?.let { nextEvent ->
-                    item(key = "next_maintenance_${nextEvent.id}") {
+                    item(key = "next_maintenance_${nextEvent.id}", contentType = "next_maintenance") {
                         NextMaintenanceCard(
                             event = nextEvent,
                             vehicle = vehicle,
                         )
                     }
                 }
-                item(key = "prefs") { PreferencesCard(vehicle) }
-                item(key = "delete") {
+                item(key = "prefs", contentType = "prefs") { PreferencesCard(vehicle) }
+                item(key = "delete", contentType = "delete") {
                     OutlinedButton(
                         onClick = { confirmDelete = true },
                         modifier = Modifier.fillMaxWidth(),

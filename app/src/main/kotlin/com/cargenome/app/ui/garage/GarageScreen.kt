@@ -138,7 +138,11 @@ fun GarageScreen(
                     }
                 }
 
-                items(state.vehicles, key = { it.vehicle.id }) { summary ->
+                items(
+                    items = state.vehicles,
+                    key = { it.vehicle.id },
+                    contentType = { "vehicle_card" },
+                ) { summary ->
                     VehicleCard(
                         summary = summary,
                         isSelected = summary.vehicle.id == state.selectedVehicleId,
@@ -192,9 +196,8 @@ private fun EmptyGarage(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(top = 4.dp),
             ) {
                 Button(
                     onClick = onAddVehicle,
@@ -225,6 +228,18 @@ private fun VehicleCard(
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val vehicle = summary.vehicle
+    val title = remember(vehicle) {
+        vehicle.nickname?.takeIf { it.isNotBlank() }
+            ?: listOfNotNull(vehicle.make, vehicle.model).joinToString(" ")
+    }
+    val subtitle = remember(vehicle) {
+        listOfNotNull(
+            vehicle.modelYear?.toString(),
+            vehicle.nickname?.takeIf { it.isNotBlank() }
+                ?.let { listOfNotNull(vehicle.make, vehicle.model).joinToString(" ") },
+            vehicle.engine,
+        ).filter { it.isNotBlank() }
+    }
 
     Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -234,8 +249,7 @@ private fun VehicleCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = vehicle.nickname?.takeIf { it.isNotBlank() }
-                        ?: listOfNotNull(vehicle.make, vehicle.model).joinToString(" "),
+                    text = title,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f, fill = false),
                 )
@@ -248,12 +262,6 @@ private fun VehicleCard(
                 }
             }
 
-            val subtitle = listOfNotNull(
-                vehicle.modelYear?.toString(),
-                vehicle.nickname?.takeIf { it.isNotBlank() }
-                    ?.let { listOfNotNull(vehicle.make, vehicle.model).joinToString(" ") },
-                vehicle.engine,
-            ).filter { it.isNotBlank() }
             if (subtitle.isNotEmpty()) {
                 Text(
                     text = subtitle.joinToString(" · "),
