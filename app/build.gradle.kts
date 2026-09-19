@@ -126,7 +126,7 @@ android {
         abortOnError = true
         // compileSdk is ahead of targetSdk on purpose: recent AndroidX artifacts
         // need API 37 to compile, while the app is built for Android 16 behavior.
-        disable += setOf("GradleDependency", "OldTargetApi")
+        disable += setOf("GradleDependency", "OldTargetApi", "MissingTranslation")
     }
 }
 

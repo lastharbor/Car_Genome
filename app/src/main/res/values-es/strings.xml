@@ -175,6 +175,10 @@
     <string name="analytics_diff_more">+%1$s sobre la media</string>
     <string name="analytics_diff_less">-%1$s bajo la media</string>
     <string name="analytics_selected_slice">Seleccionado</string>
+    <string name="analytics_best_consumption">Mejor: %1$s</string>
+    <string name="analytics_worst_consumption">Peor: %1$s</string>
+    <string name="analytics_trend_need_records">El historial de consumo requiere al menos 2 repostajes completos</string>
+    <string name="analytics_reset_selection">Restablecer</string>
 
     <string name="expense_title">Otros gastos</string>
     <string name="expense_add">Añadir gasto</string>

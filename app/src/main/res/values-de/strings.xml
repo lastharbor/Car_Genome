@@ -172,6 +172,10 @@
     <string name="analytics_diff_more">+%1$s über Schnitt</string>
     <string name="analytics_diff_less">-%1$s sparsamer als Schnitt</string>
     <string name="analytics_selected_slice">Ausgewählt</string>
+    <string name="analytics_best_consumption">Bester: %1$s</string>
+    <string name="analytics_worst_consumption">Schlechtester: %1$s</string>
+    <string name="analytics_trend_need_records">Für den Verbrauchsverlauf sind mindestens 2 Vollbetankungen erforderlich</string>
+    <string name="analytics_reset_selection">Zurücksetzen</string>
 
     <string name="expense_title">Weitere Ausgaben</string>
     <string name="expense_add">Ausgabe hinzufügen</string>
