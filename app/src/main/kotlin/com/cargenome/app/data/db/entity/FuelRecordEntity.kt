@@ -31,6 +31,7 @@ import java.time.Instant
     ],
     indices = [Index(value = ["vehicleId", "filledAt"])],
 )
+@androidx.compose.runtime.Immutable
 data class FuelRecordEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,

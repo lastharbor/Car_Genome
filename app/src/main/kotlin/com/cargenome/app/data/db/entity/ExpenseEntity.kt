@@ -34,6 +34,7 @@ enum class ExpenseCategory {
     ],
     indices = [Index(value = ["vehicleId", "incurredAt"])],
 )
+@androidx.compose.runtime.Immutable
 data class ExpenseEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,

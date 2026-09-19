@@ -64,20 +64,14 @@ fun CarGenomeNavHost(
         initialValue = AppSettings(),
     )
 
-    // Current vehicle ID is taken from route if present, falling back to selectedVehicleId
-    val currentVehicleId: Long? = runCatching {
-        when {
-            currentDestination?.hasRoute<VehicleDetailRoute>() == true ->
-                navBackStackEntry?.toRoute<VehicleDetailRoute>()?.vehicleId
-            currentDestination?.hasRoute<FuelLogRoute>() == true ->
-                navBackStackEntry?.toRoute<FuelLogRoute>()?.vehicleId
-            currentDestination?.hasRoute<ServiceLogRoute>() == true ->
-                navBackStackEntry?.toRoute<ServiceLogRoute>()?.vehicleId
-            currentDestination?.hasRoute<AnalyticsRoute>() == true ->
-                navBackStackEntry?.toRoute<AnalyticsRoute>()?.vehicleId
-            else -> null
+    // Current vehicle ID is taken from route arguments if present, falling back to selectedVehicleId
+    val currentVehicleId: Long? = navBackStackEntry?.arguments?.let { args ->
+        if (args.containsKey("vehicleId")) {
+            args.getLong("vehicleId").takeIf { it > 0 }
+        } else {
+            null
         }
-    }.getOrNull() ?: appSettings.selectedVehicleId
+    } ?: appSettings.selectedVehicleId
 
     val isCarTab = currentDestination?.let { dest ->
         dest.hasRoute<VehicleDetailRoute>() ||

@@ -1,5 +1,6 @@
 package com.cargenome.app.data.db.entity
 
+import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -16,8 +17,9 @@ import java.time.LocalDate
  * The VIN is optional on purpose: an old car may have no readable plate left,
  * and the app has to be usable before the number is found. It is uniquely
  * indexed so the same car cannot be added twice, and SQLite treats NULLs as
- * distinct, which leaves room for several cars without a VIN.
+ * distinct, modern room for several cars without a VIN.
  */
+@Immutable
 @Entity(
     tableName = "vehicles",
     indices = [Index(value = ["vin"], unique = true)],

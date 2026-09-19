@@ -601,6 +601,9 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                 val barCount = monthlySpends.size
                 val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
                 val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
+                val barCornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
+                val dotRadius = 3.dp.toPx()
+                val dotOffset = 5.dp.toPx()
 
                 monthlySpends.forEachIndexed { index, item ->
                     val x = yAxisWidth + spacing + index * (barWidth + spacing)
@@ -620,13 +623,13 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                             color = fill,
                             topLeft = Offset(x, y),
                             size = Size(barWidth, barHeight),
-                            cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx()),
+                            cornerRadius = barCornerRadius,
                         )
                         if (isSelected) {
                             drawCircle(
                                 color = highlightColor,
-                                radius = 3.dp.toPx(),
-                                center = Offset(x + barWidth / 2f, (y - 5.dp.toPx()).coerceAtLeast(3.dp.toPx())),
+                                radius = dotRadius,
+                                center = Offset(x + barWidth / 2f, (y - dotOffset).coerceAtLeast(dotRadius)),
                             )
                         }
                     }
@@ -804,15 +807,32 @@ private fun ConsumptionTrendCard(
                     )
                 }
 
-                val points = history.mapIndexed { i, point ->
-                    val x = if (history.size <= 1) {
+                val n = history.size
+                var selX = 0f
+                var selY = 0f
+                val hasSel = selectedPointIndex != null && selectedPointIndex in history.indices
+
+                trendPath.rewind()
+                for (i in 0 until n) {
+                    val ptVal = history[i].consumptionValue
+                    val px = if (n <= 1) {
                         yAxisWidth + pad + chartW / 2f
                     } else {
-                        yAxisWidth + pad + (i.toFloat() / (history.size - 1) * chartW)
+                        yAxisWidth + pad + (i.toFloat() / (n - 1) * chartW)
                     }
-                    val y = (pad + chartH - ((point.consumptionValue - minVal) / range * chartH).toFloat())
+                    val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
                         .coerceIn(pad, pad + chartH)
-                    Offset(x, y)
+
+                    if (i == 0) {
+                        trendPath.moveTo(px, py)
+                    } else {
+                        trendPath.lineTo(px, py)
+                    }
+
+                    if (selectedPointIndex == i) {
+                        selX = px
+                        selY = py
+                    }
                 }
 
                 // Average guideline
@@ -829,36 +849,42 @@ private fun ConsumptionTrendCard(
                 }
 
                 // Line connecting points
-                if (points.size >= 2) {
-                    trendPath.rewind()
-                    trendPath.moveTo(points.first().x, points.first().y)
-                    for (i in 1 until points.size) {
-                        trendPath.lineTo(points[i].x, points[i].y)
-                    }
+                if (n >= 2) {
                     drawPath(trendPath, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
                 }
 
                 // Selected point vertical indicator line
-                selectedPointIndex?.let { selIdx ->
-                    if (selIdx in points.indices) {
-                        val selPt = points[selIdx]
-                        drawLine(
-                            color = highlightColor.copy(alpha = 0.7f),
-                            start = Offset(selPt.x, pad),
-                            end = Offset(selPt.x, pad + chartH),
-                            strokeWidth = 1.5.dp.toPx(),
-                            pathEffect = dashEffect,
-                        )
-                    }
+                if (hasSel) {
+                    drawLine(
+                        color = highlightColor.copy(alpha = 0.7f),
+                        start = Offset(selX, pad),
+                        end = Offset(selX, pad + chartH),
+                        strokeWidth = 1.5.dp.toPx(),
+                        pathEffect = dashEffect,
+                    )
                 }
 
-                points.forEachIndexed { i, pt ->
-                    val isSelected = selectedPointIndex == i
-                    if (isSelected) {
-                        drawCircle(highlightColor.copy(alpha = 0.25f), radius = 10.dp.toPx(), center = pt)
-                        drawCircle(highlightColor, radius = 5.dp.toPx(), center = pt)
+                val selHaloRadius = 10.dp.toPx()
+                val selPointRadius = 5.dp.toPx()
+                val normalPointRadius = 4.dp.toPx()
+                val selHaloColor = highlightColor.copy(alpha = 0.25f)
+
+                for (i in 0 until n) {
+                    val ptVal = history[i].consumptionValue
+                    val px = if (n <= 1) {
+                        yAxisWidth + pad + chartW / 2f
                     } else {
-                        drawCircle(lineColor, radius = 4.dp.toPx(), center = pt)
+                        yAxisWidth + pad + (i.toFloat() / (n - 1) * chartW)
+                    }
+                    val py = (pad + chartH - ((ptVal - minVal) / range * chartH).toFloat())
+                        .coerceIn(pad, pad + chartH)
+                    val ptOffset = Offset(px, py)
+
+                    if (selectedPointIndex == i) {
+                        drawCircle(selHaloColor, radius = selHaloRadius, center = ptOffset)
+                        drawCircle(highlightColor, radius = selPointRadius, center = ptOffset)
+                    } else {
+                        drawCircle(lineColor, radius = normalPointRadius, center = ptOffset)
                     }
                 }
             }

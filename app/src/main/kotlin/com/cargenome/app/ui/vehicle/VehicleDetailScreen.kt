@@ -199,14 +199,14 @@ fun VehicleDetailScreen(
                     return@LazyColumn
                 }
 
-                item {
+                item(key = "mileage") {
                     MileageCard(
                         vehicle = vehicle,
                         currentKm = state.currentOdometerKm,
                         onClick = { onOpenOdometerLog(vehicle.id) },
                     )
                 }
-                item {
+                item(key = "expenses") {
                     Card(
                         onClick = { onOpenExpenses(vehicle.id) },
                         modifier = Modifier.fillMaxWidth(),
@@ -240,8 +240,8 @@ fun VehicleDetailScreen(
                         }
                     }
                 }
-                item { SpecificationCard(vehicle) }
-                item {
+                item(key = "spec") { SpecificationCard(vehicle) }
+                item(key = "insurance") {
                     InsuranceCard(
                         vehicle = vehicle,
                         onAddOrEdit = { showInsuranceDialog = true },
@@ -251,15 +251,15 @@ fun VehicleDetailScreen(
                     )
                 }
                 state.nextMaintenanceEvent?.let { nextEvent ->
-                    item {
+                    item(key = "next_maintenance_${nextEvent.id}") {
                         NextMaintenanceCard(
                             event = nextEvent,
                             vehicle = vehicle,
                         )
                     }
                 }
-                item { PreferencesCard(vehicle) }
-                item {
+                item(key = "prefs") { PreferencesCard(vehicle) }
+                item(key = "delete") {
                     OutlinedButton(
                         onClick = { confirmDelete = true },
                         modifier = Modifier.fillMaxWidth(),

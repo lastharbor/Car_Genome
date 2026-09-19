@@ -27,6 +27,7 @@ enum class OdometerSource {
     ],
     indices = [Index(value = ["vehicleId", "recordedAt"])],
 )
+@androidx.compose.runtime.Immutable
 data class OdometerReadingEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,

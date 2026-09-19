@@ -142,24 +142,33 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun enableHighRefreshRate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val currentDisplay = display ?: return
-            val maxRate = currentDisplay.supportedModes.maxOfOrNull { it.refreshRate } ?: return
-            val params = window.attributes
-            if (params.preferredRefreshRate != maxRate) {
-                params.preferredRefreshRate = maxRate
-                window.attributes = params
-            }
+        val currentDisplay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display
         } else {
             @Suppress("DEPRECATION")
-            val currentDisplay = windowManager.defaultDisplay
-            val maxRate = currentDisplay?.supportedModes?.maxOfOrNull { it.refreshRate }
-            if (maxRate != null) {
-                val params = window.attributes
-                if (params.preferredRefreshRate != maxRate) {
-                    params.preferredRefreshRate = maxRate
-                    window.attributes = params
-                }
+            windowManager.defaultDisplay
+        } ?: return
+
+        val currentMode = currentDisplay.mode
+        val bestMode = currentDisplay.supportedModes
+            .filter { it.physicalWidth == currentMode.physicalWidth && it.physicalHeight == currentMode.physicalHeight }
+            .maxByOrNull { it.refreshRate }
+            ?: currentDisplay.supportedModes.maxByOrNull { it.refreshRate }
+
+        if (bestMode != null) {
+            val params = window.attributes
+            var changed = false
+            if (params.preferredDisplayModeId != bestMode.modeId) {
+                params.preferredDisplayModeId = bestMode.modeId
+                changed = true
+            }
+            @Suppress("DEPRECATION")
+            if (params.preferredRefreshRate != bestMode.refreshRate) {
+                params.preferredRefreshRate = bestMode.refreshRate
+                changed = true
+            }
+            if (changed) {
+                window.attributes = params
             }
         }
     }

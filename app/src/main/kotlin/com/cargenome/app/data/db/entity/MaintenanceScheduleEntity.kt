@@ -26,6 +26,7 @@ import java.time.Instant
     ],
     indices = [Index(value = ["vehicleId"])],
 )
+@androidx.compose.runtime.Immutable
 data class MaintenanceScheduleEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,

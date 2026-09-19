@@ -47,6 +47,7 @@ enum class ServiceCategory {
         Index(value = ["scheduleId"]),
     ],
 )
+@androidx.compose.runtime.Immutable
 data class ServiceRecordEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,

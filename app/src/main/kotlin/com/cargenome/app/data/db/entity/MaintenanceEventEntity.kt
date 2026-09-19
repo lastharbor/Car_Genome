@@ -44,6 +44,7 @@ import java.time.LocalDate
         Index(value = ["scheduleId"]),
     ],
 )
+@androidx.compose.runtime.Immutable
 data class MaintenanceEventEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val vehicleId: Long,
