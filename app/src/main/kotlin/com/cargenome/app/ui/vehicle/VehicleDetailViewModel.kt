@@ -26,8 +26,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.launch
 
+@Immutable
 data class VehicleDetailUiState(
     val vehicle: VehicleEntity? = null,
     val currentOdometerKm: Double? = null,

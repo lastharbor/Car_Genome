@@ -255,6 +255,7 @@ fun ServiceLogScreen(
         val sides = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
         val direction = LocalLayoutDirection.current
         val vehicle = state.vehicle
+        val rawSchedules = remember(state.schedules) { state.schedules.map { it.schedule } }
 
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
@@ -276,7 +277,7 @@ fun ServiceLogScreen(
 
                 when (state.selectedTab) {
                     ServiceTab.Records -> {
-                        item {
+                        item(key = "maintenance_overview") {
                             MaintenanceOverviewCard(
                                 state = state,
                                 vehicle = vehicle,
@@ -296,9 +297,9 @@ fun ServiceLogScreen(
                         }
 
                         if (state.records.isEmpty()) {
-                            if (!state.isLoading) item { EmptyRecordsCard() }
+                            if (!state.isLoading) item(key = "empty_records") { EmptyRecordsCard() }
                         } else {
-                            item { ServiceSpendSummaryCard(state, vehicle) }
+                            item(key = "service_spend_summary") { ServiceSpendSummaryCard(state, vehicle) }
                             items(
                                 items = state.records,
                                 key = { it.id },
@@ -307,7 +308,7 @@ fun ServiceLogScreen(
                                 ServiceRecordRow(
                                     record = record,
                                     vehicle = vehicle,
-                                    schedules = state.schedules.map { it.schedule },
+                                    schedules = rawSchedules,
                                     onClick = { onOpenRecord(vehicle.id, record.id) },
                                     onPlanNext = { schedule ->
                                         scheduleToPlan = schedule
@@ -324,7 +325,7 @@ fun ServiceLogScreen(
 
                     ServiceTab.Calendar -> {
                         if (!hasNotificationPermission) {
-                            item {
+                            item(key = "notification_permission_calendar") {
                                 NotificationPermissionCard(
                                     onRequestPermission = {
                                         permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -335,7 +336,7 @@ fun ServiceLogScreen(
 
                         // Urgent schedules suggestion card
                         if (state.unscheduledUrgentSchedules.isNotEmpty()) {
-                            item {
+                            item(key = "urgent_suggestions") {
                                 CalendarScheduleSuggestionsCard(
                                     urgentSchedules = state.unscheduledUrgentSchedules,
                                     vehicle = vehicle,
@@ -349,7 +350,7 @@ fun ServiceLogScreen(
                         }
 
                         // Interactive Month Calendar View
-                        item {
+                        item(key = "calendar_month_view") {
                             MaintenanceCalendarView(
                                 selectedDate = state.selectedDate,
                                 onSelectDate = viewModel::selectDate,
@@ -358,7 +359,7 @@ fun ServiceLogScreen(
                         }
 
                         // Selected Date Header
-                        item {
+                        item(key = "selected_date_header") {
                             val locale = LocalConfiguration.current.locales[0]
                             val selectedDateFormatted = Format.date(state.selectedDate, locale)
                             Text(
@@ -385,7 +386,7 @@ fun ServiceLogScreen(
                                 )
                             }
                         } else {
-                            item {
+                            item(key = "empty_day_events") {
                                 Card(
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = CardDefaults.cardColors(
@@ -415,7 +416,7 @@ fun ServiceLogScreen(
                         // Overdue Events
                         val overdueOther = state.overdueEvents.filter { it.scheduledDate != state.selectedDate }
                         if (overdueOther.isNotEmpty()) {
-                            item {
+                            item(key = "overdue_header") {
                                 Text(
                                     text = stringResource(R.string.calendar_overdue_section),
                                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
@@ -441,7 +442,7 @@ fun ServiceLogScreen(
                         // Upcoming Events
                         val upcomingOther = state.upcomingEvents.filter { it.scheduledDate != state.selectedDate }
                         if (upcomingOther.isNotEmpty()) {
-                            item {
+                            item(key = "upcoming_header") {
                                 Text(
                                     text = stringResource(R.string.calendar_upcoming_section),
                                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
@@ -465,7 +466,7 @@ fun ServiceLogScreen(
 
                         // Empty calendar card
                         if (state.events.isEmpty() && !state.isLoading) {
-                            item {
+                            item(key = "empty_calendar") {
                                 EmptyCalendarCard()
                             }
                         }
@@ -473,7 +474,7 @@ fun ServiceLogScreen(
 
                     ServiceTab.Schedule -> {
                         if (!hasNotificationPermission) {
-                            item {
+                            item(key = "notification_permission_schedule") {
                                 NotificationPermissionCard(
                                     onRequestPermission = {
                                         permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -483,7 +484,7 @@ fun ServiceLogScreen(
                         }
 
                         if (state.schedules.isEmpty()) {
-                            if (!state.isLoading) item { EmptyScheduleCard() }
+                            if (!state.isLoading) item(key = "empty_schedules") { EmptyScheduleCard() }
                         } else {
                             items(
                                 items = state.schedules,

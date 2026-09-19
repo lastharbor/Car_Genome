@@ -12,8 +12,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.launch
 
+@Immutable
 data class GarageUiState(
     val vehicles: List<VehicleSummary> = emptyList(),
     val selectedVehicleId: Long? = null,

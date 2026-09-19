@@ -24,7 +24,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.compose.runtime.Immutable
 
+@Immutable
 data class FuelLogUiState(
     val vehicle: VehicleEntity? = null,
     /** Newest first, the order the log is read in. */

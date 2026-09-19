@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.withContext
 
 enum class ServiceTab {
@@ -39,6 +40,7 @@ enum class ServiceTab {
     Schedule,
 }
 
+@Immutable
 data class ServiceLogUiState(
     val vehicle: VehicleEntity? = null,
     val records: List<ServiceRecordEntity> = emptyList(),
@@ -51,45 +53,14 @@ data class ServiceLogUiState(
     val labourSpendMinor: Long = 0,
     val selectedTab: ServiceTab = ServiceTab.Records,
     val isLoading: Boolean = true,
-) {
-    val selectedDateEvents: List<MaintenanceEventEntity>
-        get() = events.filter { it.scheduledDate == selectedDate }
-
-    val upcomingEvents: List<MaintenanceEventEntity>
-        get() {
-            val today = LocalDate.now()
-            return events.filter { !it.isCompleted && !it.scheduledDate.isBefore(today) }
-                .sortedWith(compareBy<MaintenanceEventEntity> { it.scheduledDate }.thenBy { it.scheduledTimeMinutes ?: 1440 })
-        }
-
-    val overdueEvents: List<MaintenanceEventEntity>
-        get() {
-            val today = LocalDate.now()
-            return events.filter { !it.isCompleted && it.scheduledDate.isBefore(today) }
-                .sortedWith(compareBy<MaintenanceEventEntity> { it.scheduledDate }.thenBy { it.scheduledTimeMinutes ?: 1440 })
-        }
-
-    val urgentSchedules: List<ScheduleStatus>
-        get() = schedules.filter { it.isOverdue || it.isDueSoon }
-
-    val activeEventsByScheduleId: Map<Long, MaintenanceEventEntity>
-        get() {
-            val today = LocalDate.now()
-            return events
-                .filter { !it.isCompleted && it.scheduleId != null && !it.scheduledDate.isBefore(today) }
-                .groupBy { it.scheduleId!! }
-                .mapValues { (_, evts) -> evts.minBy { it.scheduledDate } }
-        }
-
-    val unscheduledUrgentSchedules: List<ScheduleStatus>
-        get() {
-            val activeIds = activeEventsByScheduleId.keys
-            return urgentSchedules.filter { it.schedule.id !in activeIds }
-        }
-
-    val nextUpcomingEvent: MaintenanceEventEntity?
-        get() = upcomingEvents.minByOrNull { it.scheduledDate }
-}
+    val selectedDateEvents: List<MaintenanceEventEntity> = emptyList(),
+    val upcomingEvents: List<MaintenanceEventEntity> = emptyList(),
+    val overdueEvents: List<MaintenanceEventEntity> = emptyList(),
+    val urgentSchedules: List<ScheduleStatus> = emptyList(),
+    val activeEventsByScheduleId: Map<Long, MaintenanceEventEntity> = emptyMap(),
+    val unscheduledUrgentSchedules: List<ScheduleStatus> = emptyList(),
+    val nextUpcomingEvent: MaintenanceEventEntity? = null,
+)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -141,6 +112,20 @@ class ServiceLogViewModel @Inject constructor(
                     val totalParts = records.sumOf { it.partsCostMinor }
                     val totalAll = records.sumOf { it.totalCostMinor }
 
+                    val today = LocalDate.now()
+                    val selectedDateEvents = events.filter { it.scheduledDate == selectedDate }
+                    val upcomingEvents = events.filter { !it.isCompleted && !it.scheduledDate.isBefore(today) }
+                        .sortedWith(compareBy<MaintenanceEventEntity> { it.scheduledDate }.thenBy { it.scheduledTimeMinutes ?: 1440 })
+                    val overdueEvents = events.filter { !it.isCompleted && it.scheduledDate.isBefore(today) }
+                        .sortedWith(compareBy<MaintenanceEventEntity> { it.scheduledDate }.thenBy { it.scheduledTimeMinutes ?: 1440 })
+                    val urgentSchedules = scheduleStatuses.filter { it.isOverdue || it.isDueSoon }
+                    val activeEventsByScheduleId = events
+                        .filter { !it.isCompleted && it.scheduleId != null && !it.scheduledDate.isBefore(today) }
+                        .groupBy { it.scheduleId!! }
+                        .mapValues { (_, evts) -> evts.minBy { it.scheduledDate } }
+                    val unscheduledUrgentSchedules = urgentSchedules.filter { it.schedule.id !in activeEventsByScheduleId.keys }
+                    val nextUpcomingEvent = upcomingEvents.minByOrNull { it.scheduledDate }
+
                     ServiceLogUiState(
                         vehicle = vehicle,
                         records = records,
@@ -153,6 +138,13 @@ class ServiceLogViewModel @Inject constructor(
                         labourSpendMinor = totalLabour,
                         selectedTab = tab,
                         isLoading = false,
+                        selectedDateEvents = selectedDateEvents,
+                        upcomingEvents = upcomingEvents,
+                        overdueEvents = overdueEvents,
+                        urgentSchedules = urgentSchedules,
+                        activeEventsByScheduleId = activeEventsByScheduleId,
+                        unscheduledUrgentSchedules = unscheduledUrgentSchedules,
+                        nextUpcomingEvent = nextUpcomingEvent,
                     )
                 }
             }

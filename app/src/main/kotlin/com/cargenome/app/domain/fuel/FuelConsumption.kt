@@ -1,12 +1,14 @@
 package com.cargenome.app.domain.fuel
 
 import com.cargenome.app.data.db.entity.FuelRecordEntity
+import androidx.compose.runtime.Immutable
 import java.time.Instant
 
 /**
  * One stretch between two full tanks, which is the only interval where the
  * fuel burnt is actually known.
  */
+@Immutable
 data class FuelSegment(
     val startRecordId: Long,
     val endRecordId: Long,
@@ -26,6 +28,7 @@ data class FuelSegment(
     val costPerKmMinor: Double get() = costMinor / distanceKm
 }
 
+@Immutable
 data class FuelStatistics(
     val segments: List<FuelSegment> = emptyList(),
     val totalDistanceKm: Double = 0.0,

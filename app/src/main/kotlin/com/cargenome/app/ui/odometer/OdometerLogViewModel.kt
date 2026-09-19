@@ -20,8 +20,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.launch
 
+@Immutable
 data class OdometerLogUiState(
     val vehicle: VehicleEntity? = null,
     val readings: List<OdometerReadingEntity> = emptyList(),

@@ -180,7 +180,7 @@ fun AnalyticsScreen(
                     return@LazyColumn
                 }
 
-                item {
+                item(key = "time_range") {
                     TimeRangeSelector(
                         selectedRange = state.selectedTimeRange,
                         onSelectRange = viewModel::setTimeRange,
@@ -188,20 +188,20 @@ fun AnalyticsScreen(
                 }
 
                 if (data.totalSpendMinor == 0L && data.trackedDistanceKm == 0.0) {
-                    if (!state.isLoading) item { EmptyAnalyticsCard() }
+                    if (!state.isLoading) item(key = "empty") { EmptyAnalyticsCard() }
                 } else {
-                    item { CostOverviewCard(data, vehicle) }
+                    item(key = "cost_overview") { CostOverviewCard(data, vehicle) }
 
                     if (data.categorySpends.isNotEmpty()) {
-                        item { CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount) }
+                        item(key = "category_spends") { CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount) }
                     }
 
                     if (data.monthlySpends.isNotEmpty()) {
-                        item { MonthlySpendCard(data.monthlySpends, vehicle) }
+                        item(key = "monthly_spends") { MonthlySpendCard(data.monthlySpends, vehicle) }
                     }
 
                     if (data.consumptionHistory.size >= 2) {
-                        item { ConsumptionTrendCard(data.consumptionHistory, vehicle, data.averageConsumption) }
+                        item(key = "consumption_trend") { ConsumptionTrendCard(data.consumptionHistory, vehicle, data.averageConsumption) }
                     }
                 }
             }
@@ -539,6 +539,14 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
     val textMeasurer = rememberTextMeasurer()
     val textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, color = textColor)
+    val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(6f, 6f)) }
+    val tickLayouts = remember(maxSpend, vehicle.currencyCode, locale, textMeasurer, textStyle) {
+        listOf(
+            textMeasurer.measure(Format.money(maxSpend, vehicle.currencyCode, locale), textStyle),
+            textMeasurer.measure(Format.money(maxSpend / 2L, vehicle.currencyCode, locale), textStyle),
+            textMeasurer.measure(Format.money(0L, vehicle.currencyCode, locale), textStyle),
+        )
+    }
 
     SectionCard(stringResource(R.string.analytics_monthly_spend)) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -569,16 +577,11 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                 val yAxisWidth = 60.dp.toPx()
                 val chartWidth = size.width - yAxisWidth
                 val chartHeight = size.height - 12.dp.toPx()
-                val dashEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 6f))
 
                 // Y-axis ticks (top, mid, bottom)
-                val ticks = listOf(
-                    0f to maxSpend,
-                    chartHeight / 2f to maxSpend / 2L,
-                    chartHeight to 0L,
-                )
-
-                ticks.forEach { (y, amount) ->
+                val yPositions = floatArrayOf(0f, chartHeight / 2f, chartHeight)
+                tickLayouts.forEachIndexed { i, measured ->
+                    val y = yPositions[i]
                     drawLine(
                         color = gridColor,
                         start = Offset(yAxisWidth, y),
@@ -586,8 +589,6 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                         strokeWidth = 1.dp.toPx(),
                         pathEffect = dashEffect,
                     )
-                    val label = Format.money(amount, vehicle.currencyCode, locale)
-                    val measured = textMeasurer.measure(label, textStyle)
                     drawText(
                         textLayoutResult = measured,
                         topLeft = Offset(
@@ -739,7 +740,16 @@ private fun ConsumptionTrendCard(
                 val max = allValues.maxOrNull() ?: 1.0
                 Triple(min, max, (max - min).coerceAtLeast(0.5))
             }
+            val midVal = (minVal + maxVal) / 2.0
             val dashEffect = remember { PathEffect.dashPathEffect(floatArrayOf(10f, 10f)) }
+            val trendPath = remember { Path() }
+            val tickLayouts = remember(minVal, midVal, maxVal, locale, textMeasurer, textStyle) {
+                listOf(
+                    textMeasurer.measure(Format.consumption(maxVal, locale), textStyle),
+                    textMeasurer.measure(Format.consumption(midVal, locale), textStyle),
+                    textMeasurer.measure(Format.consumption(minVal, locale), textStyle),
+                )
+            }
 
             Canvas(
                 modifier = Modifier
@@ -775,14 +785,9 @@ private fun ConsumptionTrendCard(
                 val chartW = size.width - yAxisWidth - pad * 2
                 val chartH = size.height - pad * 2
 
-                val midVal = (minVal + maxVal) / 2.0
-                val ticks = listOf(
-                    pad to maxVal,
-                    pad + chartH / 2f to midVal,
-                    pad + chartH to minVal,
-                )
-
-                ticks.forEach { (y, valNum) ->
+                val yPositions = floatArrayOf(pad, pad + chartH / 2f, pad + chartH)
+                tickLayouts.forEachIndexed { i, measured ->
+                    val y = yPositions[i]
                     drawLine(
                         color = gridColor,
                         start = Offset(yAxisWidth, y),
@@ -790,8 +795,6 @@ private fun ConsumptionTrendCard(
                         strokeWidth = 1.dp.toPx(),
                         pathEffect = dashEffect,
                     )
-                    val label = Format.consumption(valNum, locale)
-                    val measured = textMeasurer.measure(label, textStyle)
                     drawText(
                         textLayoutResult = measured,
                         topLeft = Offset(
@@ -827,13 +830,12 @@ private fun ConsumptionTrendCard(
 
                 // Line connecting points
                 if (points.size >= 2) {
-                    val path = Path().apply {
-                        moveTo(points.first().x, points.first().y)
-                        for (i in 1 until points.size) {
-                            lineTo(points[i].x, points[i].y)
-                        }
+                    trendPath.rewind()
+                    trendPath.moveTo(points.first().x, points.first().y)
+                    for (i in 1 until points.size) {
+                        trendPath.lineTo(points[i].x, points[i].y)
                     }
-                    drawPath(path, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
+                    drawPath(trendPath, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
                 }
 
                 // Selected point vertical indicator line

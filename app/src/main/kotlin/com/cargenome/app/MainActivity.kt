@@ -11,6 +11,8 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import com.cargenome.app.data.settings.AppSettings
 import com.cargenome.app.data.settings.AppSettingsRepository
 import com.cargenome.app.data.settings.ThemeMode
@@ -48,18 +50,22 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Ensure downloaded APKs are indexed by MediaStore for file managers
-        val downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS)
-        val filesToScan = listOfNotNull(
-            java.io.File(downloadsDir, "CarGenome.apk"),
-            java.io.File(downloadsDir.parentFile, "Downloads/CarGenome.apk"),
-        ).map { it.absolutePath }.toTypedArray()
-        MediaScannerConnection.scanFile(
-            applicationContext,
-            filesToScan,
-            arrayOf("application/vnd.android.package-archive"),
-            null,
-        )
+        // Ensure downloaded APKs are indexed by MediaStore without blocking the main thread
+        lifecycleScope.launch(Dispatchers.IO) {
+            val downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS)
+            val filesToScan = listOfNotNull(
+                java.io.File(downloadsDir, "CarGenome.apk"),
+                java.io.File(downloadsDir.parentFile, "Downloads/CarGenome.apk"),
+            ).filter { it.exists() }.map { it.absolutePath }.toTypedArray()
+            if (filesToScan.isNotEmpty()) {
+                MediaScannerConnection.scanFile(
+                    applicationContext,
+                    filesToScan,
+                    arrayOf("application/vnd.android.package-archive"),
+                    null,
+                )
+            }
+        }
         setContent {
             val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
             val systemDark = isSystemInDarkTheme()
@@ -140,16 +146,20 @@ class MainActivity : ComponentActivity() {
             val currentDisplay = display ?: return
             val maxRate = currentDisplay.supportedModes.maxOfOrNull { it.refreshRate } ?: return
             val params = window.attributes
-            params.preferredRefreshRate = maxRate
-            window.attributes = params
+            if (params.preferredRefreshRate != maxRate) {
+                params.preferredRefreshRate = maxRate
+                window.attributes = params
+            }
         } else {
             @Suppress("DEPRECATION")
             val currentDisplay = windowManager.defaultDisplay
             val maxRate = currentDisplay?.supportedModes?.maxOfOrNull { it.refreshRate }
             if (maxRate != null) {
                 val params = window.attributes
-                params.preferredRefreshRate = maxRate
-                window.attributes = params
+                if (params.preferredRefreshRate != maxRate) {
+                    params.preferredRefreshRate = maxRate
+                    window.attributes = params
+                }
             }
         }
     }

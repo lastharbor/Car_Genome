@@ -96,9 +96,11 @@ fun CarGenomeBottomBar(
                     if (!selected) {
                         navController.navigate(tab.route) {
                             popUpTo(GarageRoute) {
+                                saveState = true
                                 inclusive = false
                             }
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 },

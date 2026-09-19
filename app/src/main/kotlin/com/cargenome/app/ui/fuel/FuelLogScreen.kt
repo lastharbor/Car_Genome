@@ -140,15 +140,15 @@ fun FuelLogScreen(
             ) {
                 if (vehicle == null) {
                     if (!state.isLoading) {
-                        item { EmptyVehiclesTabCard(onAddVehicle = onAddVehicle) }
+                        item(key = "empty_vehicles") { EmptyVehiclesTabCard(onAddVehicle = onAddVehicle) }
                     }
                     return@LazyColumn
                 }
 
                 if (state.records.isEmpty()) {
-                    if (!state.isLoading) item { EmptyLog() }
+                    if (!state.isLoading) item(key = "empty_fuel_log") { EmptyLog() }
                 } else {
-                    item { SummaryCard(state.statistics, vehicle) }
+                    item(key = "fuel_summary") { SummaryCard(state.statistics, vehicle) }
                 }
 
                 items(

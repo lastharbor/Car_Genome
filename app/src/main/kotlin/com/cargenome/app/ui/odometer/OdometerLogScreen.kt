@@ -129,10 +129,10 @@ fun OdometerLogScreen(
                 if (vehicle == null) return@LazyColumn
 
                 if (state.readings.isEmpty()) {
-                    if (!state.isLoading) item { EmptyOdometerCard() }
+                    if (!state.isLoading) item(key = "empty_odometer") { EmptyOdometerCard() }
                 } else {
                     if (state.chronologicalReadings.size >= 2) {
-                        item {
+                        item(key = "mileage_chart") {
                             MileageChartCard(
                                 readings = state.chronologicalReadings,
                                 vehicle = vehicle,
@@ -200,6 +200,8 @@ private fun MileageChartCard(
             val minTime = readings.first().recordedAt.toEpochMilli().toDouble()
             val maxTime = readings.last().recordedAt.toEpochMilli().toDouble()
             val timeRange = (maxTime - minTime).coerceAtLeast(1.0)
+            val linePath = remember { Path() }
+            val fillPath = remember { Path() }
 
             Canvas(
                 modifier = Modifier
@@ -226,19 +228,17 @@ private fun MileageChartCard(
                 }
 
                 if (points.size >= 2) {
-                    val linePath = Path().apply {
-                        moveTo(points.first().x, points.first().y)
-                        for (i in 1 until points.size) {
-                            lineTo(points[i].x, points[i].y)
-                        }
+                    linePath.rewind()
+                    linePath.moveTo(points.first().x, points.first().y)
+                    for (i in 1 until points.size) {
+                        linePath.lineTo(points[i].x, points[i].y)
                     }
 
-                    val fillPath = Path().apply {
-                        addPath(linePath)
-                        lineTo(points.last().x, h)
-                        lineTo(points.first().x, h)
-                        close()
-                    }
+                    fillPath.rewind()
+                    fillPath.addPath(linePath)
+                    fillPath.lineTo(points.last().x, h)
+                    fillPath.lineTo(points.first().x, h)
+                    fillPath.close()
 
                     drawPath(
                         path = fillPath,

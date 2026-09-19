@@ -9,6 +9,7 @@ import com.cargenome.app.domain.fuel.FuelConsumption
 import com.cargenome.app.domain.model.ConsumptionUnit
 import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.domain.model.VolumeUnit
+import androidx.compose.runtime.Immutable
 import java.time.Instant
 import java.time.YearMonth
 import java.time.ZoneId
@@ -20,6 +21,7 @@ enum class AnalyticsTimeRange {
     MONTHS_3,
 }
 
+@Immutable
 data class CategorySpend(
     val key: String,
     val amountMinor: Long,
@@ -27,6 +29,7 @@ data class CategorySpend(
     val count: Int = 0,
 )
 
+@Immutable
 data class MonthlySpend(
     val yearMonth: YearMonth,
     val amountMinor: Long,
@@ -34,6 +37,7 @@ data class MonthlySpend(
     val percentageOfTotal: Float = 0f,
 )
 
+@Immutable
 data class ConsumptionPoint(
     val date: Instant,
     val consumptionValue: Double,
@@ -41,6 +45,7 @@ data class ConsumptionPoint(
     val deltaFromAverage: Double? = null,
 )
 
+@Immutable
 data class VehicleAnalyticsData(
     val totalSpendMinor: Long = 0,
     val fuelSpendMinor: Long = 0,

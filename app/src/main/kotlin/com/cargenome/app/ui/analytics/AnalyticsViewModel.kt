@@ -23,8 +23,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import androidx.compose.runtime.Immutable
 import com.cargenome.app.domain.analytics.AnalyticsTimeRange
 
+@Immutable
 data class AnalyticsUiState(
     val vehicle: VehicleEntity? = null,
     val data: VehicleAnalyticsData = VehicleAnalyticsData(),
