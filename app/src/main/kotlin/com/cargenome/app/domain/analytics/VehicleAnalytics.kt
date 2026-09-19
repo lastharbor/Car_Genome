@@ -13,20 +13,32 @@ import java.time.Instant
 import java.time.YearMonth
 import java.time.ZoneId
 
+enum class AnalyticsTimeRange {
+    ALL_TIME,
+    YEAR_1,
+    MONTHS_6,
+    MONTHS_3,
+}
+
 data class CategorySpend(
     val key: String,
     val amountMinor: Long,
     val percentage: Float,
+    val count: Int = 0,
 )
 
 data class MonthlySpend(
     val yearMonth: YearMonth,
     val amountMinor: Long,
+    val count: Int = 0,
+    val percentageOfTotal: Float = 0f,
 )
 
 data class ConsumptionPoint(
     val date: Instant,
     val consumptionValue: Double,
+    val odometerKm: Double? = null,
+    val deltaFromAverage: Double? = null,
 )
 
 data class VehicleAnalyticsData(
@@ -40,9 +52,12 @@ data class VehicleAnalyticsData(
     val averageConsumption: Double? = null,
     val bestConsumption: Double? = null,
     val worstConsumption: Double? = null,
+    val averageMonthlySpendMinor: Long = 0,
+    val costPerDayMinor: Long? = null,
     val categorySpends: List<CategorySpend> = emptyList(),
     val monthlySpends: List<MonthlySpend> = emptyList(),
     val consumptionHistory: List<ConsumptionPoint> = emptyList(),
+    val totalEntriesCount: Int = 0,
 )
 
 object VehicleAnalyticsCalculator {
@@ -53,26 +68,48 @@ object VehicleAnalyticsCalculator {
         serviceRecords: List<ServiceRecordEntity>,
         expenses: List<ExpenseEntity>,
         currentOdometerKm: Double?,
+        timeRange: AnalyticsTimeRange = AnalyticsTimeRange.ALL_TIME,
+        now: Instant = Instant.now(),
         zoneId: ZoneId = ZoneId.systemDefault(),
     ): VehicleAnalyticsData {
-        val fuelStats = FuelConsumption.analyse(fuelRecords)
-        val fuelSpend = fuelRecords.sumOf { it.totalCostMinor }
-        val serviceSpend = serviceRecords.sumOf { it.totalCostMinor }
-        val otherSpend = expenses.sumOf { it.amountMinor }
-        val totalSpend = fuelSpend + serviceSpend + otherSpend
+        val cutoff: Instant? = when (timeRange) {
+            AnalyticsTimeRange.ALL_TIME -> null
+            AnalyticsTimeRange.YEAR_1 -> now.minus(365, java.time.temporal.ChronoUnit.DAYS)
+            AnalyticsTimeRange.MONTHS_6 -> now.minus(183, java.time.temporal.ChronoUnit.DAYS)
+            AnalyticsTimeRange.MONTHS_3 -> now.minus(92, java.time.temporal.ChronoUnit.DAYS)
+        }
 
-        val minOdo = listOfNotNull(
-            vehicle.initialOdometerKm.takeIf { it > 0.0 },
-            fuelRecords.minOfOrNull { it.odometerKm },
-            serviceRecords.mapNotNull { it.odometerKm }.minOrNull(),
-            expenses.mapNotNull { it.odometerKm }.minOrNull(),
-        ).minOrNull() ?: 0.0
+        val filteredFuels = if (cutoff == null) fuelRecords else fuelRecords.filter { !it.filledAt.isBefore(cutoff) }
+        val filteredServices = if (cutoff == null) serviceRecords else serviceRecords.filter { !it.performedAt.isBefore(cutoff) }
+        val filteredExpenses = if (cutoff == null) expenses else expenses.filter { !it.incurredAt.isBefore(cutoff) }
+
+        val fuelStats = FuelConsumption.analyse(filteredFuels)
+        val fuelSpend = filteredFuels.sumOf { it.totalCostMinor }
+        val serviceSpend = filteredServices.sumOf { it.totalCostMinor }
+        val otherSpend = filteredExpenses.sumOf { it.amountMinor }
+        val totalSpend = fuelSpend + serviceSpend + otherSpend
+        val totalEntries = filteredFuels.size + filteredServices.size + filteredExpenses.size
+
+        val minOdo = if (timeRange == AnalyticsTimeRange.ALL_TIME) {
+            listOfNotNull(
+                vehicle.initialOdometerKm.takeIf { it > 0.0 },
+                filteredFuels.minOfOrNull { it.odometerKm },
+                filteredServices.mapNotNull { it.odometerKm }.minOrNull(),
+                filteredExpenses.mapNotNull { it.odometerKm }.minOrNull(),
+            ).minOrNull() ?: 0.0
+        } else {
+            listOfNotNull(
+                filteredFuels.minOfOrNull { it.odometerKm },
+                filteredServices.mapNotNull { it.odometerKm }.minOrNull(),
+                filteredExpenses.mapNotNull { it.odometerKm }.minOrNull(),
+            ).minOrNull() ?: (vehicle.initialOdometerKm.takeIf { it > 0.0 } ?: 0.0)
+        }
 
         val maxOdo = listOfNotNull(
             currentOdometerKm,
-            fuelRecords.maxOfOrNull { it.odometerKm },
-            serviceRecords.mapNotNull { it.odometerKm }.maxOrNull(),
-            expenses.mapNotNull { it.odometerKm }.maxOrNull(),
+            filteredFuels.maxOfOrNull { it.odometerKm },
+            filteredServices.mapNotNull { it.odometerKm }.maxOrNull(),
+            filteredExpenses.mapNotNull { it.odometerKm }.maxOrNull(),
             minOdo,
         ).maxOrNull() ?: minOdo
 
@@ -91,12 +128,21 @@ object VehicleAnalyticsCalculator {
         val bestConsumption = fuelStats.bestLitresPer100Km?.let(unit::fromLitresPer100Km)
         val worstConsumption = fuelStats.worstLitresPer100Km?.let(unit::fromLitresPer100Km)
 
-        // Spending by category breakdown
+        // Spending by category breakdown with counts
         val rawCategoryMap = mutableMapOf<String, Long>()
-        if (fuelSpend > 0) rawCategoryMap["fuel"] = fuelSpend
-        if (serviceSpend > 0) rawCategoryMap["service"] = serviceSpend
-        expenses.groupBy { it.category.name.lowercase() }.forEach { (cat, list) ->
+        val rawCategoryCountMap = mutableMapOf<String, Int>()
+
+        if (fuelSpend > 0) {
+            rawCategoryMap["fuel"] = fuelSpend
+            rawCategoryCountMap["fuel"] = filteredFuels.size
+        }
+        if (serviceSpend > 0) {
+            rawCategoryMap["service"] = serviceSpend
+            rawCategoryCountMap["service"] = filteredServices.size
+        }
+        filteredExpenses.groupBy { it.category.name.lowercase() }.forEach { (cat, list) ->
             rawCategoryMap[cat] = (rawCategoryMap[cat] ?: 0L) + list.sumOf { it.amountMinor }
+            rawCategoryCountMap[cat] = (rawCategoryCountMap[cat] ?: 0) + list.size
         }
 
         val categorySpends = if (totalSpend > 0) {
@@ -105,30 +151,58 @@ object VehicleAnalyticsCalculator {
                     key = cat,
                     amountMinor = amount,
                     percentage = (amount.toDouble() / totalSpend * 100.0).toFloat(),
+                    count = rawCategoryCountMap[cat] ?: 0,
                 )
             }.sortedByDescending { it.amountMinor }
         } else {
             emptyList()
         }
 
-        // Monthly spending (last 12 months or chronological)
+        // Monthly spending with count and percentage
         val monthlyMap = mutableMapOf<YearMonth, Long>()
-        fuelRecords.forEach {
+        val monthlyCountMap = mutableMapOf<YearMonth, Int>()
+
+        filteredFuels.forEach {
             val ym = it.filledAt.atZone(zoneId).toLocalDate().let { d -> YearMonth.of(d.year, d.month) }
             monthlyMap[ym] = (monthlyMap[ym] ?: 0L) + it.totalCostMinor
+            monthlyCountMap[ym] = (monthlyCountMap[ym] ?: 0) + 1
         }
-        serviceRecords.forEach {
+        filteredServices.forEach {
             val ym = it.performedAt.atZone(zoneId).toLocalDate().let { d -> YearMonth.of(d.year, d.month) }
             monthlyMap[ym] = (monthlyMap[ym] ?: 0L) + it.totalCostMinor
+            monthlyCountMap[ym] = (monthlyCountMap[ym] ?: 0) + 1
         }
-        expenses.forEach {
+        filteredExpenses.forEach {
             val ym = it.incurredAt.atZone(zoneId).toLocalDate().let { d -> YearMonth.of(d.year, d.month) }
             monthlyMap[ym] = (monthlyMap[ym] ?: 0L) + it.amountMinor
+            monthlyCountMap[ym] = (monthlyCountMap[ym] ?: 0) + 1
         }
 
         val monthlySpends = monthlyMap.map { (ym, amount) ->
-            MonthlySpend(ym, amount)
+            MonthlySpend(
+                yearMonth = ym,
+                amountMinor = amount,
+                count = monthlyCountMap[ym] ?: 0,
+                percentageOfTotal = if (totalSpend > 0) (amount.toDouble() / totalSpend * 100.0).toFloat() else 0f,
+            )
         }.sortedBy { it.yearMonth }
+
+        val avgMonthlySpend = if (monthlySpends.isNotEmpty()) {
+            totalSpend / monthlySpends.size
+        } else 0L
+
+        val allInstants = buildList {
+            filteredFuels.forEach { add(it.filledAt) }
+            filteredServices.forEach { add(it.performedAt) }
+            filteredExpenses.forEach { add(it.incurredAt) }
+        }
+        val earliestInstant = allInstants.minOrNull()
+        val latestInstant = allInstants.maxOrNull()
+
+        val costPerDay = if (earliestInstant != null && latestInstant != null && totalSpend > 0) {
+            val days = java.time.Duration.between(earliestInstant, latestInstant).toDays().coerceAtLeast(1)
+            totalSpend / days
+        } else null
 
         // Consumption history over time
         val consumptionHistory = fuelStats.segments.mapNotNull { segment ->
@@ -136,6 +210,8 @@ object VehicleAnalyticsCalculator {
                 ConsumptionPoint(
                     date = segment.endAt,
                     consumptionValue = value,
+                    odometerKm = segment.endOdometerKm,
+                    deltaFromAverage = avgConsumption?.let { value - it },
                 )
             }
         }
@@ -151,9 +227,12 @@ object VehicleAnalyticsCalculator {
             averageConsumption = avgConsumption,
             bestConsumption = bestConsumption,
             worstConsumption = worstConsumption,
+            averageMonthlySpendMinor = avgMonthlySpend,
+            costPerDayMinor = costPerDay,
             categorySpends = categorySpends,
             monthlySpends = monthlySpends,
             consumptionHistory = consumptionHistory,
+            totalEntriesCount = totalEntries,
         )
     }
 

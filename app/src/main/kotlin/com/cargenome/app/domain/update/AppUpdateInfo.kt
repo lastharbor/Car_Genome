@@ -11,4 +11,6 @@ data class AppUpdateInfo(
     val assetName: String,
     val assetSize: Long,
     val downloadUrl: String,
+    /** Hex SHA-256 of the APK asset, taken from the release's .sha256 companion asset. */
+    val sha256: String,
 )

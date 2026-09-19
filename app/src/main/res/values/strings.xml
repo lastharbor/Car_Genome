@@ -160,6 +160,20 @@
     <string name="analytics_consumption_trend">Fuel consumption history</string>
     <string name="analytics_empty_title">Not enough data</string>
     <string name="analytics_empty_body">Log fill-ups, services and expenses to see detailed charts and cost analysis.</string>
+    <string name="analytics_range_all">All time</string>
+    <string name="analytics_range_year">1 year</string>
+    <string name="analytics_range_6m">6 months</string>
+    <string name="analytics_range_3m">3 months</string>
+    <string name="analytics_avg_monthly">Average per month</string>
+    <string name="analytics_cost_per_day">Cost per day</string>
+    <string name="analytics_tap_hint">Tap on chart elements to inspect</string>
+    <plurals name="analytics_entries_count">
+        <item quantity="one">%1$d entry</item>
+        <item quantity="other">%1$d entries</item>
+    </plurals>
+    <string name="analytics_diff_more">+%1$s vs avg</string>
+    <string name="analytics_diff_less">-%1$s vs avg</string>
+    <string name="analytics_selected_slice">Selected</string>
 
     <string name="expense_title">Other expenses</string>
     <string name="expense_add">Add expense</string>

@@ -158,6 +158,20 @@
     <string name="analytics_consumption_trend">Verbrauchsverlauf</string>
     <string name="analytics_empty_title">Nicht genügend Daten</string>
     <string name="analytics_empty_body">Erfassen Sie Betankungen, Wartungen und Ausgaben für detaillierte Auswertungen.</string>
+    <string name="analytics_range_all">Gesamt</string>
+    <string name="analytics_range_year">1 Jahr</string>
+    <string name="analytics_range_6m">6 Monate</string>
+    <string name="analytics_range_3m">3 Monate</string>
+    <string name="analytics_avg_monthly">Monatsdurchschnitt</string>
+    <string name="analytics_cost_per_day">Kosten pro Tag</string>
+    <string name="analytics_tap_hint">Tippen für Details</string>
+    <plurals name="analytics_entries_count">
+        <item quantity="one">%1$d Eintrag</item>
+        <item quantity="other">%1$d Einträge</item>
+    </plurals>
+    <string name="analytics_diff_more">+%1$s über Schnitt</string>
+    <string name="analytics_diff_less">-%1$s sparsamer als Schnitt</string>
+    <string name="analytics_selected_slice">Ausgewählt</string>
 
     <string name="expense_title">Weitere Ausgaben</string>
     <string name="expense_add">Ausgabe hinzufügen</string>
@@ -417,7 +431,7 @@
     <string name="vin_problem_length">Eine FIN muss genau 17 Zeichen lang sein (aktuell %1$d)</string>
     <string name="vin_problem_characters">Zeichen %1$s ist unzulässig: I, O und Q existieren in einer FIN nicht</string>
     <string name="vin_problem_check_error">Prüfziffer fehlerhaft: Stelle 9 müsste %1$s sein, nicht %2$s.</string>
-    <string name="vin_problem_check_warning">Prüfziffer stimmt nicht mit der nordamerikanischen Formel überein.</string>
+    <string name="vin_problem_check_warning">An Position 9 steht %1$s, während die nordamerikanische Formel %2$s ergibt. Das ist hier normal: Die Prüfziffer ist nur in Nordamerika und China vorgeschrieben.</string>
 
     <string name="vin_region_Africa">Afrika</string>
     <string name="vin_region_Asia">Asien</string>

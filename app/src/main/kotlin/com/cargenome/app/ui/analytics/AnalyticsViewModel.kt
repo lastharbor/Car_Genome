@@ -17,15 +17,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import com.cargenome.app.domain.analytics.AnalyticsTimeRange
 
 data class AnalyticsUiState(
     val vehicle: VehicleEntity? = null,
     val data: VehicleAnalyticsData = VehicleAnalyticsData(),
+    val selectedTimeRange: AnalyticsTimeRange = AnalyticsTimeRange.ALL_TIME,
     val isLoading: Boolean = true,
 )
 
@@ -42,6 +45,8 @@ class AnalyticsViewModel @Inject constructor(
 
     val vehicleId: Long = savedStateHandle.toRoute<AnalyticsRoute>().vehicleId
 
+    private val selectedTimeRange = MutableStateFlow(AnalyticsTimeRange.ALL_TIME)
+
     val state: StateFlow<AnalyticsUiState> = vehicles.observe(vehicleId)
         .flatMapLatest { vehicle ->
             if (vehicle == null) {
@@ -57,7 +62,8 @@ class AnalyticsViewModel @Inject constructor(
                     service.observeRecords(vehicle.id),
                     expenses.observe(vehicle.id),
                     odometer.observeCurrentKm(vehicle.id),
-                ) { fuels, services, exps, currentKm ->
+                    selectedTimeRange,
+                ) { fuels, services, exps, currentKm, timeRange ->
                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
                         val analyticsData = VehicleAnalyticsCalculator.calculate(
                             vehicle = vehicle,
@@ -65,10 +71,12 @@ class AnalyticsViewModel @Inject constructor(
                             serviceRecords = services,
                             expenses = exps,
                             currentOdometerKm = currentKm,
+                            timeRange = timeRange,
                         )
                         AnalyticsUiState(
                             vehicle = vehicle,
                             data = analyticsData,
+                            selectedTimeRange = timeRange,
                             isLoading = false,
                         )
                     }
@@ -80,6 +88,10 @@ class AnalyticsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS),
             initialValue = AnalyticsUiState(),
         )
+
+    fun setTimeRange(range: AnalyticsTimeRange) {
+        selectedTimeRange.value = range
+    }
 
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L

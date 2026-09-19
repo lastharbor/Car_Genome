@@ -18,6 +18,19 @@ val keystoreProperties = Properties().apply {
 }
 val hasReleaseKeystore = keystoreProperties.getProperty("storeFile") != null
 
+// The updater token is optional and must never be committed: put
+// github.updateToken in local.properties, or set GITHUB_UPDATE_TOKEN in the
+// environment for CI. A public repository needs no token at all.
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties().apply {
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+val githubUpdateToken: String = localProperties.getProperty("github.updateToken")
+    ?: System.getenv("GITHUB_UPDATE_TOKEN")
+    ?: ""
+
 android {
     namespace = "com.cargenome.app"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -34,7 +47,7 @@ android {
         buildConfigField("boolean", "IS_PREMIUM", "false")
         buildConfigField("String", "GITHUB_REPO_OWNER", "\"lastharbor\"")
         buildConfigField("String", "GITHUB_REPO_NAME", "\"Car_Genome\"")
-        buildConfigField("String", "GITHUB_UPDATE_TOKEN", "\"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\"")
+        buildConfigField("String", "GITHUB_UPDATE_TOKEN", "\"$githubUpdateToken\"")
     }
 
     androidResources {
@@ -73,10 +86,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = if (hasReleaseKeystore) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
+            // Never fall back to the debug keystore here: its password is public,
+            // so a release signed with it offers no protection against repackaging.
+            // Without keystore.properties the release stays unsigned on purpose.
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }

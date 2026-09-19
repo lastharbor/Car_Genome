@@ -96,7 +96,7 @@
     <string name="unit_km">%1$s км</string>
     <string name="unit_mi">%1$s миль</string>
     <string name="unit_km_suffix">км</string>
-    <string name="unit_mi_suffix">миль</string>
+    <string name="unit_mi_suffix">ми</string>
     <string name="unit_km_name">Километры</string>
     <string name="unit_mi_name">Мили</string>
     <string name="unit_litre">%1$s л</string>
@@ -152,8 +152,8 @@
 
     <string name="analytics_title">Аналитика</string>
     <string name="analytics_total_cost">Всего потрачено</string>
-    <string name="analytics_cost_per_km">Стоимость километра</string>
-    <string name="analytics_fuel_cost_per_km">Топливо на км</string>
+    <string name="analytics_cost_per_km">Стоимость пробега</string>
+    <string name="analytics_fuel_cost_per_km">Топливо на пробег</string>
     <string name="analytics_distance_tracked">Учтённый пробег</string>
     <string name="analytics_category_breakdown">Расходы по категориям</string>
     <string name="analytics_fuel_category">Топливо</string>
@@ -162,6 +162,22 @@
     <string name="analytics_consumption_trend">Динамика расхода топлива</string>
     <string name="analytics_empty_title">Недостаточно данных</string>
     <string name="analytics_empty_body">Записывайте заправки, ТО и расходы, чтобы видеть графики и расчёт стоимости владения.</string>
+    <string name="analytics_range_all">Всё время</string>
+    <string name="analytics_range_year">1 год</string>
+    <string name="analytics_range_6m">6 месяцев</string>
+    <string name="analytics_range_3m">3 месяца</string>
+    <string name="analytics_avg_monthly">В среднем в месяц</string>
+    <string name="analytics_cost_per_day">В день</string>
+    <string name="analytics_tap_hint">Нажмите на сектор или столбец для деталей</string>
+    <plurals name="analytics_entries_count">
+        <item quantity="one">%1$d запись</item>
+        <item quantity="few">%1$d записи</item>
+        <item quantity="many">%1$d записей</item>
+        <item quantity="other">%1$d записи</item>
+    </plurals>
+    <string name="analytics_diff_more">+%1$s выше среднего</string>
+    <string name="analytics_diff_less">-%1$s экономичнее среднего</string>
+    <string name="analytics_selected_slice">Выбрано</string>
 
     <string name="expense_title">Прочие расходы</string>
     <string name="expense_add">Добавить расход</string>

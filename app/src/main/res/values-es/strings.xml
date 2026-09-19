@@ -22,10 +22,12 @@
     <string name="garage_no_mileage">Kilometraje desconocido</string>
     <plurals name="garage_fill_ups">
         <item quantity="one">%1$d repostaje</item>
+        <item quantity="many">%1$d repostajes</item>
         <item quantity="other">%1$d repostajes</item>
     </plurals>
     <plurals name="garage_jobs">
         <item quantity="one">%1$d servicio</item>
+        <item quantity="many">%1$d servicios</item>
         <item quantity="other">%1$d servicios</item>
     </plurals>
 
@@ -158,6 +160,21 @@
     <string name="analytics_consumption_trend">Historial de consumo</string>
     <string name="analytics_empty_title">No hay datos suficientes</string>
     <string name="analytics_empty_body">Registra repostajes, servicios y gastos para ver gráficos detallados y análisis de costes.</string>
+    <string name="analytics_range_all">Todo el tiempo</string>
+    <string name="analytics_range_year">1 año</string>
+    <string name="analytics_range_6m">6 meses</string>
+    <string name="analytics_range_3m">3 meses</string>
+    <string name="analytics_avg_monthly">Promedio mensual</string>
+    <string name="analytics_cost_per_day">Coste por día</string>
+    <string name="analytics_tap_hint">Toca un elemento del gráfico para inspeccionar</string>
+    <plurals name="analytics_entries_count">
+        <item quantity="one">%1$d registro</item>
+        <item quantity="many">%1$d registros</item>
+        <item quantity="other">%1$d registros</item>
+    </plurals>
+    <string name="analytics_diff_more">+%1$s sobre la media</string>
+    <string name="analytics_diff_less">-%1$s bajo la media</string>
+    <string name="analytics_selected_slice">Seleccionado</string>
 
     <string name="expense_title">Otros gastos</string>
     <string name="expense_add">Añadir gasto</string>
@@ -416,7 +433,7 @@
     <string name="vin_problem_length">El VIN debe tener 17 caracteres (tiene %1$d)</string>
     <string name="vin_problem_characters">La posición %1$s no es válida: I, O y Q nunca se usan en un VIN</string>
     <string name="vin_problem_check_error">Dígito de control incorrecto: la posición 9 debería ser %1$s, no %2$s.</string>
-    <string name="vin_problem_check_warning">El dígito de control no coincide con la fórmula norteamericana.</string>
+    <string name="vin_problem_check_warning">La posición 9 es %1$s y la fórmula norteamericana da %2$s. Esto es normal aquí: el dígito de control solo es obligatorio en América del Norte y China.</string>
 
     <string name="vin_region_Africa">África</string>
     <string name="vin_region_Asia">Asia</string>

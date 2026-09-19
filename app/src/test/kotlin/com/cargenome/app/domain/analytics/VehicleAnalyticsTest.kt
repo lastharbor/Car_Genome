@@ -148,4 +148,74 @@ class VehicleAnalyticsTest {
         // Min is initialOdometerKm = 100_000.0, Max should be 105_000.0 (from fuel record)
         assertEquals(5_000.0, result.trackedDistanceKm, 0.001)
     }
+
+    @Test
+    fun `filters records correctly by time range`() {
+        val now = Instant.parse("2026-07-01T12:00:00Z")
+        val fuels = listOf(
+            FuelRecordEntity(
+                id = 1,
+                vehicleId = 1,
+                filledAt = now.minusSeconds(86400L * 400), // > 1 year ago
+                odometerKm = 100_000.0,
+                volumeLitres = 40.0,
+                totalCostMinor = 5_000,
+                isFullTank = true,
+            ),
+            FuelRecordEntity(
+                id = 2,
+                vehicleId = 1,
+                filledAt = now.minusSeconds(86400L * 150), // within 6 months
+                odometerKm = 102_000.0,
+                volumeLitres = 40.0,
+                totalCostMinor = 6_000,
+                isFullTank = true,
+            ),
+            FuelRecordEntity(
+                id = 3,
+                vehicleId = 1,
+                filledAt = now.minusSeconds(86400L * 30), // within 3 months
+                odometerKm = 104_000.0,
+                volumeLitres = 40.0,
+                totalCostMinor = 7_000,
+                isFullTank = true,
+            ),
+        )
+
+        val allTimeResult = VehicleAnalyticsCalculator.calculate(
+            vehicle = vehicle,
+            fuelRecords = fuels,
+            serviceRecords = emptyList(),
+            expenses = emptyList(),
+            currentOdometerKm = 104_000.0,
+            timeRange = AnalyticsTimeRange.ALL_TIME,
+            now = now,
+        )
+        assertEquals(18_000L, allTimeResult.totalSpendMinor)
+        assertEquals(3, allTimeResult.totalEntriesCount)
+
+        val months3Result = VehicleAnalyticsCalculator.calculate(
+            vehicle = vehicle,
+            fuelRecords = fuels,
+            serviceRecords = emptyList(),
+            expenses = emptyList(),
+            currentOdometerKm = 104_000.0,
+            timeRange = AnalyticsTimeRange.MONTHS_3,
+            now = now,
+        )
+        assertEquals(7_000L, months3Result.totalSpendMinor)
+        assertEquals(1, months3Result.totalEntriesCount)
+
+        val months6Result = VehicleAnalyticsCalculator.calculate(
+            vehicle = vehicle,
+            fuelRecords = fuels,
+            serviceRecords = emptyList(),
+            expenses = emptyList(),
+            currentOdometerKm = 104_000.0,
+            timeRange = AnalyticsTimeRange.MONTHS_6,
+            now = now,
+        )
+        assertEquals(13_000L, months6Result.totalSpendMinor)
+        assertEquals(2, months6Result.totalEntriesCount)
+    }
 }

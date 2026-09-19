@@ -2,6 +2,8 @@ package com.cargenome.app.ui.analytics
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,43 +27,56 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cargenome.app.R
 import com.cargenome.app.data.db.entity.VehicleEntity
+import com.cargenome.app.domain.analytics.AnalyticsTimeRange
 import com.cargenome.app.domain.analytics.CategorySpend
 import com.cargenome.app.domain.analytics.ConsumptionPoint
 import com.cargenome.app.domain.analytics.MonthlySpend
@@ -76,7 +91,10 @@ import com.cargenome.app.ui.common.SectionCard
 import com.cargenome.app.ui.common.displayName
 import com.cargenome.app.ui.common.shortRes
 import com.cargenome.app.ui.common.suffixRes
+import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.atan2
+import kotlin.math.hypot
 import kotlin.math.roundToInt
 
 private val CategoryColors = listOf(
@@ -144,7 +162,9 @@ fun AnalyticsScreen(
 
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
-                modifier = Modifier.fillMaxHeight().widthIn(max = 600.dp),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .widthIn(max = 600.dp),
                 contentPadding = PaddingValues(
                     start = 16.dp + sides.calculateStartPadding(direction),
                     end = 16.dp + sides.calculateEndPadding(direction),
@@ -160,16 +180,23 @@ fun AnalyticsScreen(
                     return@LazyColumn
                 }
 
+                item {
+                    TimeRangeSelector(
+                        selectedRange = state.selectedTimeRange,
+                        onSelectRange = viewModel::setTimeRange,
+                    )
+                }
+
                 if (data.totalSpendMinor == 0L && data.trackedDistanceKm == 0.0) {
                     if (!state.isLoading) item { EmptyAnalyticsCard() }
                 } else {
                     item { CostOverviewCard(data, vehicle) }
 
                     if (data.categorySpends.isNotEmpty()) {
-                        item { CategorySpendCard(data.categorySpends, vehicle) }
+                        item { CategorySpendCard(data.categorySpends, vehicle, data.totalSpendMinor, data.totalEntriesCount) }
                     }
 
-                    if (data.monthlySpends.size >= 2) {
+                    if (data.monthlySpends.isNotEmpty()) {
                         item { MonthlySpendCard(data.monthlySpends, vehicle) }
                     }
 
@@ -178,6 +205,44 @@ fun AnalyticsScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TimeRangeSelector(
+    selectedRange: AnalyticsTimeRange,
+    onSelectRange: (AnalyticsTimeRange) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        AnalyticsTimeRange.entries.forEach { range ->
+            val label = when (range) {
+                AnalyticsTimeRange.ALL_TIME -> stringResource(R.string.analytics_range_all)
+                AnalyticsTimeRange.YEAR_1 -> stringResource(R.string.analytics_range_year)
+                AnalyticsTimeRange.MONTHS_6 -> stringResource(R.string.analytics_range_6m)
+                AnalyticsTimeRange.MONTHS_3 -> stringResource(R.string.analytics_range_3m)
+            }
+            val selected = range == selectedRange
+            FilterChip(
+                selected = selected,
+                onClick = { onSelectRange(range) },
+                label = {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                    )
+                },
+                modifier = Modifier.weight(1f),
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ),
+            )
         }
     }
 }
@@ -224,6 +289,20 @@ private fun CostOverviewCard(data: VehicleAnalyticsData, vehicle: VehicleEntity)
             )
         }
 
+        if (data.averageMonthlySpendMinor > 0L) {
+            DetailRow(
+                label = stringResource(R.string.analytics_avg_monthly),
+                value = Format.money(data.averageMonthlySpendMinor, vehicle.currencyCode, locale),
+            )
+        }
+
+        data.costPerDayMinor?.let { perDay ->
+            DetailRow(
+                label = stringResource(R.string.analytics_cost_per_day),
+                value = "${Format.money(perDay, vehicle.currencyCode, locale)} / день",
+            )
+        }
+
         if (data.trackedDistanceKm > 0) {
             DetailRow(
                 label = stringResource(R.string.analytics_distance_tracked),
@@ -244,65 +323,203 @@ private fun CostOverviewCard(data: VehicleAnalyticsData, vehicle: VehicleEntity)
 }
 
 @Composable
-private fun CategorySpendCard(categories: List<CategorySpend>, vehicle: VehicleEntity) {
+private fun CategorySpendCard(
+    categories: List<CategorySpend>,
+    vehicle: VehicleEntity,
+    totalSpendMinor: Long,
+    totalEntriesCount: Int = 0,
+) {
     val locale = LocalConfiguration.current.locales[0]
+    var selectedCategoryKey by remember(categories) { mutableStateOf<String?>(null) }
+    val selectedCat = remember(categories, selectedCategoryKey) {
+        categories.find { it.key == selectedCategoryKey }
+    }
 
     SectionCard(stringResource(R.string.analytics_category_breakdown)) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            // Donut chart
-            Canvas(
+            // Interactive Donut chart with centered summary
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
-                    .padding(8.dp),
+                    .height(200.dp),
+                contentAlignment = Alignment.Center,
             ) {
-                val strokeWidth = 22.dp.toPx()
-                val radius = (size.minDimension - strokeWidth) / 2f
-                val center = Offset(size.width / 2f, size.height / 2f)
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                        .pointerInput(categories) {
+                            detectTapGestures { offset ->
+                                val defaultStroke = 24.dp.toPx()
+                                val minDim = kotlin.math.min(size.width, size.height).toFloat()
+                                val radius = (minDim - defaultStroke - 8.dp.toPx()) / 2f
+                                val center = Offset(size.width / 2f, size.height / 2f)
+                                val dx = offset.x - center.x
+                                val dy = offset.y - center.y
+                                val dist = hypot(dx, dy)
 
-                var startAngle = -90f
-                categories.forEachIndexed { index, cat ->
-                    val sweepAngle = cat.percentage * 3.6f
-                    val color = CategoryColors[index % CategoryColors.size]
-                    drawArc(
-                        color = color,
-                        startAngle = startAngle,
-                        sweepAngle = sweepAngle,
-                        useCenter = false,
-                        topLeft = Offset(center.x - radius, center.y - radius),
-                        size = Size(radius * 2, radius * 2),
-                        style = Stroke(width = strokeWidth, cap = StrokeCap.Butt),
-                    )
-                    startAngle += sweepAngle
+                                if (dist in (radius - defaultStroke)..(radius + defaultStroke)) {
+                                    var angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble())).toFloat() + 90f
+                                    if (angle < 0f) angle += 360f
+                                    var currentAngle = 0f
+                                    var tappedKey: String? = null
+                                    for (cat in categories) {
+                                        val sweep = cat.percentage * 3.6f
+                                        if (angle >= currentAngle && angle <= currentAngle + sweep) {
+                                            tappedKey = cat.key
+                                            break
+                                        }
+                                        currentAngle += sweep
+                                    }
+                                    selectedCategoryKey = if (selectedCategoryKey == tappedKey) null else tappedKey
+                                } else if (dist < radius - defaultStroke) {
+                                    // Tap center to reset
+                                    selectedCategoryKey = null
+                                }
+                            }
+                        },
+                ) {
+                    val baseStroke = 22.dp.toPx()
+                    val selectedStroke = 30.dp.toPx()
+                    val radius = (size.minDimension - selectedStroke - 4.dp.toPx()) / 2f
+                    val center = Offset(size.width / 2f, size.height / 2f)
+
+                    var startAngle = -90f
+                    categories.forEachIndexed { index, cat ->
+                        val sweepAngle = cat.percentage * 3.6f
+                        val isSelected = selectedCategoryKey == cat.key
+                        val hasAnySelection = selectedCategoryKey != null
+                        val rawColor = CategoryColors[index % CategoryColors.size]
+                        val color = if (hasAnySelection && !isSelected) {
+                            rawColor.copy(alpha = 0.35f)
+                        } else {
+                            rawColor
+                        }
+                        val stroke = if (isSelected) selectedStroke else baseStroke
+
+                        drawArc(
+                            color = color,
+                            startAngle = startAngle,
+                            sweepAngle = sweepAngle,
+                            useCenter = false,
+                            topLeft = Offset(center.x - radius, center.y - radius),
+                            size = Size(radius * 2, radius * 2),
+                            style = Stroke(width = stroke, cap = StrokeCap.Butt),
+                        )
+                        startAngle += sweepAngle
+                    }
+                }
+
+                // Center information text
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { selectedCategoryKey = null }
+                        .padding(12.dp),
+                ) {
+                    if (selectedCat != null) {
+                        Text(
+                            text = categoryDisplayName(selectedCat.key),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Text(
+                            text = Format.money(selectedCat.amountMinor, vehicle.currencyCode, locale),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = "${selectedCat.percentage.roundToInt()}% (${selectedCat.count})",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.analytics_total_cost),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                        )
+                        Text(
+                            text = Format.money(totalSpendMinor, vehicle.currencyCode, locale),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        if (totalEntriesCount > 0) {
+                            Text(
+                                text = pluralStringResource(R.plurals.analytics_entries_count, totalEntriesCount, totalEntriesCount),
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
                 }
             }
 
-            // Category legend
+            // Category legend (clickable to highlight / inspect)
             categories.forEachIndexed { index, cat ->
                 val color = CategoryColors[index % CategoryColors.size]
                 val label = categoryDisplayName(cat.key)
                 val money = Format.money(cat.amountMinor, vehicle.currencyCode, locale)
                 val pct = "${cat.percentage.roundToInt()}%"
+                val isSelected = selectedCategoryKey == cat.key
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable {
+                            selectedCategoryKey = if (selectedCategoryKey == cat.key) null else cat.key
+                        },
+                    color = if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+                    } else {
+                        Color.Transparent
+                    },
+                    shape = RoundedCornerShape(8.dp),
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                        Box(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .background(color, CircleShape),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                            Box(
+                                modifier = Modifier
+                                    .size(if (isSelected) 14.dp else 10.dp)
+                                    .background(color, CircleShape),
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = label,
+                                style = if (isSelected) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.bodyMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false),
+                            )
+                            if (cat.count > 0) {
+                                Spacer(Modifier.width(4.dp))
+                                Text(
+                                    text = "(${cat.count})",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                )
+                            }
+                        }
+                        Text(
+                            text = "$money ($pct)",
+                            style = if (isSelected) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.bodyMedium,
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Spacer(Modifier.width(8.dp))
-                        Text(label, style = MaterialTheme.typography.bodyMedium)
                     }
-                    Text(
-                        text = "$money ($pct)",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
                 }
             }
         }
@@ -313,7 +530,11 @@ private fun CategorySpendCard(categories: List<CategorySpend>, vehicle: VehicleE
 private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: VehicleEntity) {
     val locale = LocalConfiguration.current.locales[0]
     val maxSpend = remember(monthlySpends) { monthlySpends.maxOf { it.amountMinor }.coerceAtLeast(1L) }
+    var selectedMonthIndex by remember(monthlySpends) { mutableStateOf<Int?>(null) }
+
     val barColor = MaterialTheme.colorScheme.primary
+    val barColorDimmed = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+    val highlightColor = MaterialTheme.colorScheme.tertiary
     val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
     val textMeasurer = rememberTextMeasurer()
@@ -325,7 +546,25 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .padding(top = 12.dp, bottom = 4.dp),
+                    .padding(top = 12.dp, bottom = 4.dp)
+                    .pointerInput(monthlySpends) {
+                        detectTapGestures { offset ->
+                            val yAxisWidth = 60.dp.toPx()
+                            val chartWidth = size.width - yAxisWidth
+                            val barCount = monthlySpends.size
+                            val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(2.dp.toPx(), 8.dp.toPx())
+                            val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(2.dp.toPx())
+
+                            var hitIdx: Int? = null
+                            monthlySpends.forEachIndexed { idx, _ ->
+                                val x = yAxisWidth + spacing + idx * (barWidth + spacing)
+                                if (offset.x in (x - spacing / 2f)..(x + barWidth + spacing / 2f)) {
+                                    hitIdx = idx
+                                }
+                            }
+                            selectedMonthIndex = if (selectedMonthIndex == hitIdx) null else hitIdx
+                        }
+                    },
             ) {
                 val yAxisWidth = 60.dp.toPx()
                 val chartWidth = size.width - yAxisWidth
@@ -351,7 +590,10 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                     val measured = textMeasurer.measure(label, textStyle)
                     drawText(
                         textLayoutResult = measured,
-                        topLeft = Offset((yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f), (y - measured.size.height / 2f).coerceAtLeast(0f)),
+                        topLeft = Offset(
+                            (yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f),
+                            (y - measured.size.height / 2f).coerceAtLeast(0f),
+                        ),
                     )
                 }
 
@@ -363,18 +605,34 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                     val x = yAxisWidth + spacing + index * (barWidth + spacing)
                     val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
                     val y = chartHeight - barHeight
+                    val isSelected = selectedMonthIndex == index
+                    val hasSelection = selectedMonthIndex != null
+
+                    val fill = when {
+                        isSelected -> highlightColor
+                        hasSelection -> barColorDimmed
+                        else -> barColor
+                    }
 
                     if (barHeight > 0f) {
                         drawRoundRect(
-                            color = barColor,
+                            color = fill,
                             topLeft = Offset(x, y),
                             size = Size(barWidth, barHeight),
                             cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx()),
                         )
+                        if (isSelected) {
+                            drawCircle(
+                                color = highlightColor,
+                                radius = 3.dp.toPx(),
+                                center = Offset(x + barWidth / 2f, (y - 5.dp.toPx()).coerceAtLeast(3.dp.toPx())),
+                            )
+                        }
                     }
                 }
             }
 
+            // Month labels (first and last)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -394,6 +652,62 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+
+            // Interactive inspection detail banner
+            val selectedItem = selectedMonthIndex?.let { monthlySpends.getOrNull(it) }
+            if (selectedItem != null) {
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { selectedMonthIndex = null },
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        val monthTitle = remember(selectedItem.yearMonth, locale) {
+                            try {
+                                DateTimeFormatter.ofPattern("LLLL yyyy", locale).format(selectedItem.yearMonth)
+                                    .replaceFirstChar { it.titlecase(locale) }
+                            } catch (_: Exception) {
+                                "${selectedItem.yearMonth.monthValue}/${selectedItem.yearMonth.year}"
+                            }
+                        }
+                        Column {
+                            Text(
+                                text = monthTitle,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "${Format.money(selectedItem.amountMinor, vehicle.currencyCode, locale)} • ${selectedItem.percentageOfTotal.roundToInt()}% • ${pluralStringResource(R.plurals.analytics_entries_count, selectedItem.count, selectedItem.count)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        IconButton(
+                            onClick = { selectedMonthIndex = null },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Clear",
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
+                    }
+                }
+            } else {
+                Text(
+                    text = stringResource(R.string.analytics_tap_hint),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.padding(start = 8.dp),
+                )
+            }
         }
     }
 }
@@ -406,8 +720,11 @@ private fun ConsumptionTrendCard(
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val unit = vehicle.consumptionUnit()
+    var selectedPointIndex by remember(history) { mutableStateOf<Int?>(null) }
+
     val lineColor = MaterialTheme.colorScheme.primary
     val avgLineColor = MaterialTheme.colorScheme.error
+    val highlightColor = MaterialTheme.colorScheme.tertiary
     val gridColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant
     val textMeasurer = rememberTextMeasurer()
@@ -428,7 +745,30 @@ private fun ConsumptionTrendCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .padding(8.dp),
+                    .padding(8.dp)
+                    .pointerInput(history) {
+                        detectTapGestures { offset ->
+                            val yAxisWidth = 44.dp.toPx()
+                            val pad = 12f
+                            val chartW = size.width - yAxisWidth - pad * 2
+
+                            var bestIdx: Int? = null
+                            var bestDist = Float.MAX_VALUE
+                            history.forEachIndexed { i, _ ->
+                                val x = if (history.size <= 1) {
+                                    yAxisWidth + pad + chartW / 2f
+                                } else {
+                                    yAxisWidth + pad + (i.toFloat() / (history.size - 1) * chartW)
+                                }
+                                val d = kotlin.math.abs(offset.x - x)
+                                if (d < bestDist && d < 36.dp.toPx()) {
+                                    bestDist = d
+                                    bestIdx = i
+                                }
+                            }
+                            selectedPointIndex = if (selectedPointIndex == bestIdx) null else bestIdx
+                        }
+                    },
             ) {
                 val yAxisWidth = 44.dp.toPx()
                 val pad = 12f
@@ -454,7 +794,10 @@ private fun ConsumptionTrendCard(
                     val measured = textMeasurer.measure(label, textStyle)
                     drawText(
                         textLayoutResult = measured,
-                        topLeft = Offset((yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f), (y - measured.size.height / 2f).coerceAtLeast(0f)),
+                        topLeft = Offset(
+                            (yAxisWidth - measured.size.width - 4.dp.toPx()).coerceAtLeast(0f),
+                            (y - measured.size.height / 2f).coerceAtLeast(0f),
+                        ),
                     )
                 }
 
@@ -493,8 +836,28 @@ private fun ConsumptionTrendCard(
                     drawPath(path, lineColor, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
                 }
 
-                points.forEach { pt ->
-                    drawCircle(lineColor, radius = 4.dp.toPx(), center = pt)
+                // Selected point vertical indicator line
+                selectedPointIndex?.let { selIdx ->
+                    if (selIdx in points.indices) {
+                        val selPt = points[selIdx]
+                        drawLine(
+                            color = highlightColor.copy(alpha = 0.7f),
+                            start = Offset(selPt.x, pad),
+                            end = Offset(selPt.x, pad + chartH),
+                            strokeWidth = 1.5.dp.toPx(),
+                            pathEffect = dashEffect,
+                        )
+                    }
+                }
+
+                points.forEachIndexed { i, pt ->
+                    val isSelected = selectedPointIndex == i
+                    if (isSelected) {
+                        drawCircle(highlightColor.copy(alpha = 0.25f), radius = 10.dp.toPx(), center = pt)
+                        drawCircle(highlightColor, radius = 5.dp.toPx(), center = pt)
+                    } else {
+                        drawCircle(lineColor, radius = 4.dp.toPx(), center = pt)
+                    }
                 }
             }
 
@@ -522,26 +885,86 @@ private fun ConsumptionTrendCard(
                 }
             }
 
-            average?.let {
-                Row(
-                    modifier = Modifier.padding(start = 44.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+            // Interactive inspection banner for selected point
+            val selectedPoint = selectedPointIndex?.let { history.getOrNull(it) }
+            if (selectedPoint != null) {
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { selectedPointIndex = null },
                 ) {
-                    Canvas(modifier = Modifier.size(width = 16.dp, height = 2.dp)) {
-                        drawLine(
-                            color = avgLineColor,
-                            start = Offset.Zero,
-                            end = Offset(size.width, 0f),
-                            strokeWidth = 2.dp.toPx(),
-                            pathEffect = dashEffect,
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column {
+                            Text(
+                                text = "${Format.date(selectedPoint.date, locale)}: ${Format.consumption(selectedPoint.consumptionValue, locale)} ${stringResource(unit.shortRes())}",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            val delta = selectedPoint.deltaFromAverage
+                            if (delta != null && kotlin.math.abs(delta) > 0.05) {
+                                val deltaFormatted = Format.consumption(kotlin.math.abs(delta), locale)
+                                val deltaText = if (delta > 0) {
+                                    stringResource(R.string.analytics_diff_more, deltaFormatted)
+                                } else {
+                                    stringResource(R.string.analytics_diff_less, deltaFormatted)
+                                }
+                                Text(
+                                    text = deltaText,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (delta > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                            selectedPoint.odometerKm?.let { odo ->
+                                Text(
+                                    text = stringResource(
+                                        vehicle.distanceUnit.shortRes(),
+                                        Format.distance(odo, vehicle.distanceUnit, locale),
+                                    ),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                        IconButton(
+                            onClick = { selectedPointIndex = null },
+                            modifier = Modifier.size(24.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Clear",
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
+                    }
+                }
+            } else {
+                average?.let {
+                    Row(
+                        modifier = Modifier.padding(start = 44.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Canvas(modifier = Modifier.size(width = 16.dp, height = 2.dp)) {
+                            drawLine(
+                                color = avgLineColor,
+                                start = Offset.Zero,
+                                end = Offset(size.width, 0f),
+                                strokeWidth = 2.dp.toPx(),
+                                pathEffect = dashEffect,
+                            )
+                        }
+                        Text(
+                            text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(it, locale)} ${stringResource(unit.shortRes())}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    Text(
-                        text = "${stringResource(R.string.fuel_average)}: ${Format.consumption(it, locale)} ${stringResource(unit.shortRes())}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
                 }
             }
         }

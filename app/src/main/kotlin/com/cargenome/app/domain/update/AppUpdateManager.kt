@@ -7,10 +7,12 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.content.FileProvider
 import com.cargenome.app.BuildConfig
+import com.cargenome.app.data.update.GitHubAssetDto
 import com.cargenome.app.data.update.GitHubReleaseDto
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
+import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -99,6 +101,7 @@ class AppUpdateManager @Inject constructor(
                 assetName = apkAsset.name,
                 assetSize = apkAsset.size,
                 downloadUrl = apkAsset.browserDownloadUrl ?: apkAsset.url.orEmpty(),
+                sha256 = fetchChecksum(candidate.assets, apkAsset.name).orEmpty(),
             ).also {
                 android.util.Log.d("AppUpdateManager", "Created update info: $it")
             }
@@ -107,7 +110,58 @@ class AppUpdateManager @Inject constructor(
         }
     }
 
+    /**
+     * Reads the `<apk name>.sha256` asset published next to the APK. Returns null when the
+     * release has no checksum, which makes [downloadApk] refuse the update rather than
+     * install a binary nobody vouched for.
+     */
+    private fun fetchChecksum(assets: List<GitHubAssetDto>, apkName: String): String? {
+        val asset = assets.firstOrNull { it.name.equals("$apkName.sha256", ignoreCase = true) }
+            ?: return null
+        val url = if (asset.id > 0L) {
+            "https://api.github.com/repos/$owner/$repo/releases/assets/${asset.id}"
+        } else {
+            asset.browserDownloadUrl ?: return null
+        }
+
+        val requestBuilder = Request.Builder()
+            .url(url)
+            .header("Accept", "application/octet-stream")
+            .header("User-Agent", "CarGenome-App/${BuildConfig.VERSION_NAME}")
+        if (token.isNotBlank() && asset.id > 0L) {
+            requestBuilder.header("Authorization", "Bearer $token")
+        }
+
+        return runCatching {
+            okHttpClient.newCall(requestBuilder.build()).execute().use { response ->
+                if (!response.isSuccessful) return@use null
+                // sha256sum output is "<hex>  <file name>"; keep the digest only.
+                response.body.string().trim().substringBefore(' ').lowercase()
+                    .takeIf { hex -> hex.length == 64 && hex.all { it in "0123456789abcdef" } }
+            }
+        }.onFailure {
+            android.util.Log.e("AppUpdateManager", "Error fetching checksum for $apkName", it)
+        }.getOrNull()
+    }
+
+    private fun sha256Of(file: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input ->
+            val buffer = ByteArray(8 * 1024)
+            var read: Int
+            while (input.read(buffer).also { read = it } != -1) {
+                digest.update(buffer, 0, read)
+            }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
     fun downloadApk(info: AppUpdateInfo): Flow<UpdateDownloadState> = flow {
+        if (info.sha256.isBlank()) {
+            emit(UpdateDownloadState.Error("Release publishes no SHA-256 checksum"))
+            return@flow
+        }
+
         emit(UpdateDownloadState.Downloading(0L, info.assetSize, 0))
 
         val updatesDir = File(context.cacheDir, "updates")
@@ -116,9 +170,14 @@ class AppUpdateManager @Inject constructor(
         }
 
         val apkFile = File(updatesDir, "CarGenome-v${info.newVersion}.apk")
-        if (apkFile.exists() && info.assetSize > 0L && apkFile.length() == info.assetSize) {
-            emit(UpdateDownloadState.Completed(apkFile))
-            return@flow
+        if (apkFile.exists()) {
+            // A cached file is reused only when its digest still matches; size alone
+            // says nothing about what the bytes actually are.
+            if (sha256Of(apkFile).equals(info.sha256, ignoreCase = true)) {
+                emit(UpdateDownloadState.Completed(apkFile))
+                return@flow
+            }
+            apkFile.delete()
         }
 
         val tempFile = File(updatesDir, "CarGenome-v${info.newVersion}.apk.tmp")
@@ -177,10 +236,21 @@ class AppUpdateManager @Inject constructor(
                 }
             }
 
+            val actualSha256 = sha256Of(tempFile)
+            if (!actualSha256.equals(info.sha256, ignoreCase = true)) {
+                tempFile.delete()
+                emit(UpdateDownloadState.Error("Checksum mismatch, the download was discarded"))
+                return@flow
+            }
+
             if (apkFile.exists()) {
                 apkFile.delete()
             }
-            tempFile.renameTo(apkFile)
+            if (!tempFile.renameTo(apkFile)) {
+                tempFile.delete()
+                emit(UpdateDownloadState.Error("Could not store the verified download"))
+                return@flow
+            }
 
             emit(UpdateDownloadState.Completed(apkFile))
         } catch (e: Exception) {

@@ -771,27 +771,24 @@ private fun ServiceRecordRow(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TagBadge(text = stringResource(record.category.labelRes()))
-                    if (record.scheduleId != null) {
-                        TagBadge(text = "\u2713 " + (linkedSchedule?.title ?: stringResource(R.string.service_action_to_schedule)))
-                    }
+                TagBadge(text = stringResource(record.category.labelRes()))
+                if (record.scheduleId != null) {
+                    TagBadge(text = "\u2713 " + (linkedSchedule?.title ?: stringResource(R.string.service_action_to_schedule)))
                 }
+            }
 
-                if (linkedSchedule != null) {
-                    TextButton(onClick = { onPlanNext(linkedSchedule) }) {
-                        Text(
-                            text = stringResource(R.string.service_action_plan_next),
-                            style = MaterialTheme.typography.labelSmall,
-                        )
-                    }
+            if (linkedSchedule != null) {
+                TextButton(
+                    onClick = { onPlanNext(linkedSchedule) },
+                    modifier = Modifier.align(Alignment.End),
+                ) {
+                    Text(
+                        text = stringResource(R.string.service_action_plan_next),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
                 }
             }
         }
