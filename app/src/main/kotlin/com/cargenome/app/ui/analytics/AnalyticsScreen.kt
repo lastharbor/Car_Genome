@@ -30,12 +30,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.LocalGasStation
 import androidx.compose.material.icons.filled.Speed
@@ -95,12 +100,16 @@ import com.cargenome.app.domain.analytics.VehicleAnalyticsData
 import com.cargenome.app.domain.model.ConsumptionUnit
 import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.domain.model.VolumeUnit
+import com.cargenome.app.ui.common.AppDateRangePickerDialog
 import com.cargenome.app.ui.common.EmptyVehiclesTabCard
 import com.cargenome.app.ui.common.Format
 import com.cargenome.app.ui.common.displayName
 import com.cargenome.app.ui.common.shortRes
 import com.cargenome.app.ui.common.suffixRes
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 import kotlin.math.atan2
 import kotlin.math.hypot
@@ -132,6 +141,20 @@ fun AnalyticsScreen(
     viewModel: AnalyticsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showDateRangePicker by remember { mutableStateOf(false) }
+    val locale = LocalConfiguration.current.locales[0]
+
+    if (showDateRangePicker) {
+        val today = remember { LocalDate.now() }
+        AppDateRangePickerDialog(
+            initialStartDate = state.customStartDate ?: today.minusDays(29),
+            initialEndDate = state.customEndDate ?: today,
+            onRangeSelected = { start, end ->
+                viewModel.setCustomRange(start, end)
+            },
+            onDismiss = { showDateRangePicker = false },
+        )
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -173,6 +196,13 @@ fun AnalyticsScreen(
         val vehicle = state.vehicle
         val data = state.data
 
+        val activeLabel = formatActivePeriodLabel(
+            timeRange = state.selectedTimeRange,
+            customStartDate = state.customStartDate,
+            customEndDate = state.customEndDate,
+            locale = locale,
+        )
+
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             LazyColumn(
                 modifier = Modifier
@@ -194,17 +224,36 @@ fun AnalyticsScreen(
                 }
 
                 item(key = "time_range", contentType = "time_range") {
-                    TimeRangeSelector(
-                        selectedRange = state.selectedTimeRange,
-                        onSelectRange = viewModel::setTimeRange,
-                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TimeRangeSelector(
+                            selectedRange = state.selectedTimeRange,
+                            onSelectRange = { range ->
+                                if (range == AnalyticsTimeRange.CUSTOM) {
+                                    showDateRangePicker = true
+                                } else {
+                                    viewModel.setTimeRange(range)
+                                }
+                            },
+                        )
+
+                        ActivePeriodBar(
+                            periodLabel = activeLabel,
+                            isCustomOrRestricted = state.selectedTimeRange != AnalyticsTimeRange.ALL_TIME,
+                            canStepBackward = state.canStepBackward,
+                            canStepForward = state.canStepForward,
+                            onStepBackward = { viewModel.stepPeriod(forward = false) },
+                            onStepForward = { viewModel.stepPeriod(forward = true) },
+                            onOpenDatePicker = { showDateRangePicker = true },
+                            onResetAllTime = { viewModel.setTimeRange(AnalyticsTimeRange.ALL_TIME) },
+                        )
+                    }
                 }
 
                 if (data.totalSpendMinor == 0L && data.trackedDistanceKm == 0.0) {
                     if (!state.isLoading) item(key = "empty", contentType = "empty") { EmptyAnalyticsCard() }
                 } else {
                     item(key = "cost_overview", contentType = "cost_overview") {
-                        CostOverviewCard(data, vehicle, state.selectedTimeRange)
+                        CostOverviewCard(data, vehicle, state.selectedTimeRange, activeLabel)
                     }
 
                     if (data.categorySpends.isNotEmpty()) {
@@ -231,10 +280,49 @@ fun AnalyticsScreen(
 private val AnalyticsTimeRange.labelRes: Int
     get() = when (this) {
         AnalyticsTimeRange.ALL_TIME -> R.string.analytics_range_all
+        AnalyticsTimeRange.THIS_YEAR -> R.string.analytics_range_this_year
         AnalyticsTimeRange.YEAR_1 -> R.string.analytics_range_year
         AnalyticsTimeRange.MONTHS_6 -> R.string.analytics_range_6m
         AnalyticsTimeRange.MONTHS_3 -> R.string.analytics_range_3m
+        AnalyticsTimeRange.THIS_MONTH -> R.string.analytics_range_this_month
+        AnalyticsTimeRange.CUSTOM -> R.string.analytics_range_custom
     }
+
+@Composable
+private fun formatActivePeriodLabel(
+    timeRange: AnalyticsTimeRange,
+    customStartDate: LocalDate?,
+    customEndDate: LocalDate?,
+    locale: Locale,
+): String = when (timeRange) {
+    AnalyticsTimeRange.ALL_TIME -> stringResource(R.string.analytics_range_all)
+    AnalyticsTimeRange.THIS_YEAR -> stringResource(R.string.analytics_range_this_year)
+    AnalyticsTimeRange.THIS_MONTH -> {
+        val now = LocalDate.now()
+        val monthName = now.month.getDisplayName(TextStyle.FULL_STANDALONE, locale)
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
+        "$monthName ${now.year}"
+    }
+    AnalyticsTimeRange.YEAR_1 -> stringResource(R.string.analytics_range_year)
+    AnalyticsTimeRange.MONTHS_6 -> stringResource(R.string.analytics_range_6m)
+    AnalyticsTimeRange.MONTHS_3 -> stringResource(R.string.analytics_range_3m)
+    AnalyticsTimeRange.CUSTOM -> {
+        if (customStartDate != null && customEndDate != null) {
+            val days = ChronoUnit.DAYS.between(customStartDate, customEndDate) + 1
+            val daysText = stringResource(R.string.analytics_days_format, days)
+            if (customStartDate == customEndDate) {
+                Format.date(customStartDate, locale)
+            } else if (customStartDate.year == customEndDate.year && customStartDate.month == customEndDate.month) {
+                val monthName = customStartDate.month.getDisplayName(TextStyle.SHORT_STANDALONE, locale)
+                "${customStartDate.dayOfMonth}–${customEndDate.dayOfMonth} $monthName ${customStartDate.year} ($daysText)"
+            } else {
+                "${Format.date(customStartDate, locale)} – ${Format.date(customEndDate, locale)} ($daysText)"
+            }
+        } else {
+            stringResource(R.string.analytics_range_custom)
+        }
+    }
+}
 
 @Composable
 private fun TimeRangeSelector(
@@ -243,19 +331,31 @@ private fun TimeRangeSelector(
     modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
+    val ranges = remember {
+        listOf(
+            AnalyticsTimeRange.ALL_TIME,
+            AnalyticsTimeRange.THIS_YEAR,
+            AnalyticsTimeRange.YEAR_1,
+            AnalyticsTimeRange.MONTHS_6,
+            AnalyticsTimeRange.MONTHS_3,
+            AnalyticsTimeRange.THIS_MONTH,
+            AnalyticsTimeRange.CUSTOM,
+        )
+    }
+
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
         tonalElevation = 1.dp,
     ) {
-        Row(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            AnalyticsTimeRange.entries.forEach { range ->
+            items(ranges) { range ->
                 val label = stringResource(range.labelRes)
                 val isSelected = range == selectedRange
                 val backgroundColor by animateColorAsState(
@@ -269,26 +369,147 @@ private fun TimeRangeSelector(
 
                 Box(
                     modifier = Modifier
-                        .weight(1f)
                         .clip(RoundedCornerShape(12.dp))
                         .background(backgroundColor)
                         .clickable {
-                            if (!isSelected) {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onSelectRange(range)
-                            }
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onSelectRange(range)
                         }
-                        .padding(vertical = 10.dp),
+                        .padding(horizontal = 14.dp, vertical = 9.dp),
                     contentAlignment = Alignment.Center,
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        if (range == AnalyticsTimeRange.CUSTOM) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = null,
+                                modifier = Modifier.size(15.dp),
+                                tint = textColor,
+                            )
+                        }
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            ),
+                            color = textColor,
+                            maxLines = 1,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ActivePeriodBar(
+    periodLabel: String,
+    isCustomOrRestricted: Boolean,
+    canStepBackward: Boolean,
+    canStepForward: Boolean,
+    onStepBackward: () -> Unit,
+    onStepForward: () -> Unit,
+    onOpenDatePicker: () -> Unit,
+    onResetAllTime: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val haptic = LocalHapticFeedback.current
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        tonalElevation = 1.dp,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            IconButton(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onStepBackward()
+                },
+                enabled = canStepBackward,
+                modifier = Modifier.size(36.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                    contentDescription = stringResource(R.string.analytics_previous_period),
+                    tint = if (canStepBackward) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                )
+            }
+
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onOpenDatePicker()
+                    },
+                shape = RoundedCornerShape(10.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f),
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Spacer(Modifier.width(6.dp))
                     Text(
-                        text = label,
+                        text = periodLabel,
                         style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            fontWeight = FontWeight.SemiBold,
                         ),
-                        color = textColor,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+
+            IconButton(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onStepForward()
+                },
+                enabled = canStepForward,
+                modifier = Modifier.size(36.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = stringResource(R.string.analytics_next_period),
+                    tint = if (canStepForward) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                )
+            }
+
+            if (isCustomOrRestricted) {
+                IconButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onResetAllTime()
+                    },
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = stringResource(R.string.analytics_reset_all_time),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(18.dp),
                     )
                 }
             }
@@ -322,6 +543,7 @@ private fun CostOverviewCard(
     data: VehicleAnalyticsData,
     vehicle: VehicleEntity,
     timeRange: AnalyticsTimeRange,
+    periodLabel: String,
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val distSuffix = stringResource(vehicle.distanceUnit.suffixRes())
@@ -458,7 +680,7 @@ private fun CostOverviewCard(
                             Format.distance(data.trackedDistanceKm, vehicle.distanceUnit, locale),
                         )
                     } else "—",
-                    subtitle = stringResource(timeRange.labelRes),
+                    subtitle = periodLabel,
                     modifier = Modifier.weight(1f),
                 )
             }

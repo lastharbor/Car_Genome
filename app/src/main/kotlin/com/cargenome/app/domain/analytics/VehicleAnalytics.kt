@@ -11,14 +11,18 @@ import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.domain.model.VolumeUnit
 import androidx.compose.runtime.Immutable
 import java.time.Instant
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
 
 enum class AnalyticsTimeRange {
     ALL_TIME,
+    THIS_YEAR,
     YEAR_1,
     MONTHS_6,
     MONTHS_3,
+    THIS_MONTH,
+    CUSTOM,
 }
 
 @Immutable
@@ -74,19 +78,51 @@ object VehicleAnalyticsCalculator {
         expenses: List<ExpenseEntity>,
         currentOdometerKm: Double?,
         timeRange: AnalyticsTimeRange = AnalyticsTimeRange.ALL_TIME,
+        customStartDate: LocalDate? = null,
+        customEndDate: LocalDate? = null,
+        startInstant: Instant? = null,
+        endInstant: Instant? = null,
         now: Instant = Instant.now(),
         zoneId: ZoneId = ZoneId.systemDefault(),
     ): VehicleAnalyticsData {
-        val cutoff: Instant? = when (timeRange) {
-            AnalyticsTimeRange.ALL_TIME -> null
-            AnalyticsTimeRange.YEAR_1 -> now.minus(365, java.time.temporal.ChronoUnit.DAYS)
-            AnalyticsTimeRange.MONTHS_6 -> now.minus(183, java.time.temporal.ChronoUnit.DAYS)
-            AnalyticsTimeRange.MONTHS_3 -> now.minus(92, java.time.temporal.ChronoUnit.DAYS)
+        val (rangeStart: Instant?, rangeEnd: Instant?) = if (startInstant != null || endInstant != null) {
+            Pair(startInstant, endInstant)
+        } else {
+            when (timeRange) {
+                AnalyticsTimeRange.ALL_TIME -> Pair(null, null)
+                AnalyticsTimeRange.THIS_YEAR -> {
+                    val today = now.atZone(zoneId).toLocalDate()
+                    val start = today.withDayOfYear(1).atStartOfDay(zoneId).toInstant()
+                    Pair(start, null)
+                }
+                AnalyticsTimeRange.YEAR_1 -> Pair(now.minus(365, java.time.temporal.ChronoUnit.DAYS), null)
+                AnalyticsTimeRange.MONTHS_6 -> Pair(now.minus(183, java.time.temporal.ChronoUnit.DAYS), null)
+                AnalyticsTimeRange.MONTHS_3 -> Pair(now.minus(92, java.time.temporal.ChronoUnit.DAYS), null)
+                AnalyticsTimeRange.THIS_MONTH -> {
+                    val today = now.atZone(zoneId).toLocalDate()
+                    val start = today.withDayOfMonth(1).atStartOfDay(zoneId).toInstant()
+                    Pair(start, null)
+                }
+                AnalyticsTimeRange.CUSTOM -> {
+                    val start = customStartDate?.atStartOfDay(zoneId)?.toInstant()
+                    val end = customEndDate?.atTime(23, 59, 59, 999_999_999)?.atZone(zoneId)?.toInstant()
+                    Pair(start, end)
+                }
+            }
         }
 
-        val filteredFuels = if (cutoff == null) fuelRecords else fuelRecords.filter { !it.filledAt.isBefore(cutoff) }
-        val filteredServices = if (cutoff == null) serviceRecords else serviceRecords.filter { !it.performedAt.isBefore(cutoff) }
-        val filteredExpenses = if (cutoff == null) expenses else expenses.filter { !it.incurredAt.isBefore(cutoff) }
+        val filteredFuels = fuelRecords.filter { record ->
+            (rangeStart == null || !record.filledAt.isBefore(rangeStart)) &&
+            (rangeEnd == null || !record.filledAt.isAfter(rangeEnd))
+        }
+        val filteredServices = serviceRecords.filter { record ->
+            (rangeStart == null || !record.performedAt.isBefore(rangeStart)) &&
+            (rangeEnd == null || !record.performedAt.isAfter(rangeEnd))
+        }
+        val filteredExpenses = expenses.filter { record ->
+            (rangeStart == null || !record.incurredAt.isBefore(rangeStart)) &&
+            (rangeEnd == null || !record.incurredAt.isAfter(rangeEnd))
+        }
 
         val fuelStats = FuelConsumption.analyse(filteredFuels)
         val fuelSpend = filteredFuels.sumOf { it.totalCostMinor }
@@ -110,13 +146,23 @@ object VehicleAnalyticsCalculator {
             ).minOrNull() ?: (vehicle.initialOdometerKm.takeIf { it > 0.0 } ?: 0.0)
         }
 
-        val maxOdo = listOfNotNull(
-            currentOdometerKm,
-            filteredFuels.maxOfOrNull { it.odometerKm },
-            filteredServices.mapNotNull { it.odometerKm }.maxOrNull(),
-            filteredExpenses.mapNotNull { it.odometerKm }.maxOrNull(),
-            minOdo,
-        ).maxOrNull() ?: minOdo
+        val isHistoricalPeriod = rangeEnd != null && rangeEnd.isBefore(now.minusSeconds(86400))
+        val maxOdo = if (isHistoricalPeriod) {
+            listOfNotNull(
+                filteredFuels.maxOfOrNull { it.odometerKm },
+                filteredServices.mapNotNull { it.odometerKm }.maxOrNull(),
+                filteredExpenses.mapNotNull { it.odometerKm }.maxOrNull(),
+                minOdo,
+            ).maxOrNull() ?: minOdo
+        } else {
+            listOfNotNull(
+                currentOdometerKm,
+                filteredFuels.maxOfOrNull { it.odometerKm },
+                filteredServices.mapNotNull { it.odometerKm }.maxOrNull(),
+                filteredExpenses.mapNotNull { it.odometerKm }.maxOrNull(),
+                minOdo,
+            ).maxOrNull() ?: minOdo
+        }
 
         val trackedDistance = (maxOdo - minOdo).coerceAtLeast(0.0)
 
@@ -204,9 +250,17 @@ object VehicleAnalyticsCalculator {
         val earliestInstant = allInstants.minOrNull()
         val latestInstant = allInstants.maxOrNull()
 
-        val costPerDay = if (earliestInstant != null && latestInstant != null && totalSpend > 0) {
-            val days = java.time.Duration.between(earliestInstant, latestInstant).toDays().coerceAtLeast(1)
-            totalSpend / days
+        val costPerDay = if (totalSpend > 0) {
+            if (rangeStart != null && rangeEnd != null) {
+                val days = java.time.Duration.between(rangeStart, rangeEnd).toDays().coerceAtLeast(1)
+                totalSpend / days
+            } else if (rangeStart != null) {
+                val days = java.time.Duration.between(rangeStart, now).toDays().coerceAtLeast(1)
+                totalSpend / days
+            } else if (earliestInstant != null && latestInstant != null) {
+                val days = java.time.Duration.between(earliestInstant, latestInstant).toDays().coerceAtLeast(1)
+                totalSpend / days
+            } else null
         } else null
 
         // Consumption history over time

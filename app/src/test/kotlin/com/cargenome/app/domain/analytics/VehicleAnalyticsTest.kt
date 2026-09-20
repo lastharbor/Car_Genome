@@ -10,6 +10,8 @@ import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.domain.model.FuelType
 import com.cargenome.app.domain.model.VolumeUnit
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -217,5 +219,47 @@ class VehicleAnalyticsTest {
         )
         assertEquals(13_000L, months6Result.totalSpendMinor)
         assertEquals(2, months6Result.totalEntriesCount)
+
+        val thisMonthResult = VehicleAnalyticsCalculator.calculate(
+            vehicle = vehicle,
+            fuelRecords = fuels,
+            serviceRecords = emptyList(),
+            expenses = emptyList(),
+            currentOdometerKm = 104_000.0,
+            timeRange = AnalyticsTimeRange.THIS_MONTH,
+            now = now,
+            zoneId = ZoneOffset.UTC,
+        )
+        // Fuel 3 was filled 30 days before July 1 (June 1), not in July
+        assertEquals(0L, thisMonthResult.totalSpendMinor)
+
+        val thisYearResult = VehicleAnalyticsCalculator.calculate(
+            vehicle = vehicle,
+            fuelRecords = fuels,
+            serviceRecords = emptyList(),
+            expenses = emptyList(),
+            currentOdometerKm = 104_000.0,
+            timeRange = AnalyticsTimeRange.THIS_YEAR,
+            now = now,
+            zoneId = ZoneOffset.UTC,
+        )
+        // Fuels in 2026: Fuel 2 (150 days prior ~ Feb 2026) and Fuel 3 (30 days prior ~ June 2026)
+        assertEquals(13_000L, thisYearResult.totalSpendMinor)
+        assertEquals(2, thisYearResult.totalEntriesCount)
+
+        val customResult = VehicleAnalyticsCalculator.calculate(
+            vehicle = vehicle,
+            fuelRecords = fuels,
+            serviceRecords = emptyList(),
+            expenses = emptyList(),
+            currentOdometerKm = 104_000.0,
+            timeRange = AnalyticsTimeRange.CUSTOM,
+            customStartDate = LocalDate.of(2026, 1, 1),
+            customEndDate = LocalDate.of(2026, 6, 15),
+            now = now,
+            zoneId = ZoneOffset.UTC,
+        )
+        assertEquals(13_000L, customResult.totalSpendMinor)
+        assertEquals(2, customResult.totalEntriesCount)
     }
 }
