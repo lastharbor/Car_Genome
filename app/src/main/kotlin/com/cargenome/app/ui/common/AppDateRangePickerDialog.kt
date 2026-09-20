@@ -102,7 +102,7 @@ fun AppDateRangePickerDialog(
 
                 val rangeText = if (startDate != null && endDate != null) {
                     val days = ChronoUnit.DAYS.between(startDate, endDate) + 1
-                    "${Format.date(startDate, locale)} – ${Format.date(endDate, locale)} ($days ${stringResource(R.string.analytics_days_format, days).replace("%1\$d ", "")})"
+                    "${Format.date(startDate, locale)} – ${Format.date(endDate, locale)} (${stringResource(R.string.analytics_days_format, days)})"
                 } else if (startDate != null) {
                     "${Format.date(startDate, locale)} – ..."
                 } else {
