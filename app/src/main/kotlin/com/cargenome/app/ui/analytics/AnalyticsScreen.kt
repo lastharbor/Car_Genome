@@ -204,7 +204,7 @@ fun AnalyticsScreen(
                     if (!state.isLoading) item(key = "empty", contentType = "empty") { EmptyAnalyticsCard() }
                 } else {
                     item(key = "cost_overview", contentType = "cost_overview") {
-                        CostOverviewCard(data, vehicle)
+                        CostOverviewCard(data, vehicle, state.selectedTimeRange)
                     }
 
                     if (data.categorySpends.isNotEmpty()) {
@@ -228,6 +228,14 @@ fun AnalyticsScreen(
     }
 }
 
+private val AnalyticsTimeRange.labelRes: Int
+    get() = when (this) {
+        AnalyticsTimeRange.ALL_TIME -> R.string.analytics_range_all
+        AnalyticsTimeRange.YEAR_1 -> R.string.analytics_range_year
+        AnalyticsTimeRange.MONTHS_6 -> R.string.analytics_range_6m
+        AnalyticsTimeRange.MONTHS_3 -> R.string.analytics_range_3m
+    }
+
 @Composable
 private fun TimeRangeSelector(
     selectedRange: AnalyticsTimeRange,
@@ -248,12 +256,7 @@ private fun TimeRangeSelector(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             AnalyticsTimeRange.entries.forEach { range ->
-                val label = when (range) {
-                    AnalyticsTimeRange.ALL_TIME -> stringResource(R.string.analytics_range_all)
-                    AnalyticsTimeRange.YEAR_1 -> stringResource(R.string.analytics_range_year)
-                    AnalyticsTimeRange.MONTHS_6 -> stringResource(R.string.analytics_range_6m)
-                    AnalyticsTimeRange.MONTHS_3 -> stringResource(R.string.analytics_range_3m)
-                }
+                val label = stringResource(range.labelRes)
                 val isSelected = range == selectedRange
                 val backgroundColor by animateColorAsState(
                     targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
@@ -315,7 +318,11 @@ private fun EmptyAnalyticsCard() {
 }
 
 @Composable
-private fun CostOverviewCard(data: VehicleAnalyticsData, vehicle: VehicleEntity) {
+private fun CostOverviewCard(
+    data: VehicleAnalyticsData,
+    vehicle: VehicleEntity,
+    timeRange: AnalyticsTimeRange,
+) {
     val locale = LocalConfiguration.current.locales[0]
     val distSuffix = stringResource(vehicle.distanceUnit.suffixRes())
     val consUnit = vehicle.consumptionUnit()
@@ -415,7 +422,7 @@ private fun CostOverviewCard(data: VehicleAnalyticsData, vehicle: VehicleEntity)
                     icon = Icons.Default.Speed,
                     iconTint = MaterialTheme.colorScheme.primary,
                     iconBg = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-                    title = stringResource(R.string.analytics_cost_per_km),
+                    title = "Цена / $distSuffix",
                     value = perKmText,
                     subtitle = fuelPerKmText,
                     modifier = Modifier.weight(1f),
@@ -451,7 +458,7 @@ private fun CostOverviewCard(data: VehicleAnalyticsData, vehicle: VehicleEntity)
                             Format.distance(data.trackedDistanceKm, vehicle.distanceUnit, locale),
                         )
                     } else "—",
-                    subtitle = null,
+                    subtitle = stringResource(timeRange.labelRes),
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -759,7 +766,9 @@ private fun CategorySpendCard(
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(end = 8.dp),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     Box(
@@ -767,8 +776,9 @@ private fun CategorySpendCard(
                                             .size(if (isSelected) 12.dp else 10.dp)
                                             .background(color, CircleShape),
                                     )
+                                    val fullLabel = if (cat.count > 0) "$label (${cat.count})" else label
                                     Text(
-                                        text = label,
+                                        text = fullLabel,
                                         style = if (isSelected) {
                                             MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                                         } else {
@@ -777,13 +787,6 @@ private fun CategorySpendCard(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                     )
-                                    if (cat.count > 0) {
-                                        Text(
-                                            text = "(${cat.count})",
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    }
                                 }
                                 Text(
                                     text = "$money  •  $pct",
@@ -793,6 +796,8 @@ private fun CategorySpendCard(
                                         MaterialTheme.typography.bodyMedium
                                     },
                                     color = if (isSelected) color else MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    softWrap = false,
                                 )
                             }
                             // Visual proportion bar
