@@ -44,7 +44,10 @@ object DatabaseModule {
                 File(context.getExternalFilesDir(null), "restore"),
                 File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "CarGenome_Restore"),
             )
-            val restoreDir = candidateDirs.firstOrNull { File(it, "cargenome.db").exists() } ?: return
+            val restoreDir = candidateDirs.firstOrNull { dir ->
+                val f = File(dir, "cargenome.db")
+                f.exists() && f.canRead() && f.length() > 0
+            } ?: return
             val restoreDb = File(restoreDir, "cargenome.db")
 
             val targetDb = context.getDatabasePath(CarGenomeDatabase.NAME)
@@ -53,8 +56,16 @@ object DatabaseModule {
                 parentDir.mkdirs()
             }
 
-            // Copy restore database to target path
-            restoreDb.copyTo(targetDb, overwrite = true)
+            // Copy to temp file first to prevent truncating targetDb if source read fails
+            val tempDb = File(parentDir, "${CarGenomeDatabase.NAME}.tmp")
+            restoreDb.copyTo(tempDb, overwrite = true)
+            if (tempDb.exists() && tempDb.length() > 0) {
+                tempDb.copyTo(targetDb, overwrite = true)
+                tempDb.delete()
+            } else {
+                tempDb.delete()
+                return
+            }
             File(parentDir, "${CarGenomeDatabase.NAME}-wal").delete()
             File(parentDir, "${CarGenomeDatabase.NAME}-shm").delete()
 
