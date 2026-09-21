@@ -227,10 +227,6 @@
     <string name="settings_backup_export_success">Backup erfolgreich exportiert</string>
     <string name="settings_clear_data">Alle Daten löschen</string>
     <string name="settings_clear_data_desc">Löscht unwiderruflich alle Fahrzeuge und Einträge.</string>
-    <string name="settings_demo_data">Demodaten laden</string>
-    <string name="settings_demo_data_desc">Erstellt ein Beispielfahrzeug mit vollständiger Historie zur Veranschaulichung.</string>
-    <string name="settings_demo_data_action">Demofahrzeug laden</string>
-    <string name="settings_demo_data_success">Demofahrzeug BMW 330i xDrive mit Historie hinzugefügt</string>
 
     <string name="settings_section_sync">Cloud-Synchronisierung</string>
     <string name="settings_sync_desc">Synchronisieren Sie Fahrzeuge, Wartung und Protokolle zwischen Geräten</string>
@@ -532,11 +528,9 @@
     <string name="settings_backup_exported">Backup erfolgreich exportiert</string>
     <string name="settings_backup_restored">Backup erfolgreich wiederhergestellt</string>
     <string name="settings_data_cleared">Alle Daten gelöscht</string>
-    <string name="settings_demo_seeded">Demofahrzeug BMW 330i xDrive hinzugefügt</string>
     <string name="settings_export_failed">Export fehlgeschlagen: %1$s</string>
     <string name="settings_restore_failed">Wiederherstellung fehlgeschlagen: %1$s</string>
     <string name="settings_clear_failed">Löschen fehlgeschlagen: %1$s</string>
-    <string name="settings_seed_failed">Demofahrzeug konnte nicht hinzugefügt werden: %1$s</string>
     <string name="settings_persistent_maintenance_notification">Dauerhafte Benachrichtigung am Servicetag</string>
     <string name="settings_persistent_maintenance_notification_desc">Erinnerung in der Statusleiste fixiert lassen, bis die Wartung als erledigt markiert wird.</string>
     <string name="settings_reminder_interval_title">Wiederholungsintervall der Erinnerung</string>

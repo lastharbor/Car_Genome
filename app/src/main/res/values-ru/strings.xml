@@ -233,10 +233,6 @@
     <string name="settings_backup_export_success">Резервная копия сохранена</string>
     <string name="settings_clear_data">Очистить все данные</string>
     <string name="settings_clear_data_desc">Безвозвратно удаляет все автомобили и записи.</string>
-    <string name="settings_demo_data">Заполнить тестовыми данными</string>
-    <string name="settings_demo_data_desc">Создаёт тестовый автомобиль с полной историей заправок, ТО, регламентов и расходов для наглядной демонстрации аналитики.</string>
-    <string name="settings_demo_data_action">Загрузить демо-автомобиль</string>
-    <string name="settings_demo_data_success">Демо-автомобиль BMW 330i xDrive успешно добавлен с полной историей</string>
 
     <string name="settings_section_sync">Облачная синхронизация</string>
     <string name="settings_sync_desc">Синхронизация автопарка, ТО и расходов между вашими смартфонами</string>
@@ -538,11 +534,9 @@
     <string name="settings_backup_exported">Резервная копия успешно экспортирована</string>
     <string name="settings_backup_restored">Резервная копия успешно восстановлена</string>
     <string name="settings_data_cleared">Все данные удалены</string>
-    <string name="settings_demo_seeded">Демо-автомобиль BMW 330i xDrive добавлен</string>
     <string name="settings_export_failed">Ошибка экспорта: %1$s</string>
     <string name="settings_restore_failed">Ошибка восстановления: %1$s</string>
     <string name="settings_clear_failed">Ошибка очистки: %1$s</string>
-    <string name="settings_seed_failed">Не удалось добавить демо-автомобиль: %1$s</string>
     <string name="settings_persistent_maintenance_notification">Неудаляемое уведомление в день ТО</string>
     <string name="settings_persistent_maintenance_notification_desc">Закреплять напоминание в шторке в день обслуживания до момента его выполнения.</string>
     <string name="settings_reminder_interval_title">Интервал повторного напоминания</string>

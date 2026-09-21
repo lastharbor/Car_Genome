@@ -21,7 +21,6 @@ import com.cargenome.app.ui.theme.CarGenomeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-import android.media.MediaScannerConnection
 import com.cargenome.app.domain.service.MaintenanceReminderScheduler
 
 @AndroidEntryPoint
@@ -50,22 +49,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Ensure downloaded APKs are indexed by MediaStore without blocking the main thread
-        lifecycleScope.launch(Dispatchers.IO) {
-            val downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS)
-            val filesToScan = listOfNotNull(
-                java.io.File(downloadsDir, "CarGenome.apk"),
-                java.io.File(downloadsDir.parentFile, "Downloads/CarGenome.apk"),
-            ).filter { it.exists() }.map { it.absolutePath }.toTypedArray()
-            if (filesToScan.isNotEmpty()) {
-                MediaScannerConnection.scanFile(
-                    applicationContext,
-                    filesToScan,
-                    arrayOf("application/vnd.android.package-archive"),
-                    null,
-                )
-            }
-        }
         setContent {
             val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = AppSettings())
             val systemDark = isSystemInDarkTheme()

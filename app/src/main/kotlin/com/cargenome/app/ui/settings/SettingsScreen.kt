@@ -846,23 +846,6 @@ fun SettingsScreen(
                                 }
                             }
 
-                            Card(
-                                onClick = { viewModel.seedDemoData() },
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                Column(Modifier.padding(14.dp)) {
-                                    Text(
-                                        text = stringResource(R.string.settings_demo_data),
-                                        style = MaterialTheme.typography.titleSmall,
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.settings_demo_data_desc),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                }
-                            }
-
                             OutlinedButton(
                                 onClick = { showClearDialog = true },
                                 colors = ButtonDefaults.outlinedButtonColors(

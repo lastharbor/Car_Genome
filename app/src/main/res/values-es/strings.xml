@@ -230,10 +230,6 @@
     <string name="settings_backup_export_success">Copia de seguridad exportada correctamente</string>
     <string name="settings_clear_data">Eliminar todos los datos</string>
     <string name="settings_clear_data_desc">Elimina de forma permanente todos los vehículos y registros.</string>
-    <string name="settings_demo_data">Cargar datos de prueba</string>
-    <string name="settings_demo_data_desc">Crea un vehículo de demostración con historial completo para explorar la aplicación.</string>
-    <string name="settings_demo_data_action">Cargar coche de demostración</string>
-    <string name="settings_demo_data_success">Vehículo de demostración BMW 330i xDrive añadido con éxito</string>
 
     <string name="settings_section_sync">Sincronización en la nube</string>
     <string name="settings_sync_desc">Sincroniza vehículos, mantenimiento y registros entre tus dispositivos</string>
@@ -534,11 +530,9 @@
     <string name="settings_backup_exported">Copia de seguridad exportada correctamente</string>
     <string name="settings_backup_restored">Copia de seguridad restaurada correctamente</string>
     <string name="settings_data_cleared">Todos los datos han sido borrados</string>
-    <string name="settings_demo_seeded">Vehículo de demostración BMW 330i xDrive añadido</string>
     <string name="settings_export_failed">Fallo al exportar: %1$s</string>
     <string name="settings_restore_failed">Fallo al restaurar: %1$s</string>
     <string name="settings_clear_failed">Fallo al borrar: %1$s</string>
-    <string name="settings_seed_failed">No se pudo añadir el vehículo demo: %1$s</string>
     <string name="settings_persistent_maintenance_notification">Notificación fija el día del servicio</string>
     <string name="settings_persistent_maintenance_notification_desc">Mantener la notificación visible en la barra de estado hasta completar el servicio.</string>
     <string name="settings_reminder_interval_title">Intervalo de repetición del recordatorio</string>

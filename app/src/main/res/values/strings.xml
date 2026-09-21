@@ -229,10 +229,6 @@
     <string name="settings_backup_export_success">Backup exported successfully</string>
     <string name="settings_clear_data">Delete all data</string>
     <string name="settings_clear_data_desc">Permanently deletes all vehicles and records.</string>
-    <string name="settings_demo_data">Load demo test data</string>
-    <string name="settings_demo_data_desc">Creates a demo vehicle with full fuel history, maintenance logs, schedules, and expenses to showcase analytics.</string>
-    <string name="settings_demo_data_action">Load demo vehicle</string>
-    <string name="settings_demo_data_success">Demo vehicle BMW 330i xDrive added with complete history</string>
 
     <string name="settings_section_sync">Cloud Sync</string>
     <string name="settings_sync_desc">Synchronize vehicles, maintenance and logs between your devices</string>
@@ -534,11 +530,9 @@
     <string name="settings_backup_exported">Backup exported successfully</string>
     <string name="settings_backup_restored">Backup restored successfully</string>
     <string name="settings_data_cleared">All data cleared</string>
-    <string name="settings_demo_seeded">Demo vehicle BMW 330i xDrive added</string>
     <string name="settings_export_failed">Export failed: %1$s</string>
     <string name="settings_restore_failed">Restore failed: %1$s</string>
     <string name="settings_clear_failed">Clear failed: %1$s</string>
-    <string name="settings_seed_failed">Failed to add demo vehicle: %1$s</string>
     <string name="settings_persistent_maintenance_notification">Ongoing notification on service day</string>
     <string name="settings_persistent_maintenance_notification_desc">Keep reminder notification pinned in tray until maintenance is completed.</string>
     <string name="settings_reminder_interval_title">Reminder repeat interval</string>

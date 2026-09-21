@@ -42,7 +42,6 @@ object DatabaseModule {
         try {
             val candidateDirs = listOfNotNull(
                 File(context.getExternalFilesDir(null), "restore"),
-                File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "CarGenome_Restore"),
             )
             val restoreDir = candidateDirs.firstOrNull { dir ->
                 val f = File(dir, "cargenome.db")

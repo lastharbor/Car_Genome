@@ -3,7 +3,6 @@ package com.cargenome.app.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cargenome.app.R
-import com.cargenome.app.data.demo.DemoDataSeeder
 import com.cargenome.app.data.export.DataBackupManager
 import com.cargenome.app.data.settings.AppSettings
 import com.cargenome.app.data.settings.AppSettingsRepository
@@ -35,7 +34,6 @@ sealed interface SettingsEvent {
 class SettingsViewModel @Inject constructor(
     private val settingsRepo: AppSettingsRepository,
     private val backupManager: DataBackupManager,
-    private val demoSeeder: DemoDataSeeder,
     private val alarmScheduler: MaintenanceAlarmScheduler,
     private val reminderScheduler: MaintenanceReminderScheduler,
     private val cloudSyncManager: CloudSyncManager,
@@ -167,18 +165,6 @@ class SettingsViewModel @Inject constructor(
                 _event.value = SettingsEvent.Success(R.string.settings_data_cleared)
             }.onFailure {
                 _event.value = SettingsEvent.Error(R.string.settings_clear_failed, it.message ?: "")
-            }
-        }
-    }
-
-    fun seedDemoData() {
-        viewModelScope.launch {
-            runCatching {
-                demoSeeder.seedDemoVehicle()
-            }.onSuccess {
-                _event.value = SettingsEvent.Success(R.string.settings_demo_seeded)
-            }.onFailure {
-                _event.value = SettingsEvent.Error(R.string.settings_seed_failed, it.message ?: "")
             }
         }
     }

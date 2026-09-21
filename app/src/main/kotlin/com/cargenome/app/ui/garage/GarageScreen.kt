@@ -133,7 +133,6 @@ fun GarageScreen(
                     item {
                         EmptyGarage(
                             onAddVehicle = onAddVehicle,
-                            onSeedDemo = { viewModel.seedDemoData(onOpenVehicle) },
                         )
                     }
                 }
@@ -185,7 +184,6 @@ fun GarageScreen(
 @Composable
 private fun EmptyGarage(
     onAddVehicle: () -> Unit,
-    onSeedDemo: () -> Unit,
 ) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -195,25 +193,16 @@ private fun EmptyGarage(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            Button(
+                onClick = onAddVehicle,
                 modifier = Modifier.padding(top = 4.dp),
             ) {
-                Button(
-                    onClick = onAddVehicle,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp),
-                    )
-                    Text(stringResource(R.string.garage_add))
-                }
-                OutlinedButton(
-                    onClick = onSeedDemo,
-                ) {
-                    Text("Тестовый BMW")
-                }
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp),
+                )
+                Text(stringResource(R.string.garage_add))
             }
         }
     }

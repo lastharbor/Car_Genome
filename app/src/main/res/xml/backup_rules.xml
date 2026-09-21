@@ -3,4 +3,5 @@
     <include domain="database" path="." />
     <include domain="sharedpref" path="." />
     <include domain="file" path="datastore" />
+    <include domain="file" path="attachments" />
 </full-backup-content>
