@@ -277,23 +277,25 @@ fun ServiceLogScreen(
 
                 when (state.selectedTab) {
                     ServiceTab.Records -> {
-                        item(key = "maintenance_overview", contentType = "maintenance_overview") {
-                            MaintenanceOverviewCard(
-                                state = state,
-                                vehicle = vehicle,
-                                onPlanSchedule = { schedule, targetKm ->
-                                    scheduleToPlan = schedule
-                                    initialTargetOdometerKm = targetKm
-                                    showAddEventDialog = true
-                                },
-                                onGoToCalendar = onGoToCalendarDate,
-                                onMarkScheduleDone = { schedId ->
-                                    onMarkScheduleDone(vehicle.id, schedId)
-                                },
-                                onGoToSchedule = {
-                                    viewModel.selectTab(ServiceTab.Schedule)
-                                },
-                            )
+                        if (state.urgentSchedules.isNotEmpty() || state.schedules.isNotEmpty() || state.nextUpcomingEvent != null) {
+                            item(key = "maintenance_overview", contentType = "maintenance_overview") {
+                                MaintenanceOverviewCard(
+                                    state = state,
+                                    vehicle = vehicle,
+                                    onPlanSchedule = { schedule, targetKm ->
+                                        scheduleToPlan = schedule
+                                        initialTargetOdometerKm = targetKm
+                                        showAddEventDialog = true
+                                    },
+                                    onGoToCalendar = onGoToCalendarDate,
+                                    onMarkScheduleDone = { schedId ->
+                                        onMarkScheduleDone(vehicle.id, schedId)
+                                    },
+                                    onGoToSchedule = {
+                                        viewModel.selectTab(ServiceTab.Schedule)
+                                    },
+                                )
+                            }
                         }
 
                         if (state.records.isEmpty()) {

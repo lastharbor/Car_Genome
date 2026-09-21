@@ -167,7 +167,8 @@ fun ServiceEditorScreen(
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text(stringResource(R.string.service_record_title)) },
                         placeholder = { Text(stringResource(R.string.service_record_title_hint)) },
-                        singleLine = true,
+                        minLines = 1,
+                        maxLines = 3,
                     )
                 }
 

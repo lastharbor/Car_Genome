@@ -191,6 +191,7 @@ fun ScheduleEditorScreen(
                             value = state.warnBeforeDays,
                             onValueChange = viewModel::onWarnBeforeDaysChanged,
                             label = { Text(stringResource(R.string.schedule_warn_days)) },
+                            suffix = { Text(stringResource(R.string.unit_days_suffix)) },
                             modifier = Modifier.weight(1f),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                             singleLine = true,

@@ -107,6 +107,7 @@
     <string name="unit_km_l">km/L</string>
     <string name="unit_mpg_us">mpg</string>
     <string name="unit_mpg_imp">mpg (imp)</string>
+    <string name="unit_days_suffix">T.</string>
 
     <string name="fuel_petrol">Benzin</string>
     <string name="fuel_diesel">Diesel</string>
@@ -337,8 +338,8 @@
     <string name="schedule_interval_km">Intervall (Distanz)</string>
     <string name="schedule_interval_months">Intervall (Monate)</string>
     <string name="schedule_interval_months_badge">%1$d M.</string>
-    <string name="schedule_warn_km">Vorwarnung (Distanz)</string>
-    <string name="schedule_warn_days">Vorwarnung (Tage)</string>
+    <string name="schedule_warn_km">Vorwarnung</string>
+    <string name="schedule_warn_days">Vorwarnung</string>
     <string name="schedule_is_enabled">Aktiviert</string>
     <string name="schedule_last_performed_date">Zuletzt durchgeführt am</string>
     <string name="schedule_last_performed_odometer">Zuletzt bei Kilometerstand</string>

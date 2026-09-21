@@ -1006,7 +1006,7 @@ private fun CategorySpendCard(
                                         } else {
                                             MaterialTheme.typography.bodyMedium
                                         },
-                                        maxLines = 1,
+                                        maxLines = 2,
                                         overflow = TextOverflow.Ellipsis,
                                     )
                                 }
@@ -1163,12 +1163,17 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                                 fun updateTouch(touchX: Float) {
                                     val chartWidth = size.width.toFloat()
                                     val barCount = monthlySpends.size
+                                    val maxBarWidth = 44.dp.toPx()
+                                    val minBarWidth = 4.dp.toPx()
                                     val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(3.dp.toPx(), 8.dp.toPx())
-                                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(4.dp.toPx())
+                                    val rawBarWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(minBarWidth)
+                                    val barWidth = rawBarWidth.coerceAtMost(maxBarWidth)
+                                    val totalBarsWidth = barCount * barWidth + (barCount - 1) * spacing
+                                    val startX = if (totalBarsWidth < chartWidth) (chartWidth - totalBarsWidth) / 2f else spacing
 
                                     var hitIdx: Int? = null
                                     monthlySpends.forEachIndexed { idx, _ ->
-                                        val x = spacing + idx * (barWidth + spacing)
+                                        val x = startX + idx * (barWidth + spacing)
                                         if (touchX in (x - spacing / 2f)..(x + barWidth + spacing / 2f)) {
                                             hitIdx = idx
                                         }
@@ -1198,12 +1203,17 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
                     drawLine(color = gridColor, start = Offset(0f, chartHeight), end = Offset(chartWidth, chartHeight), strokeWidth = strokeW)
 
                     val barCount = monthlySpends.size
+                    val maxBarWidth = 44.dp.toPx()
+                    val minBarWidth = 4.dp.toPx()
                     val spacing = (chartWidth / (barCount * 4 + 1)).coerceIn(3.dp.toPx(), 8.dp.toPx())
-                    val barWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(4.dp.toPx())
+                    val rawBarWidth = ((chartWidth - (barCount + 1) * spacing) / barCount).coerceAtLeast(minBarWidth)
+                    val barWidth = rawBarWidth.coerceAtMost(maxBarWidth)
+                    val totalBarsWidth = barCount * barWidth + (barCount - 1) * spacing
+                    val startX = if (totalBarsWidth < chartWidth) (chartWidth - totalBarsWidth) / 2f else spacing
                     val barCornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
 
                     monthlySpends.forEachIndexed { index, item ->
-                        val x = spacing + index * (barWidth + spacing)
+                        val x = startX + index * (barWidth + spacing)
                         val barHeight = (item.amountMinor.toDouble() / maxSpend * chartHeight).toFloat().coerceIn(0f, chartHeight)
                         val y = chartHeight - barHeight
                         val isSelected = selectedMonthIndex == index
@@ -1260,30 +1270,46 @@ private fun MonthlySpendCard(monthlySpends: List<MonthlySpend>, vehicle: Vehicle
             }
 
             // Month Labels on X-axis
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 60.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                val first = monthlySpends.first().yearMonth
-                val last = monthlySpends.last().yearMonth
-                val firstStr = try {
-                    DateTimeFormatter.ofPattern("LLL yy", locale).format(first)
-                } catch (_: Exception) { "${first.monthValue}/${first.year}" }
-                val lastStr = try {
-                    DateTimeFormatter.ofPattern("LLL yy", locale).format(last)
-                } catch (_: Exception) { "${last.monthValue}/${last.year}" }
-
-                Text(text = firstStr, style = MaterialTheme.typography.bodySmall, color = textColor)
-                if (monthlySpends.size > 2) {
-                    val mid = monthlySpends[monthlySpends.size / 2].yearMonth
-                    val midStr = try {
-                        DateTimeFormatter.ofPattern("LLL yy", locale).format(mid)
-                    } catch (_: Exception) { "${mid.monthValue}/${mid.year}" }
-                    Text(text = midStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+            if (monthlySpends.size == 1) {
+                val only = monthlySpends.first().yearMonth
+                val onlyStr = try {
+                    DateTimeFormatter.ofPattern("LLLL yyyy", locale).format(only)
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
+                } catch (_: Exception) { "${only.monthValue}/${only.year}" }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 60.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(text = onlyStr, style = MaterialTheme.typography.bodySmall, color = textColor)
                 }
-                Text(text = lastStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 60.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    val first = monthlySpends.first().yearMonth
+                    val last = monthlySpends.last().yearMonth
+                    val firstStr = try {
+                        DateTimeFormatter.ofPattern("LLL yy", locale).format(first)
+                    } catch (_: Exception) { "${first.monthValue}/${first.year}" }
+                    val lastStr = try {
+                        DateTimeFormatter.ofPattern("LLL yy", locale).format(last)
+                    } catch (_: Exception) { "${last.monthValue}/${last.year}" }
+
+                    Text(text = firstStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+                    if (monthlySpends.size > 2) {
+                        val mid = monthlySpends[monthlySpends.size / 2].yearMonth
+                        val midStr = try {
+                            DateTimeFormatter.ofPattern("LLL yy", locale).format(mid)
+                        } catch (_: Exception) { "${mid.monthValue}/${mid.year}" }
+                        Text(text = midStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+                    }
+                    Text(text = lastStr, style = MaterialTheme.typography.bodySmall, color = textColor)
+                }
             }
         }
     }

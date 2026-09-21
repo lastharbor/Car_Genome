@@ -111,6 +111,7 @@
     <string name="unit_km_l">км/л</string>
     <string name="unit_mpg_us">миль/гал</string>
     <string name="unit_mpg_imp">миль/гал (имп)</string>
+    <string name="unit_days_suffix">дн.</string>
 
     <string name="fuel_petrol">Бензин</string>
     <string name="fuel_diesel">Дизель</string>
@@ -343,8 +344,8 @@
     <string name="schedule_interval_km">Интервал по пробегу</string>
     <string name="schedule_interval_months">Интервал по времени (месяцев)</string>
     <string name="schedule_interval_months_badge">%1$d мес.</string>
-    <string name="schedule_warn_km">Предупреждать за (пробег)</string>
-    <string name="schedule_warn_days">Предупреждать за (дней)</string>
+    <string name="schedule_warn_km">Предупредить за</string>
+    <string name="schedule_warn_days">Предупредить за</string>
     <string name="schedule_is_enabled">Активно</string>
     <string name="schedule_last_performed_date">Дата последнего выполнения</string>
     <string name="schedule_last_performed_odometer">Пробег последнего выполнения</string>
