@@ -40,3 +40,5 @@ docs/
 databases/
 files/
 scripts/check_build.py
+cargenome_backup*.json
+CarGenome_Restore/
