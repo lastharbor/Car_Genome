@@ -70,9 +70,15 @@ class MainActivity : ComponentActivity() {
 
             androidx.compose.runtime.LaunchedEffect(settings.autoCheckUpdates) {
                 if (settings.autoCheckUpdates) {
-                    val result = appUpdateManager.checkForUpdate()
-                    result.getOrNull()?.let { info ->
-                        startupUpdateInfo = info
+                    val lastCheck = settings.lastUpdateCheckTimestamp ?: 0L
+                    val now = System.currentTimeMillis()
+                    // Don't spam checks if checked within the last 4 hours
+                    if (now - lastCheck > 4 * 60 * 60 * 1000L) {
+                        settingsRepository.setLastUpdateCheckTimestamp(now)
+                        val result = appUpdateManager.checkForUpdate()
+                        result.getOrNull()?.let { info ->
+                            startupUpdateInfo = info
+                        }
                     }
                 }
             }
