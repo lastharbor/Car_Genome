@@ -317,7 +317,7 @@ fun LoyaltyCardDetailScreen(
                 onClick = {
                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     clipboard.setPrimaryClip(ClipData.newPlainText("Card Number", currentCard.cardNumber))
-                    Toast.makeText(context, context.getString(R.string.loyalty_cards_number_copied), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.loyalty_cards_number_copied, Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {
