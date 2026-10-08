@@ -138,6 +138,21 @@ data class MaintenanceEventBackupDto(
 )
 
 @Serializable
+data class LoyaltyCardBackupDto(
+    val id: Long,
+    val title: String,
+    val cardNumber: String,
+    val barcodeType: String,
+    val barcodeRawValue: String,
+    val category: String,
+    val colorHex: Long,
+    val note: String? = null,
+    val vehicleId: Long? = null,
+    val createdAt: String,
+    val updatedAt: String,
+)
+
+@Serializable
 data class CarGenomeBackup(
     val version: Int = 1,
     val exportedAt: String,
@@ -148,6 +163,7 @@ data class CarGenomeBackup(
     val expenses: List<ExpenseBackupDto>,
     val odometerReadings: List<OdometerReadingBackupDto>,
     val maintenanceEvents: List<MaintenanceEventBackupDto> = emptyList(),
+    val loyaltyCards: List<LoyaltyCardBackupDto> = emptyList(),
 )
 
 @Singleton
@@ -169,6 +185,7 @@ class DataBackupManager @Inject constructor(
         val expenses = db.expenseDao().listAll().map { it.toDto() }
         val readings = db.odometerReadingDao().listAll().map { it.toDto() }
         val events = db.maintenanceEventDao().listAll().map { it.toDto() }
+        val loyaltyCards = db.loyaltyCardDao().listAll().map { it.toDto() }
 
         val backup = CarGenomeBackup(
             version = 1,
@@ -180,6 +197,7 @@ class DataBackupManager @Inject constructor(
             expenses = expenses,
             odometerReadings = readings,
             maintenanceEvents = events,
+            loyaltyCards = loyaltyCards,
         )
 
         return json.encodeToString(backup)
@@ -198,6 +216,7 @@ class DataBackupManager @Inject constructor(
         db.serviceRecordDao().insertAll(backup.serviceRecords.map { it.toEntity() })
         db.expenseDao().insertAll(backup.expenses.map { it.toEntity() })
         db.odometerReadingDao().insertAll(backup.odometerReadings.map { it.toEntity() })
+        db.loyaltyCardDao().insertAll(backup.loyaltyCards.map { it.toEntity() })
 
         val importedEvents = backup.maintenanceEvents.map { it.toEntity() }
         db.maintenanceEventDao().insertAll(importedEvents)
@@ -222,6 +241,7 @@ class DataBackupManager @Inject constructor(
         for (v in vehicles) {
             db.vehicleDao().deleteById(v.id)
         }
+        db.loyaltyCardDao().deleteAll()
         db.attachmentDao().deleteAll()
         attachmentManager?.deleteAllAttachments()
     }
@@ -495,5 +515,35 @@ class DataBackupManager @Inject constructor(
         completedAt = completedAt?.let { runCatching { Instant.parse(it) }.getOrNull() },
         serviceRecordId = serviceRecordId,
         createdAt = runCatching { Instant.parse(createdAt) }.getOrDefault(Instant.now()),
+    )
+
+    private fun com.cargenome.app.data.db.entity.LoyaltyCardEntity.toDto() = LoyaltyCardBackupDto(
+        id = id,
+        title = title,
+        cardNumber = cardNumber,
+        barcodeType = barcodeType.name,
+        barcodeRawValue = barcodeRawValue,
+        category = category.name,
+        colorHex = colorHex,
+        note = note,
+        vehicleId = vehicleId,
+        createdAt = createdAt.toString(),
+        updatedAt = updatedAt.toString(),
+    )
+
+    private fun LoyaltyCardBackupDto.toEntity() = com.cargenome.app.data.db.entity.LoyaltyCardEntity(
+        id = id,
+        title = title,
+        cardNumber = cardNumber,
+        barcodeType = runCatching { com.cargenome.app.data.db.entity.BarcodeType.valueOf(barcodeType) }
+            .getOrDefault(com.cargenome.app.data.db.entity.BarcodeType.Code128),
+        barcodeRawValue = barcodeRawValue.ifBlank { cardNumber },
+        category = runCatching { com.cargenome.app.data.db.entity.LoyaltyCategory.valueOf(category) }
+            .getOrDefault(com.cargenome.app.data.db.entity.LoyaltyCategory.Fuel),
+        colorHex = colorHex,
+        note = note,
+        vehicleId = vehicleId,
+        createdAt = runCatching { Instant.parse(createdAt) }.getOrDefault(Instant.now()),
+        updatedAt = runCatching { Instant.parse(updatedAt) }.getOrDefault(Instant.now()),
     )
 }

@@ -606,5 +606,37 @@
     <string name="update_action_grant_permission">Permission Settings</string>
     <string name="update_action_retry">Retry</string>
     <string name="update_action_later">Later</string>
+
+    <!-- Loyalty Cards -->
+    <string name="premium_feat_loyalty_cards">Discount &amp; Loyalty Cards Wallet</string>
+    <string name="premium_feat_loyalty_cards_desc">Store all your fuel, repair shop and car wash discount cards in one place.</string>
+    <string name="loyalty_cards_title">Loyalty Cards</string>
+    <string name="loyalty_cards_empty_title">No loyalty cards yet</string>
+    <string name="loyalty_cards_empty_desc">Add your fuel, service, wash or parts discount cards to keep them always at hand.</string>
+    <string name="loyalty_cards_add">Add Card</string>
+    <string name="loyalty_cards_edit">Edit Card</string>
+    <string name="loyalty_cards_scan_camera">Scan Barcode</string>
+    <string name="loyalty_cards_scan_hint">Point the camera at the barcode or QR code</string>
+    <string name="loyalty_cards_card_number">Card number</string>
+    <string name="loyalty_cards_card_title">Card name</string>
+    <string name="loyalty_cards_category">Category</string>
+    <string name="loyalty_cards_color">Card color</string>
+    <string name="loyalty_cards_note">Note (optional)</string>
+    <string name="loyalty_cards_vehicle_bind">Car (optional)</string>
+    <string name="loyalty_cards_vehicle_all">All cars</string>
+    <string name="loyalty_cards_category_all">All</string>
+    <string name="loyalty_cards_category_fuel">Fuel</string>
+    <string name="loyalty_cards_category_wash">Wash</string>
+    <string name="loyalty_cards_category_service">Service</string>
+    <string name="loyalty_cards_category_parts">Parts</string>
+    <string name="loyalty_cards_category_insurance">Insurance</string>
+    <string name="loyalty_cards_category_other">Other</string>
+    <string name="loyalty_cards_barcode_copy">Copy number</string>
+    <string name="loyalty_cards_number_copied">Card number copied</string>
+    <string name="loyalty_cards_delete_confirm">Delete this loyalty card?</string>
+    <string name="loyalty_cards_paywall_title">Loyalty Cards Wallet</string>
+    <string name="loyalty_cards_paywall_subtitle">Available in CarGenome Premium</string>
+    <string name="loyalty_cards_paywall_desc">Store all your fuel station, repair shop, and auto wash discount cards in one convenient place with instant on-screen barcode scanning.</string>
+    <string name="loyalty_cards_paywall_activate">Activate Premium</string>
 </resources>
 

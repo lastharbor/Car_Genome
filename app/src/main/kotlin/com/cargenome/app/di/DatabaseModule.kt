@@ -6,6 +6,7 @@ import com.cargenome.app.data.db.CarGenomeDatabase
 import com.cargenome.app.data.db.dao.AttachmentDao
 import com.cargenome.app.data.db.dao.ExpenseDao
 import com.cargenome.app.data.db.dao.FuelRecordDao
+import com.cargenome.app.data.db.dao.LoyaltyCardDao
 import com.cargenome.app.data.db.dao.MaintenanceEventDao
 import com.cargenome.app.data.db.dao.MaintenanceScheduleDao
 import com.cargenome.app.data.db.dao.OdometerReadingDao
@@ -34,6 +35,7 @@ object DatabaseModule {
                 CarGenomeDatabase.MIGRATION_2_3,
                 CarGenomeDatabase.MIGRATION_3_4,
                 CarGenomeDatabase.MIGRATION_4_5,
+                CarGenomeDatabase.MIGRATION_5_6,
             )
             .build()
     }
@@ -146,4 +148,7 @@ object DatabaseModule {
 
     @Provides
     fun provideVinCacheDao(database: CarGenomeDatabase): VinCacheDao = database.vinCacheDao()
+
+    @Provides
+    fun provideLoyaltyCardDao(database: CarGenomeDatabase): LoyaltyCardDao = database.loyaltyCardDao()
 }

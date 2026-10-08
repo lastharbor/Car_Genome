@@ -606,4 +606,36 @@
     <string name="update_action_grant_permission">Configuración de permisos</string>
     <string name="update_action_retry">Reintentar</string>
     <string name="update_action_later">Más tarde</string>
+
+    <!-- Loyalty Cards -->
+    <string name="premium_feat_loyalty_cards">Monedero de tarjetas de fidelidad</string>
+    <string name="premium_feat_loyalty_cards_desc">Guarde todas sus tarjetas de combustible, taller y lavado en un solo lugar.</string>
+    <string name="loyalty_cards_title">Tarjetas de fidelidad</string>
+    <string name="loyalty_cards_empty_title">Aún no hay tarjetas</string>
+    <string name="loyalty_cards_empty_desc">Añada sus tarjetas de descuento de combustible, taller o lavado para tenerlas siempre a mano.</string>
+    <string name="loyalty_cards_add">Añadir tarjeta</string>
+    <string name="loyalty_cards_edit">Editar tarjeta</string>
+    <string name="loyalty_cards_scan_camera">Escanear código</string>
+    <string name="loyalty_cards_scan_hint">Apunte la cámara al código de barras o código QR</string>
+    <string name="loyalty_cards_card_number">Número de tarjeta</string>
+    <string name="loyalty_cards_card_title">Nombre de la tarjeta</string>
+    <string name="loyalty_cards_category">Categoría</string>
+    <string name="loyalty_cards_color">Color de la tarjeta</string>
+    <string name="loyalty_cards_note">Nota (opcional)</string>
+    <string name="loyalty_cards_vehicle_bind">Vehículo (opcional)</string>
+    <string name="loyalty_cards_vehicle_all">Todos los vehículos</string>
+    <string name="loyalty_cards_category_all">Todas</string>
+    <string name="loyalty_cards_category_fuel">Combustible</string>
+    <string name="loyalty_cards_category_wash">Lavado</string>
+    <string name="loyalty_cards_category_service">Taller</string>
+    <string name="loyalty_cards_category_parts">Repuestos</string>
+    <string name="loyalty_cards_category_insurance">Seguro</string>
+    <string name="loyalty_cards_category_other">Otro</string>
+    <string name="loyalty_cards_barcode_copy">Copiar número</string>
+    <string name="loyalty_cards_number_copied">Número copiado</string>
+    <string name="loyalty_cards_delete_confirm">¿Eliminar esta tarjeta?</string>
+    <string name="loyalty_cards_paywall_title">Monedero de tarjetas de fidelidad</string>
+    <string name="loyalty_cards_paywall_subtitle">Disponible en CarGenome Premium</string>
+    <string name="loyalty_cards_paywall_desc">Guarde todas sus tarjetas de combustible y taller en un lugar conveniente con escaneo instantáneo en caja.</string>
+    <string name="loyalty_cards_paywall_activate">Activar Premium</string>
 </resources>

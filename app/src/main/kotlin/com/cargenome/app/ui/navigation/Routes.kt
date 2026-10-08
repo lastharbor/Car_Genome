@@ -64,6 +64,11 @@ data class SettingsRoute(val openPremium: Boolean = false)
 @Serializable
 data object VinScanRoute
 
+@Serializable
+data class LoyaltyCardsRoute(val vehicleId: Long? = null)
 
+@Serializable
+data class LoyaltyCardEditorRoute(val cardId: Long? = null, val initialVehicleId: Long? = null)
 
-
+@Serializable
+data class LoyaltyCardDetailRoute(val cardId: Long)

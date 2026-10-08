@@ -30,6 +30,9 @@ import com.cargenome.app.ui.expense.ExpenseLogScreen
 import com.cargenome.app.ui.fuel.FuelEditorScreen
 import com.cargenome.app.ui.fuel.FuelLogScreen
 import com.cargenome.app.ui.garage.GarageScreen
+import com.cargenome.app.ui.loyalty.LoyaltyCardDetailScreen
+import com.cargenome.app.ui.loyalty.LoyaltyCardEditorScreen
+import com.cargenome.app.ui.loyalty.LoyaltyCardsScreen
 import com.cargenome.app.ui.odometer.OdometerLogScreen
 import com.cargenome.app.ui.service.ScheduleEditorScreen
 import com.cargenome.app.ui.service.ServiceEditorScreen
@@ -116,6 +119,9 @@ fun CarGenomeNavHost(
                             navController.navigate(SettingsRoute(openPremium = true)) {
                                 launchSingleTop = true
                             }
+                        },
+                        onOpenLoyaltyCards = {
+                            navController.navigate(LoyaltyCardsRoute())
                         },
                     )
                 }
@@ -270,6 +276,32 @@ fun CarGenomeNavHost(
                         navController.previousBackStackEntry?.savedStateHandle?.set("scanned_vin", vin)
                         navController.popBackStack()
                     },
+                )
+            }
+
+            composable<LoyaltyCardsRoute> { entry ->
+                val route: LoyaltyCardsRoute = entry.toRoute()
+                LoyaltyCardsScreen(
+                    onBack = navController::popBackStack,
+                    onAddCard = { navController.navigate(LoyaltyCardEditorRoute(initialVehicleId = route.vehicleId)) },
+                    onCardClick = { cardId -> navController.navigate(LoyaltyCardDetailRoute(cardId)) },
+                    onOpenSettings = { openPremium -> navController.navigate(SettingsRoute(openPremium = openPremium)) },
+                )
+            }
+
+            composable<LoyaltyCardEditorRoute> {
+                LoyaltyCardEditorScreen(
+                    onBack = navController::popBackStack,
+                    onSaved = { navController.popBackStack() },
+                )
+            }
+
+            composable<LoyaltyCardDetailRoute> { entry ->
+                val route: LoyaltyCardDetailRoute = entry.toRoute()
+                LoyaltyCardDetailScreen(
+                    cardId = route.cardId,
+                    onBack = navController::popBackStack,
+                    onEdit = { cardId -> navController.navigate(LoyaltyCardEditorRoute(cardId = cardId)) },
                 )
             }
         }

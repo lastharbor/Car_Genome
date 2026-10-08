@@ -31,6 +31,8 @@ okhttp = "5.5.0"
 
 camerax = "1.6.2"
 mlkitTextRecognition = "16.0.1"
+mlkitBarcodeScanning = "17.3.0"
+zxing = "3.5.3"
 coil = "3.6.2"
 
 leakcanary = "2.14"
@@ -93,6 +95,8 @@ camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cam
 camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
 camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
 mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkitTextRecognition" }
+mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkitBarcodeScanning" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 

@@ -604,4 +604,36 @@
     <string name="update_action_grant_permission">Berechtigungseinstellungen</string>
     <string name="update_action_retry">Wiederholen</string>
     <string name="update_action_later">Später</string>
+
+    <!-- Loyalty Cards -->
+    <string name="premium_feat_loyalty_cards">Kunden- &amp; Tankkarten-Brieftasche</string>
+    <string name="premium_feat_loyalty_cards_desc">Speichern Sie alle Tank-, Werkstatt- und Waschstraßen-Karten an einem Ort.</string>
+    <string name="loyalty_cards_title">Kundenkarten</string>
+    <string name="loyalty_cards_empty_title">Noch keine Kundenkarten</string>
+    <string name="loyalty_cards_empty_desc">Fügen Sie Ihre Tank-, Werkstatt- oder Waschkarten hinzu, um sie stets griffbereit zu haben.</string>
+    <string name="loyalty_cards_add">Karte hinzufügen</string>
+    <string name="loyalty_cards_edit">Karte bearbeiten</string>
+    <string name="loyalty_cards_scan_camera">Barcode scannen</string>
+    <string name="loyalty_cards_scan_hint">Richten Sie die Kamera auf den Barcode oder QR-Code</string>
+    <string name="loyalty_cards_card_number">Kartennummer</string>
+    <string name="loyalty_cards_card_title">Kartenname</string>
+    <string name="loyalty_cards_category">Kategorie</string>
+    <string name="loyalty_cards_color">Kartenfarbe</string>
+    <string name="loyalty_cards_note">Notiz (optional)</string>
+    <string name="loyalty_cards_vehicle_bind">Fahrzeug (optional)</string>
+    <string name="loyalty_cards_vehicle_all">Alle Fahrzeuge</string>
+    <string name="loyalty_cards_category_all">Alle</string>
+    <string name="loyalty_cards_category_fuel">Tanken</string>
+    <string name="loyalty_cards_category_wash">Waschen</string>
+    <string name="loyalty_cards_category_service">Werkstatt</string>
+    <string name="loyalty_cards_category_parts">Ersatzteile</string>
+    <string name="loyalty_cards_category_insurance">Versicherung</string>
+    <string name="loyalty_cards_category_other">Sonstiges</string>
+    <string name="loyalty_cards_barcode_copy">Nummer kopieren</string>
+    <string name="loyalty_cards_number_copied">Kartennummer kopiert</string>
+    <string name="loyalty_cards_delete_confirm">Diese Kundenkarte löschen?</string>
+    <string name="loyalty_cards_paywall_title">Kundenkarten-Brieftasche</string>
+    <string name="loyalty_cards_paywall_subtitle">Verfügbar in CarGenome Premium</string>
+    <string name="loyalty_cards_paywall_desc">Speichern Sie alle Tank- und Werkstattkarten an einem Ort mit sofortigem Scannen an der Kasse.</string>
+    <string name="loyalty_cards_paywall_activate">Premium aktivieren</string>
 </resources>

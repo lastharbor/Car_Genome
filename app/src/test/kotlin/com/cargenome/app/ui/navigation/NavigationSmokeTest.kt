@@ -101,5 +101,15 @@ class NavigationSmokeTest {
 
         val vinScan = json.decodeFromString<VinScanRoute>(json.encodeToString(VinScanRoute))
         assertEquals(VinScanRoute, vinScan)
+
+        val loyaltyList = json.decodeFromString<LoyaltyCardsRoute>(json.encodeToString(LoyaltyCardsRoute(vehicleId = 10L)))
+        assertEquals(10L, loyaltyList.vehicleId)
+
+        val loyaltyEdit = json.decodeFromString<LoyaltyCardEditorRoute>(json.encodeToString(LoyaltyCardEditorRoute(cardId = 5L, initialVehicleId = 10L)))
+        assertEquals(5L, loyaltyEdit.cardId)
+        assertEquals(10L, loyaltyEdit.initialVehicleId)
+
+        val loyaltyDetail = json.decodeFromString<LoyaltyCardDetailRoute>(json.encodeToString(LoyaltyCardDetailRoute(cardId = 77L)))
+        assertEquals(77L, loyaltyDetail.cardId)
     }
 }

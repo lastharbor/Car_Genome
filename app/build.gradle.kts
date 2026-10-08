@@ -39,8 +39,8 @@ android {
         applicationId = "com.cargenome.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 13
-        versionName = "1.1.11"
+        versionCode = 14
+        versionName = "1.1.12"
 
         testInstrumentationRunner = "com.cargenome.app.CarGenomeTestRunner"
 
@@ -182,6 +182,8 @@ dependencies {
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
     implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.barcode.scanning)
+    implementation(libs.zxing.core)
 
     implementation(libs.coil.compose)
     // debugImplementation(libs.leakcanary.android) -- disabled for smooth 120 FPS performance

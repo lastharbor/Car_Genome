@@ -610,5 +610,37 @@
     <string name="update_action_grant_permission">Открыть настройки</string>
     <string name="update_action_retry">Повторить</string>
     <string name="update_action_later">Позже</string>
+
+    <!-- Loyalty Cards -->
+    <string name="premium_feat_loyalty_cards">Кошелёк карт лояльности</string>
+    <string name="premium_feat_loyalty_cards_desc">Храните все карты АЗС, моек и автосервисов в одном месте.</string>
+    <string name="loyalty_cards_title">Карты лояльности</string>
+    <string name="loyalty_cards_empty_title">Пока нет карт лояльности</string>
+    <string name="loyalty_cards_empty_desc">Добавьте скидочные карты АЗС, моек, запчастей и автосервисов, чтобы они всегда были под рукой.</string>
+    <string name="loyalty_cards_add">Добавить карту</string>
+    <string name="loyalty_cards_edit">Изменить карту</string>
+    <string name="loyalty_cards_scan_camera">Сканировать штрихкод</string>
+    <string name="loyalty_cards_scan_hint">Наведите камеру на штрихкод или QR-код карты</string>
+    <string name="loyalty_cards_card_number">Номер карты</string>
+    <string name="loyalty_cards_card_title">Название карты</string>
+    <string name="loyalty_cards_category">Категория</string>
+    <string name="loyalty_cards_color">Цвет карты</string>
+    <string name="loyalty_cards_note">Заметка (необязательно)</string>
+    <string name="loyalty_cards_vehicle_bind">Автомобиль (необязательно)</string>
+    <string name="loyalty_cards_vehicle_all">Все автомобили</string>
+    <string name="loyalty_cards_category_all">Все</string>
+    <string name="loyalty_cards_category_fuel">АЗС</string>
+    <string name="loyalty_cards_category_wash">Мойка</string>
+    <string name="loyalty_cards_category_service">Автосервис</string>
+    <string name="loyalty_cards_category_parts">Запчасти</string>
+    <string name="loyalty_cards_category_insurance">Страхование</string>
+    <string name="loyalty_cards_category_other">Другое</string>
+    <string name="loyalty_cards_barcode_copy">Скопировать номер</string>
+    <string name="loyalty_cards_number_copied">Номер карты скопирован</string>
+    <string name="loyalty_cards_delete_confirm">Удалить эту карту лояльности?</string>
+    <string name="loyalty_cards_paywall_title">Кошелёк карт лояльности</string>
+    <string name="loyalty_cards_paywall_subtitle">Доступно в CarGenome Premium</string>
+    <string name="loyalty_cards_paywall_desc">Храните все скидочные карты АЗС, моек, сервисов и магазинов запчастей в одном удобном месте с мгновенным считыванием на кассе.</string>
+    <string name="loyalty_cards_paywall_activate">Активировать Premium</string>
 </resources>
 

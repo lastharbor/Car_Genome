@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -67,6 +68,7 @@ fun GarageScreen(
     onOpenVehicle: (Long) -> Unit,
     modifier: Modifier = Modifier,
     onOpenSettings: (() -> Unit)? = null,
+    onOpenLoyaltyCards: (() -> Unit)? = null,
     viewModel: GarageViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -87,6 +89,18 @@ fun GarageScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.garage_title)) },
                 actions = {
+                    if (onOpenLoyaltyCards != null) {
+                        val loyaltyDesc = stringResource(R.string.loyalty_cards_title)
+                        IconButton(
+                            onClick = onOpenLoyaltyCards,
+                            modifier = Modifier.semantics { contentDescription = loyaltyDesc },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CreditCard,
+                                contentDescription = loyaltyDesc,
+                            )
+                        }
+                    }
                     if (onOpenSettings != null) {
                         val settingsDesc = stringResource(R.string.settings_title)
                         IconButton(

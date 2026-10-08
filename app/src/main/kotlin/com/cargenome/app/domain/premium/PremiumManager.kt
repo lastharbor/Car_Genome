@@ -38,6 +38,10 @@ enum class PremiumFeature(
         R.string.premium_feat_backup,
         R.string.settings_backup_export_desc,
     ),
+    LOYALTY_CARDS(
+        R.string.premium_feat_loyalty_cards,
+        R.string.premium_feat_loyalty_cards_desc,
+    ),
 }
 
 sealed interface RedeemResult {

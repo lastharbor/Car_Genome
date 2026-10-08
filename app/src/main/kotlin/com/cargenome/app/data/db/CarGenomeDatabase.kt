@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import com.cargenome.app.data.db.dao.AttachmentDao
 import com.cargenome.app.data.db.dao.ExpenseDao
 import com.cargenome.app.data.db.dao.FuelRecordDao
+import com.cargenome.app.data.db.dao.LoyaltyCardDao
 import com.cargenome.app.data.db.dao.MaintenanceEventDao
 import com.cargenome.app.data.db.dao.MaintenanceScheduleDao
 import com.cargenome.app.data.db.dao.OdometerReadingDao
@@ -15,6 +16,7 @@ import com.cargenome.app.data.db.dao.VinCacheDao
 import com.cargenome.app.data.db.entity.AttachmentEntity
 import com.cargenome.app.data.db.entity.ExpenseEntity
 import com.cargenome.app.data.db.entity.FuelRecordEntity
+import com.cargenome.app.data.db.entity.LoyaltyCardEntity
 import com.cargenome.app.data.db.entity.MaintenanceEventEntity
 import com.cargenome.app.data.db.entity.MaintenanceScheduleEntity
 import com.cargenome.app.data.db.entity.OdometerReadingEntity
@@ -33,6 +35,7 @@ import com.cargenome.app.data.db.entity.VinCacheEntryEntity
         AttachmentEntity::class,
         VinCacheEntryEntity::class,
         MaintenanceEventEntity::class,
+        LoyaltyCardEntity::class,
     ],
     version = CarGenomeDatabase.VERSION,
     exportSchema = true,
@@ -41,6 +44,8 @@ import com.cargenome.app.data.db.entity.VinCacheEntryEntity
 abstract class CarGenomeDatabase : RoomDatabase() {
 
     abstract fun vehicleDao(): VehicleDao
+
+    abstract fun loyaltyCardDao(): LoyaltyCardDao
 
     abstract fun fuelRecordDao(): FuelRecordDao
 
@@ -59,7 +64,7 @@ abstract class CarGenomeDatabase : RoomDatabase() {
     abstract fun vinCacheDao(): VinCacheDao
 
     companion object {
-        const val VERSION = 5
+        const val VERSION = 6
         const val NAME = "cargenome.db"
 
         val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
@@ -111,6 +116,31 @@ abstract class CarGenomeDatabase : RoomDatabase() {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `maintenance_events` ADD COLUMN `scheduleId` INTEGER REFERENCES `maintenance_schedules`(`id`) ON DELETE SET NULL")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_maintenance_events_scheduleId` ON `maintenance_events` (`scheduleId`)")
+            }
+        }
+
+        val MIGRATION_5_6 = object : androidx.room.migration.Migration(5, 6) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `loyalty_cards` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `title` TEXT NOT NULL,
+                        `cardNumber` TEXT NOT NULL,
+                        `barcodeType` TEXT NOT NULL,
+                        `barcodeRawValue` TEXT NOT NULL,
+                        `category` TEXT NOT NULL,
+                        `colorHex` INTEGER NOT NULL,
+                        `note` TEXT,
+                        `vehicleId` INTEGER,
+                        `createdAt` INTEGER NOT NULL,
+                        `updatedAt` INTEGER NOT NULL,
+                        FOREIGN KEY(`vehicleId`) REFERENCES `vehicles`(`id`) ON DELETE SET NULL
+                    )
+                    """.trimIndent(),
+                )
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_loyalty_cards_vehicleId` ON `loyalty_cards` (`vehicleId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_loyalty_cards_category` ON `loyalty_cards` (`category`)")
             }
         }
     }
