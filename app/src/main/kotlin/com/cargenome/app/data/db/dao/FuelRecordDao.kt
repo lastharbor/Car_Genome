@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.FuelRecordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -70,8 +71,8 @@ interface FuelRecordDao {
     @Insert
     suspend fun insert(record: FuelRecordEntity): Long
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
-    suspend fun insertAll(records: List<FuelRecordEntity>): List<Long>
+    @Upsert
+    suspend fun upsertAll(records: List<FuelRecordEntity>)
 
     @Update
     suspend fun update(record: FuelRecordEntity)

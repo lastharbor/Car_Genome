@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.ServiceRecordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -57,8 +58,8 @@ interface ServiceRecordDao {
     @Insert
     suspend fun insert(record: ServiceRecordEntity): Long
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
-    suspend fun insertAll(records: List<ServiceRecordEntity>): List<Long>
+    @Upsert
+    suspend fun upsertAll(records: List<ServiceRecordEntity>)
 
     @Update
     suspend fun update(record: ServiceRecordEntity)

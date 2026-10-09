@@ -1,8 +1,12 @@
 package com.cargenome.app.data.export
 
+import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import com.cargenome.app.data.attachment.AttachmentManager
 import com.cargenome.app.data.db.CarGenomeDatabase
+import com.cargenome.app.data.db.entity.AttachmentEntity
+import com.cargenome.app.data.db.entity.AttachmentOwner
 import com.cargenome.app.data.db.entity.ExpenseCategory
 import com.cargenome.app.data.db.entity.ExpenseEntity
 import com.cargenome.app.data.db.entity.FuelRecordEntity
@@ -15,10 +19,16 @@ import com.cargenome.app.data.db.entity.VehicleEntity
 import com.cargenome.app.domain.model.DistanceUnit
 import com.cargenome.app.domain.model.FuelType
 import com.cargenome.app.domain.model.VolumeUnit
+import java.io.File
 import java.time.Instant
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -288,4 +298,152 @@ class DataBackupManagerTest {
         assertEquals(0, database.vehicleDao().listAll().size)
         assertEquals(0, database.attachmentDao().listForOwner(com.cargenome.app.data.db.entity.AttachmentOwner.Vehicle, 5L).size)
     }
+
+    @Test
+    fun importOverAnExistingCarKeepsRecordsAddedAfterTheBackup() = runTest {
+        database.vehicleDao().insert(car(1L))
+        database.fuelRecordDao().insert(fillUp(10L, vehicleId = 1L))
+        val backup = backupManager.exportJson()
+
+        database.fuelRecordDao().insert(fillUp(11L, vehicleId = 1L))
+        backupManager.importJson(backup)
+
+        assertEquals(listOf(10L, 11L), database.fuelRecordDao().listAll().map { it.id })
+    }
+
+    @Test
+    fun importKeepsDeviceOnlyVehicleFields() = runTest {
+        database.vehicleDao().insert(car(1L, vin = "XTA00000000000001"))
+        val backup = backupManager.exportJson()
+        database.vehicleDao().update(
+            car(1L, vin = "XTA00000000000001").copy(
+                photoUri = "content://test/photo.jpg",
+                insurancePdfUri = "content://test/policy.pdf",
+                vinDecodeJson = "{}",
+            ),
+        )
+
+        backupManager.importJson(backup)
+
+        val restored = database.vehicleDao().findById(1L)!!
+        assertEquals("content://test/photo.jpg", restored.photoUri)
+        assertEquals("content://test/policy.pdf", restored.insurancePdfUri)
+        assertEquals("{}", restored.vinDecodeJson)
+    }
+
+    @Test
+    fun importDropsTheCachedVinDecodeWhenTheVinChanged() = runTest {
+        database.vehicleDao().insert(car(1L, vin = "XTA00000000000001"))
+        val backup = backupManager.exportJson()
+        database.vehicleDao().update(car(1L, vin = "XTA00000000000002").copy(vinDecodeJson = "{}"))
+
+        backupManager.importJson(backup)
+
+        val restored = database.vehicleDao().findById(1L)!!
+        assertEquals("XTA00000000000001", restored.vin)
+        assertNull(restored.vinDecodeJson)
+    }
+
+    @Test
+    fun replaceAllDataKeepsAttachmentsOfSurvivingRecordsOnly() = runTest {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val manager = DataBackupManager(database, AttachmentManager(context, Dispatchers.Unconfined))
+        val dir = File(context.filesDir, "attachments").apply { mkdirs() }
+        File(dir, "kept.jpg").writeText("receipt")
+        File(dir, "orphan.jpg").writeText("receipt")
+
+        database.vehicleDao().insert(car(1L))
+        database.fuelRecordDao().insert(fillUp(10L, vehicleId = 1L))
+        val payload = manager.exportJson()
+
+        database.fuelRecordDao().insert(fillUp(11L, vehicleId = 1L))
+        database.attachmentDao().insert(fuelReceipt(10L, "kept.jpg"))
+        database.attachmentDao().insert(fuelReceipt(11L, "orphan.jpg"))
+
+        manager.replaceAllData(payload)
+
+        assertEquals(listOf(10L), database.fuelRecordDao().listAll().map { it.id })
+        assertEquals(1, database.attachmentDao().listForOwner(AttachmentOwner.FuelRecord, 10L).size)
+        assertTrue(database.attachmentDao().listForOwner(AttachmentOwner.FuelRecord, 11L).isEmpty())
+        assertTrue(File(dir, "kept.jpg").exists())
+        assertFalse(File(dir, "orphan.jpg").exists())
+    }
+
+    @Test
+    fun replaceAllDataRollsBackWhenThePayloadCannotBeInserted() = runTest {
+        database.vehicleDao().insert(car(1L))
+        database.fuelRecordDao().insert(fillUp(10L, vehicleId = 1L))
+        // Decodes fine, but the fill-up belongs to a car the payload does not have.
+        val payload = payload(
+            fuelRecords = listOf(
+                FuelRecordBackupDto(
+                    id = 20L,
+                    vehicleId = 999L,
+                    filledAt = "2025-03-01T12:00:00Z",
+                    odometerKm = 1_000.0,
+                    volumeLitres = 40.0,
+                    totalCostMinor = 200_000L,
+                    isFullTank = true,
+                    missedPreviousFillUp = false,
+                ),
+            ),
+        )
+
+        assertTrue(runCatching { backupManager.replaceAllData(payload) }.isFailure)
+
+        assertEquals(listOf(1L), database.vehicleDao().listAll().map { it.id })
+        assertEquals(listOf(10L), database.fuelRecordDao().listAll().map { it.id })
+    }
+
+    @Test
+    fun replaceAllDataRejectsMalformedAndNewerPayloadsWithoutTouchingData() = runTest {
+        database.vehicleDao().insert(car(1L))
+
+        assertTrue(runCatching { backupManager.replaceAllData("{ not json") }.isFailure)
+        assertTrue(runCatching { backupManager.replaceAllData(payload(version = 2)) }.isFailure)
+
+        assertEquals(listOf(1L), database.vehicleDao().listAll().map { it.id })
+    }
+
+    private fun car(id: Long, vin: String? = null) = VehicleEntity(
+        id = id,
+        vin = vin,
+        make = "Lada",
+        model = "Vesta",
+        currencyCode = "RUB",
+    )
+
+    private fun fillUp(id: Long, vehicleId: Long) = FuelRecordEntity(
+        id = id,
+        vehicleId = vehicleId,
+        filledAt = Instant.parse("2025-03-01T12:00:00Z").plusSeconds(id * 86_400),
+        odometerKm = id * 100.0,
+        volumeLitres = 40.0,
+        totalCostMinor = 200_000L,
+        isFullTank = true,
+        missedPreviousFillUp = false,
+    )
+
+    private fun fuelReceipt(fuelRecordId: Long, fileName: String) = AttachmentEntity(
+        ownerType = AttachmentOwner.FuelRecord,
+        ownerId = fuelRecordId,
+        uri = "content://com.cargenome.app.fileprovider/attachments/$fileName",
+        addedAt = Instant.parse("2025-03-01T12:00:00Z"),
+    )
+
+    private fun payload(
+        version: Int = DataBackupManager.BACKUP_VERSION,
+        fuelRecords: List<FuelRecordBackupDto> = emptyList(),
+    ): String = Json.encodeToString(
+        CarGenomeBackup(
+            version = version,
+            exportedAt = "2025-03-01T12:00:00Z",
+            vehicles = emptyList(),
+            fuelRecords = fuelRecords,
+            serviceRecords = emptyList(),
+            maintenanceSchedules = emptyList(),
+            expenses = emptyList(),
+            odometerReadings = emptyList(),
+        ),
+    )
 }

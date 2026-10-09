@@ -1,5 +1,6 @@
 package com.cargenome.app.data.export
 
+import android.util.Log
 import androidx.room.withTransaction
 import com.cargenome.app.data.db.CarGenomeDatabase
 import com.cargenome.app.data.db.entity.ExpenseCategory
@@ -21,6 +22,7 @@ import com.cargenome.app.data.attachment.AttachmentManager
 import com.cargenome.app.domain.service.MaintenanceAlarmScheduler
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -172,6 +174,11 @@ class DataBackupManager @Inject constructor(
     private val attachmentManager: AttachmentManager? = null,
     private val alarmScheduler: MaintenanceAlarmScheduler? = null,
 ) {
+    companion object {
+        const val BACKUP_VERSION = 1
+        private const val TAG = "DataBackupManager"
+    }
+
     private val json = Json {
         prettyPrint = true
         ignoreUnknownKeys = true
@@ -188,7 +195,7 @@ class DataBackupManager @Inject constructor(
         val loyaltyCards = db.loyaltyCardDao().listAll().map { it.toDto() }
 
         val backup = CarGenomeBackup(
-            version = 1,
+            version = BACKUP_VERSION,
             exportedAt = Instant.now().toString(),
             vehicles = vehicles,
             fuelRecords = fuels,
@@ -203,48 +210,136 @@ class DataBackupManager @Inject constructor(
         return json.encodeToString(backup)
     }
 
-    suspend fun importJson(jsonContent: String) = db.withTransaction {
-        val backup = json.decodeFromString<CarGenomeBackup>(jsonContent)
-
-        // Insert vehicles first (so foreign keys are valid)
-        db.vehicleDao().insertAll(backup.vehicles.map { it.toEntity() })
-
-        // Insert schedules before service records (since service records reference scheduleId)
-        db.maintenanceScheduleDao().insertAll(backup.maintenanceSchedules.map { it.toEntity() })
-
-        db.fuelRecordDao().insertAll(backup.fuelRecords.map { it.toEntity() })
-        db.serviceRecordDao().insertAll(backup.serviceRecords.map { it.toEntity() })
-        db.expenseDao().insertAll(backup.expenses.map { it.toEntity() })
-        db.odometerReadingDao().insertAll(backup.odometerReadings.map { it.toEntity() })
-        db.loyaltyCardDao().insertAll(backup.loyaltyCards.map { it.toEntity() })
-
-        val importedEvents = backup.maintenanceEvents.map { it.toEntity() }
-        db.maintenanceEventDao().insertAll(importedEvents)
-        for (event in importedEvents) {
-            if (!event.isCompleted && event.remindAdvanceDays >= 0) {
-                val vehicle = db.vehicleDao().findById(event.vehicleId)
-                val vehicleName = vehicle?.let { v ->
-                    v.nickname?.takeIf { it.isNotBlank() }
-                        ?: listOf(v.make, v.model).filter { it.isNotBlank() }.joinToString(" ")
-                }.orEmpty()
-                alarmScheduler?.scheduleEventAlarm(event, vehicleName)
-            }
+    /**
+     * Merges a backup into what is already stored: a row from the backup
+     * overwrites the row with the same id and everything else stays.
+     *
+     * Rows are upserted, never REPLACEd. REPLACE deletes the old row before
+     * inserting, so for a car it set off ON DELETE CASCADE and silently took
+     * every record logged since the backup was made.
+     */
+    suspend fun importJson(jsonContent: String) {
+        val backup = decodeBackup(jsonContent)
+        db.withTransaction {
+            writeBackup(backup, localVehicles = db.vehicleDao().listAll())
         }
+        afterCommit(
+            cancelAlarmsFor = backup.maintenanceEvents.map { it.id },
+            staleFileUris = emptyList(),
+        )
     }
 
-    suspend fun clearAllData() = db.withTransaction {
-        val events = db.maintenanceEventDao().listAll()
-        for (e in events) {
-            alarmScheduler?.cancelAlarm(e.id)
+    /**
+     * Makes the stored data match the backup exactly, as a cloud pull needs.
+     *
+     * The payload is decoded before anything is touched and the wipe shares one
+     * transaction with the import, so a payload that cannot be decoded or
+     * inserted leaves the current data as it was.
+     *
+     * Attachments are local files a backup does not carry. Those whose record is
+     * still there afterwards keep pointing at it; only the ones left without a
+     * record are dropped, and their files go once the transaction has committed.
+     */
+    suspend fun replaceAllData(jsonContent: String) {
+        val backup = decodeBackup(jsonContent)
+        val outcome = db.withTransaction {
+            val previousVehicles = db.vehicleDao().listAll()
+            val previousEventIds = db.maintenanceEventDao().listAll().map { it.id }
+
+            db.vehicleDao().deleteAll()
+            db.loyaltyCardDao().deleteAll()
+            writeBackup(backup, localVehicles = previousVehicles)
+
+            val orphans = db.attachmentDao().listOrphans()
+            db.attachmentDao().deleteAll(orphans)
+
+            val keptVehicleIds = backup.vehicles.mapTo(HashSet()) { it.id }
+            val droppedVehicleFiles = previousVehicles
+                .filter { it.id !in keptVehicleIds }
+                .flatMap { listOfNotNull(it.photoUri, it.insurancePdfUri) }
+
+            ReplaceOutcome(
+                previousEventIds = previousEventIds,
+                staleFileUris = orphans.map { it.uri } + droppedVehicleFiles,
+            )
         }
-        val vehicles = db.vehicleDao().listAll()
-        for (v in vehicles) {
-            db.vehicleDao().deleteById(v.id)
+        afterCommit(
+            cancelAlarmsFor = outcome.previousEventIds,
+            staleFileUris = outcome.staleFileUris,
+        )
+    }
+
+    suspend fun clearAllData() {
+        val eventIds = db.withTransaction {
+            val ids = db.maintenanceEventDao().listAll().map { it.id }
+            db.vehicleDao().deleteAll()
+            db.loyaltyCardDao().deleteAll()
+            db.attachmentDao().deleteAll()
+            ids
         }
-        db.loyaltyCardDao().deleteAll()
-        db.attachmentDao().deleteAll()
+        // Alarms and files cannot roll back, so they go only once the rows have.
+        eventIds.forEach { alarmScheduler?.cancelAlarm(it) }
         attachmentManager?.deleteAllAttachments()
     }
+
+    private fun decodeBackup(jsonContent: String): CarGenomeBackup {
+        val backup = json.decodeFromString<CarGenomeBackup>(jsonContent)
+        // Unknown keys are ignored, so a newer format would import with parts missing.
+        require(backup.version <= BACKUP_VERSION) {
+            "Backup format ${backup.version} is newer than this app supports ($BACKUP_VERSION)"
+        }
+        return backup
+    }
+
+    /**
+     * Writes the backup's rows in foreign-key order. A backup does not carry a
+     * car's photo, insurance PDF or cached VIN decode, which exist on this device
+     * only, so those are kept from [localVehicles] for the car with the same id.
+     */
+    private suspend fun writeBackup(backup: CarGenomeBackup, localVehicles: List<VehicleEntity>) {
+        val local = localVehicles.associateBy { it.id }
+        db.vehicleDao().upsertAll(
+            backup.vehicles.map { dto ->
+                val restored = dto.toEntity()
+                val existing = local[restored.id] ?: return@map restored
+                restored.copy(
+                    photoUri = existing.photoUri,
+                    insurancePdfUri = existing.insurancePdfUri,
+                    vinDecodeJson = existing.vinDecodeJson.takeIf { existing.vin == restored.vin },
+                )
+            },
+        )
+        // Schedules before service records and events, which point at them.
+        db.maintenanceScheduleDao().upsertAll(backup.maintenanceSchedules.map { it.toEntity() })
+        db.fuelRecordDao().upsertAll(backup.fuelRecords.map { it.toEntity() })
+        db.serviceRecordDao().upsertAll(backup.serviceRecords.map { it.toEntity() })
+        db.expenseDao().upsertAll(backup.expenses.map { it.toEntity() })
+        db.odometerReadingDao().upsertAll(backup.odometerReadings.map { it.toEntity() })
+        db.loyaltyCardDao().upsertAll(backup.loyaltyCards.map { it.toEntity() })
+        db.maintenanceEventDao().upsertAll(backup.maintenanceEvents.map { it.toEntity() })
+    }
+
+    /**
+     * Alarms and files cannot roll back with a transaction, so they are touched
+     * only after the commit. The data is in place by then, so a failure here is
+     * logged instead of being reported as a failed import.
+     */
+    private suspend fun afterCommit(cancelAlarmsFor: Collection<Long>, staleFileUris: Collection<String>) {
+        try {
+            cancelAlarmsFor.forEach { alarmScheduler?.cancelAlarm(it) }
+            alarmScheduler?.rescheduleAllAlarms()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not reschedule maintenance alarms after import", e)
+        }
+        staleFileUris.forEach { attachmentManager?.deleteAttachmentFile(it) }
+    }
+
+    private class ReplaceOutcome(
+        val previousEventIds: List<Long>,
+        val staleFileUris: List<String>,
+    )
 
     suspend fun exportFuelCsv(vehicleId: Long): String {
         val records = db.fuelRecordDao().listChronological(vehicleId)

@@ -69,8 +69,8 @@ interface VehicleDao {
     @Insert
     suspend fun insert(vehicle: VehicleEntity): Long
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
-    suspend fun insertAll(vehicles: List<VehicleEntity>): List<Long>
+    @Upsert
+    suspend fun upsertAll(vehicles: List<VehicleEntity>)
 
     @Update
     suspend fun update(vehicle: VehicleEntity)
@@ -83,6 +83,10 @@ interface VehicleDao {
 
     @Query("DELETE FROM vehicles WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    /** Cascades to every per-car table; loyalty cards only lose their link. */
+    @Query("DELETE FROM vehicles")
+    suspend fun deleteAll()
 
     @Query("UPDATE vehicles SET isArchived = :archived WHERE id = :id")
     suspend fun setArchived(id: Long, archived: Boolean)

@@ -115,4 +115,32 @@ interface AttachmentDao {
         insertAll(added)
         deleteAll(removed)
     }
+
+    /**
+     * Attachments whose record no longer exists. With no foreign key to follow,
+     * a bulk replacement of the records leaves these behind and they have to be
+     * swept up explicitly.
+     */
+    suspend fun listOrphans(): List<AttachmentEntity> = listOrphans(
+        vehicleOwner = AttachmentOwner.Vehicle,
+        fuelOwner = AttachmentOwner.FuelRecord,
+        serviceOwner = AttachmentOwner.ServiceRecord,
+        expenseOwner = AttachmentOwner.Expense,
+    )
+
+    @Query(
+        """
+        SELECT * FROM attachments
+        WHERE (ownerType = :vehicleOwner AND ownerId NOT IN (SELECT id FROM vehicles))
+           OR (ownerType = :fuelOwner AND ownerId NOT IN (SELECT id FROM fuel_records))
+           OR (ownerType = :serviceOwner AND ownerId NOT IN (SELECT id FROM service_records))
+           OR (ownerType = :expenseOwner AND ownerId NOT IN (SELECT id FROM expenses))
+        """,
+    )
+    suspend fun listOrphans(
+        vehicleOwner: AttachmentOwner,
+        fuelOwner: AttachmentOwner,
+        serviceOwner: AttachmentOwner,
+        expenseOwner: AttachmentOwner,
+    ): List<AttachmentEntity>
 }

@@ -133,8 +133,7 @@ class CloudSyncManager @Inject constructor(
                 val body = resp.body()!!
                 if (body.payload != null) {
                     val jsonStr = json.encodeToString(body.payload)
-                    backupManager.clearAllData()
-                    backupManager.importJson(jsonStr)
+                    backupManager.replaceAllData(jsonStr)
                     settingsRepository.setLastSyncTimestamp(System.currentTimeMillis())
                 }
                 SyncResult.Success(body)

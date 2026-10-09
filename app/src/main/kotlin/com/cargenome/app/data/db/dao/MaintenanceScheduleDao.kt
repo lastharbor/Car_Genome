@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.MaintenanceScheduleEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -34,6 +35,9 @@ interface MaintenanceScheduleDao {
 
     @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
     suspend fun insertAll(schedules: List<MaintenanceScheduleEntity>): List<Long>
+
+    @Upsert
+    suspend fun upsertAll(schedules: List<MaintenanceScheduleEntity>)
 
     @Update
     suspend fun update(schedule: MaintenanceScheduleEntity)

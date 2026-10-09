@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.MaintenanceEventEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -59,8 +60,8 @@ interface MaintenanceEventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(event: MaintenanceEventEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(events: List<MaintenanceEventEntity>)
+    @Upsert
+    suspend fun upsertAll(events: List<MaintenanceEventEntity>)
 
     @Update
     suspend fun update(event: MaintenanceEventEntity)

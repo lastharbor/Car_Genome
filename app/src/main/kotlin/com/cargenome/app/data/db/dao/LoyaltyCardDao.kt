@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.LoyaltyCardEntity
 import com.cargenome.app.data.db.entity.LoyaltyCategory
 import kotlinx.coroutines.flow.Flow
@@ -43,8 +44,8 @@ interface LoyaltyCardDao {
     @Query("SELECT * FROM loyalty_cards ORDER BY id ASC")
     suspend fun listAll(): List<LoyaltyCardEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(cards: List<LoyaltyCardEntity>)
+    @Upsert
+    suspend fun upsertAll(cards: List<LoyaltyCardEntity>)
 
     @Query("DELETE FROM loyalty_cards")
     suspend fun deleteAll()

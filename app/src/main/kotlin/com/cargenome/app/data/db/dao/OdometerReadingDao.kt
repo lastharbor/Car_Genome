@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.OdometerReadingEntity
 import com.cargenome.app.data.db.entity.OdometerSource
 import kotlinx.coroutines.flow.Flow
@@ -46,8 +47,8 @@ interface OdometerReadingDao {
     @Insert
     suspend fun insert(reading: OdometerReadingEntity): Long
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
-    suspend fun insertAll(readings: List<OdometerReadingEntity>): List<Long>
+    @Upsert
+    suspend fun upsertAll(readings: List<OdometerReadingEntity>)
 
     @Update
     suspend fun update(reading: OdometerReadingEntity)

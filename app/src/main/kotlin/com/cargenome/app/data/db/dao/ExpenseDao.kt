@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.cargenome.app.data.db.entity.ExpenseCategory
 import com.cargenome.app.data.db.entity.ExpenseEntity
 import kotlinx.coroutines.flow.Flow
@@ -63,8 +64,8 @@ interface ExpenseDao {
     @Insert
     suspend fun insert(expense: ExpenseEntity): Long
 
-    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
-    suspend fun insertAll(expenses: List<ExpenseEntity>): List<Long>
+    @Upsert
+    suspend fun upsertAll(expenses: List<ExpenseEntity>)
 
     @Update
     suspend fun update(expense: ExpenseEntity)
