@@ -8,18 +8,41 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
-from passlib.context import CryptContext
+import bcrypt
 from jose import JWTError, jwt
 
 # Configuration
-SECRET_KEY = os.getenv("SECRET_KEY", "cargenome_secret_jwt_key_please_change_in_production_998877")
+# Every token is signed with this key, so whoever knows it can act as any user.
+# There is no default: the old ones are public in the repository.
+SECRET_KEY = os.getenv("SECRET_KEY", "")
+_PUBLISHED_KEYS = {
+    "cargenome_secret_jwt_key_please_change_in_production_998877",
+    "cargenome_jwt_secret_change_me_in_production",
+}
+if len(SECRET_KEY) < 32 or SECRET_KEY in _PUBLISHED_KEYS:
+    raise RuntimeError(
+        "SECRET_KEY must be a private random string of at least 32 characters. "
+        "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(48))\""
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 365
 DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(__file__), "data", "cargenome.db"))
 
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("ascii")
+
+
+def verify_password(password: str, hashed: str) -> bool:
+    try:
+        return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("ascii"))
+    except ValueError:
+        # Over bcrypt's 72-byte limit, or a malformed stored hash.
+        return False
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
 app = FastAPI(
@@ -119,10 +142,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> sqlite3.Row:
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
-    except JWTError:
+        user_id = int(payload["sub"])
+    except (JWTError, KeyError, ValueError):
         raise credentials_exception
 
     with get_db() as conn:
@@ -146,8 +167,10 @@ def register(req: AuthRequest):
     email = req.email.lower().strip()
     if len(req.password) < 6:
         raise HTTPException(status_code=400, detail="Пароль должен содержать не менее 6 символов")
+    if len(req.password.encode("utf-8")) > 72:
+        raise HTTPException(status_code=400, detail="Пароль слишком длинный (не более 72 байт)")
 
-    hashed = pwd_context.hash(req.password)
+    hashed = hash_password(req.password)
     now = datetime.now(timezone.utc).isoformat()
 
     with get_db() as conn:
@@ -162,7 +185,7 @@ def register(req: AuthRequest):
         user_id = cursor.lastrowid
         conn.commit()
 
-    token = create_access_token({"sub": user_id, "email": email})
+    token = create_access_token({"sub": str(user_id), "email": email})
     return AuthResponse(token=token, email=email, user_id=user_id)
 
 @app.post("/api/v1/auth/login", response_model=AuthResponse)
@@ -170,10 +193,10 @@ def login(req: AuthRequest):
     email = req.email.lower().strip()
     with get_db() as conn:
         user = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
-        if not user or not pwd_context.verify(req.password, user["hashed_password"]):
+        if not user or not verify_password(req.password, user["hashed_password"]):
             raise HTTPException(status_code=401, detail="Неверный email или пароль")
 
-        token = create_access_token({"sub": user["id"], "email": email})
+        token = create_access_token({"sub": str(user["id"]), "email": email})
         return AuthResponse(token=token, email=email, user_id=user["id"])
 
 @app.get("/api/v1/sync/status", response_model=SyncStatusResponse)

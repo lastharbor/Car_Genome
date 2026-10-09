@@ -11,6 +11,16 @@
 
 ## Быстрый запуск
 
+Сервер не запустится без `SECRET_KEY`: этим ключом подписываются токены, и тот, кто его знает,
+может войти под любым пользователем. Ключ генерируется один раз и хранится только на сервере:
+
+```bash
+cd server
+echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(48))')" > .env
+```
+
+Файл `.env` в git не попадает. Если ключ поменять, все пользователи должны будут войти заново.
+
 ### Вариант 1: Через Docker (рекомендуется)
 ```bash
 cd server
@@ -22,6 +32,7 @@ docker compose up -d
 ```bash
 cd server
 pip install -r requirements.txt
+export $(cat .env)
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 

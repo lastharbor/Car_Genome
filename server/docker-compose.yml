@@ -10,5 +10,5 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - SECRET_KEY=cargenome_jwt_secret_change_me_in_production
+      - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in server/.env, see README}
       - DB_PATH=/app/data/cargenome.db
