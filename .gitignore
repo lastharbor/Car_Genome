@@ -42,3 +42,10 @@ files/
 scripts/check_build.py
 cargenome_backup*.json
 CarGenome_Restore/
+
+# AI tooling: shared config in .claude/ is committed; personal and machine-specific files are not
+.ai-logs/
+.claude/settings.local.json
+CLAUDE.local.md
+.mcp.json
+vault

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/ai/gradle.py:*)",
+      "Bash(python tools/ui_nodes.py:*)",
+      "Bash(python tools/check_wmi_coverage.py:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(adb devices:*)",
+      "Bash(adb install:*)",
+      "Bash(adb logcat:*)",
+      "Bash(adb exec-out screencap:*)",
+      "Bash(adb shell uiautomator dump:*)",
+      "Bash(adb pull:*)",
+      "Bash(adb shell am start:*)",
+      "Bash(adb shell input:*)",
+      "Read(E:/ObsidianVault/CarGenome/**)"
+    ],
+    "deny": [
+      "Read(**/*.apk)",
+      "Read(**/*.aab)",
+      "Read(**/*.tar)",
+      "Read(**/*.keystore)",
+      "Read(**/*.jks)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/keystore.properties)",
+      "Read(tools/keys/**)",
+      "Read(scripts/keys/**)",
+      "Read(**/build/**)",
+      "Read(.gradle/**)",
+      "Read(.kotlin/**)",
+      "Read(.idea/**)",
+      "Read(databases/**)",
+      "Read(files/**)",
+      "Read(CarGenome_Restore/**)",
+      "Read(cargenome_backup*.json)",
+      "Read(app/src/main/assets/wmi.json)",
+      "Read(tools/vpic_wmi_cache.json)",
+      "Read(tools/wmi_wikipedia.json)",
+      "Read(ui*.xml)",
+      "Read(screen*.png)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git tag:*)",
+      "Bash(gh release:*)",
+      "Bash(adb uninstall:*)",
+      "Bash(adb shell pm clear:*)"
+    ],
+    "additionalDirectories": [
+      "E:/ObsidianVault/CarGenome"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-bash.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "kotlin-lsp@claude-plugins-official": false,
+    "pyright-lsp@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  }
+}
