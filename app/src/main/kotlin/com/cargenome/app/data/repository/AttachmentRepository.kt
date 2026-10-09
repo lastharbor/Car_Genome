@@ -1,5 +1,6 @@
 package com.cargenome.app.data.repository
 
+import androidx.core.net.toUri
 import com.cargenome.app.data.attachment.AttachmentManager
 import com.cargenome.app.data.db.dao.AttachmentDao
 import com.cargenome.app.data.db.entity.AttachmentEntity
@@ -24,6 +25,34 @@ class AttachmentRepository @Inject constructor(
     suspend fun delete(attachment: AttachmentEntity) {
         attachmentManager?.deleteAttachmentFile(attachment.uri)
         dao.delete(attachment)
+    }
+
+    /**
+     * Makes an owner's attachments match [uris], as an editor's save needs.
+     *
+     * New sources are copied in before any row changes. If one cannot be read,
+     * the copies made so far are removed and the call throws with the stored
+     * attachments untouched. Files of dropped attachments go only after their
+     * rows have.
+     */
+    suspend fun syncForOwner(ownerType: AttachmentOwner, ownerId: Long, uris: List<String>) {
+        val manager = checkNotNull(attachmentManager) { "AttachmentManager is required to save attachments" }
+        val existing = dao.listForOwner(ownerType, ownerId)
+        val existingUris = existing.mapTo(HashSet()) { it.uri }
+        val removed = existing.filter { it.uri !in uris }
+        val added = mutableListOf<AttachmentEntity>()
+        try {
+            for (uri in uris.distinct()) {
+                if (uri !in existingUris) {
+                    added += manager.saveAttachment(uri.toUri(), ownerType, ownerId)
+                }
+            }
+            dao.swap(added = added, removed = removed)
+        } catch (e: Exception) {
+            added.forEach { manager.deleteAttachmentFile(it.uri) }
+            throw e
+        }
+        removed.forEach { manager.deleteAttachmentFile(it.uri) }
     }
 
     suspend fun deleteForOwner(ownerType: AttachmentOwner, ownerId: Long) {

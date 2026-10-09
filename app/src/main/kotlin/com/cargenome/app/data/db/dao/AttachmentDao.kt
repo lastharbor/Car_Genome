@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.cargenome.app.data.db.entity.AttachmentEntity
 import com.cargenome.app.data.db.entity.AttachmentOwner
 import kotlinx.coroutines.flow.Flow
@@ -101,4 +102,17 @@ interface AttachmentDao {
         serviceOwner: AttachmentOwner,
         expenseOwner: AttachmentOwner,
     )
+
+    @Delete
+    suspend fun deleteAll(attachments: List<AttachmentEntity>)
+
+    @Insert
+    suspend fun insertAll(attachments: List<AttachmentEntity>)
+
+    /** One transaction, so a failure cannot leave only some of the rows swapped. */
+    @Transaction
+    suspend fun swap(added: List<AttachmentEntity>, removed: List<AttachmentEntity>) {
+        insertAll(added)
+        deleteAll(removed)
+    }
 }

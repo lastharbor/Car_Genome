@@ -4,6 +4,7 @@
 
     <string name="action_back">Back</string>
     <string name="action_save">Save</string>
+    <string name="editor_save_failed">Couldn\'t save. Check the attached photos and try again.</string>
     <string name="action_edit">Edit</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_ok">OK</string>
@@ -69,6 +70,7 @@
     <string name="field_insurance_policy">Policy Number</string>
     <string name="field_insurance_expires">Expires On</string>
     <string name="insurance_not_added">No insurance policy added</string>
+    <string name="insurance_attach_failed">Couldn\'t attach the PDF. The current policy file was kept.</string>
     <string name="insurance_add_action">Add Insurance</string>
     <string name="insurance_edit_action">Edit</string>
     <string name="insurance_delete_action">Remove</string>

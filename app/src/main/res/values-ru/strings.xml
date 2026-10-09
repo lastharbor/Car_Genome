@@ -2,6 +2,7 @@
 <resources>
     <string name="action_back">Назад</string>
     <string name="action_save">Сохранить</string>
+    <string name="editor_save_failed">Не удалось сохранить. Проверьте прикреплённые фото и попробуйте ещё раз.</string>
     <string name="action_edit">Изменить</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_ok">Готово</string>
@@ -71,6 +72,7 @@
     <string name="field_insurance_policy">Номер полиса</string>
     <string name="field_insurance_expires">Действует до</string>
     <string name="insurance_not_added">Страховой полис не добавлен</string>
+    <string name="insurance_attach_failed">Не удалось прикрепить PDF. Текущий файл полиса сохранён.</string>
     <string name="insurance_add_action">Добавить страховку</string>
     <string name="insurance_edit_action">Изменить</string>
     <string name="insurance_delete_action">Удалить</string>

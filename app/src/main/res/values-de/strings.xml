@@ -2,6 +2,7 @@
 <resources>
     <string name="action_back">Zurück</string>
     <string name="action_save">Speichern</string>
+    <string name="editor_save_failed">Speichern fehlgeschlagen. Prüfen Sie die angehängten Fotos und versuchen Sie es erneut.</string>
     <string name="action_edit">Bearbeiten</string>
     <string name="action_cancel">Abbrechen</string>
     <string name="action_ok">OK</string>
@@ -67,6 +68,7 @@
     <string name="field_insurance_policy">Versicherungsschein-Nr.</string>
     <string name="field_insurance_expires">Gültig bis</string>
     <string name="insurance_not_added">Keine Versicherung hinzugefügt</string>
+    <string name="insurance_attach_failed">PDF konnte nicht angehängt werden. Die bisherige Policendatei bleibt erhalten.</string>
     <string name="insurance_add_action">Versicherung hinzufügen</string>
     <string name="insurance_edit_action">Bearbeiten</string>
     <string name="insurance_delete_action">Entfernen</string>

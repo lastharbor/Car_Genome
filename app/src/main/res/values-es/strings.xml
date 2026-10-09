@@ -2,6 +2,7 @@
 <resources>
     <string name="action_back">Atrás</string>
     <string name="action_save">Guardar</string>
+    <string name="editor_save_failed">No se pudo guardar. Revisa las fotos adjuntas e inténtalo de nuevo.</string>
     <string name="action_edit">Editar</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_ok">Aceptar</string>
@@ -69,6 +70,7 @@
     <string name="field_insurance_policy">Nº de póliza</string>
     <string name="field_insurance_expires">Fecha de vencimiento</string>
     <string name="insurance_not_added">No se ha añadido ninguna póliza</string>
+    <string name="insurance_attach_failed">No se pudo adjuntar el PDF. Se conservó el archivo de póliza actual.</string>
     <string name="insurance_add_action">Añadir seguro</string>
     <string name="insurance_edit_action">Editar</string>
     <string name="insurance_delete_action">Eliminar</string>

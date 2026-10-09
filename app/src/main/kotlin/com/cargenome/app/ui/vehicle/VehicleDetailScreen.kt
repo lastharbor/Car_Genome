@@ -49,6 +49,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -108,6 +110,15 @@ fun VehicleDetailScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val deleted by viewModel.deleted.collectAsStateWithLifecycle()
+    val attachFailed by viewModel.attachFailed.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(R.string.insurance_attach_failed)
+    LaunchedEffect(attachFailed) {
+        if (attachFailed) {
+            snackbarHostState.showSnackbar(errorMessage)
+            viewModel.onAttachErrorShown()
+        }
+    }
     var confirmDelete by remember { mutableStateOf(false) }
     var showInsuranceDialog by remember { mutableStateOf(false) }
     var showPdfViewer by remember { mutableStateOf(false) }
@@ -133,6 +144,7 @@ fun VehicleDetailScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {

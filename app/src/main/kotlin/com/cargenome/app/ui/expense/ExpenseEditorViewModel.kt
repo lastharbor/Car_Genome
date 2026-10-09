@@ -1,10 +1,10 @@
 package com.cargenome.app.ui.expense
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import androidx.core.net.toUri
 import com.cargenome.app.data.attachment.AttachmentManager
 import com.cargenome.app.data.db.entity.AttachmentOwner
 import com.cargenome.app.data.db.entity.ExpenseCategory
@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 data class ExpenseEditorUiState(
@@ -48,6 +49,7 @@ data class ExpenseEditorUiState(
 
     val isSaving: Boolean = false,
     val isSaved: Boolean = false,
+    val saveFailed: Boolean = false,
 ) {
     val isEditing: Boolean get() = expenseId != null
 
@@ -72,6 +74,8 @@ data class ExpenseEditorUiState(
     val canSave: Boolean
         get() = !isSaving && title.isNotBlank() && (amountValue ?: 0.0) > 0.0 && !isOdometerInvalid
 }
+
+private const val TAG = "ExpenseEditorViewModel"
 
 @HiltViewModel
 class ExpenseEditorViewModel @Inject constructor(
@@ -173,56 +177,43 @@ class ExpenseEditorViewModel @Inject constructor(
         _state.update { it.copy(isSaving = true) }
 
         viewModelScope.launch {
-            val scale = Format.minorScale(vehicle.currencyCode)
-            val amountMinor = (amount * scale).roundToLong().coerceAtLeast(0L)
-            val odoKm = current.odometerValue?.takeIf { it > 0.0 }?.let { vehicle.distanceUnit.toKilometres(it) }
+            try {
+                val scale = Format.minorScale(vehicle.currencyCode)
+                val amountMinor = (amount * scale).roundToLong().coerceAtLeast(0L)
+                val odoKm = current.odometerValue?.takeIf { it > 0.0 }?.let { vehicle.distanceUnit.toKilometres(it) }
 
-            val entity = ExpenseEntity(
-                id = current.expenseId ?: 0,
-                vehicleId = vehicle.id,
-                incurredAt = current.date.atTime(LocalTime.NOON).atZone(ZoneId.systemDefault()).toInstant(),
-                category = current.category,
-                title = current.title.trim(),
-                amountMinor = amountMinor,
-                odometerKm = odoKm,
-                notes = current.notes.trim().ifBlank { null },
-            )
+                val entity = ExpenseEntity(
+                    id = current.expenseId ?: 0,
+                    vehicleId = vehicle.id,
+                    incurredAt = current.date.atTime(LocalTime.NOON).atZone(ZoneId.systemDefault()).toInstant(),
+                    category = current.category,
+                    title = current.title.trim(),
+                    amountMinor = amountMinor,
+                    odometerKm = odoKm,
+                    notes = current.notes.trim().ifBlank { null },
+                )
 
-            val expenseId = if (current.expenseId != null) {
-                expenses.update(entity)
-                current.expenseId
-            } else {
-                expenses.add(entity)
-            }
-
-            val existing = if (current.expenseId != null) {
-                attachments.listForOwner(AttachmentOwner.Expense, current.expenseId)
-            } else {
-                emptyList()
-            }
-            val existingUris = existing.map { it.uri }.toSet()
-            for (att in existing) {
-                if (att.uri !in current.attachmentUris) {
-                    attachments.delete(att)
+                val expenseId = if (current.expenseId != null) {
+                    expenses.update(entity)
+                    current.expenseId
+                } else {
+                    expenses.add(entity)
                 }
-            }
 
-            for (uriStr in current.attachmentUris) {
-                if (uriStr !in existingUris) {
-                    runCatching {
-                        val att = attachmentManager.saveAttachment(
-                            sourceUri = uriStr.toUri(),
-                            ownerType = AttachmentOwner.Expense,
-                            ownerId = expenseId,
-                        )
-                        attachments.add(att)
-                    }
-                }
+                // If the attachments fail, a retry must update this expense, not add another.
+                _state.update { it.copy(expenseId = expenseId) }
+                attachments.syncForOwner(AttachmentOwner.Expense, expenseId, current.attachmentUris)
+                _state.update { it.copy(isSaving = false, isSaved = true) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not save the expense", e)
+                _state.update { it.copy(isSaving = false, saveFailed = true) }
             }
-
-            _state.update { it.copy(isSaving = false, isSaved = true) }
         }
     }
+
+    fun onSaveErrorShown() = _state.update { it.copy(saveFailed = false) }
 
     fun delete() {
         val id = _state.value.expenseId ?: return

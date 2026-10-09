@@ -1,10 +1,10 @@
 package com.cargenome.app.ui.service
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import androidx.core.net.toUri
 import com.cargenome.app.data.attachment.AttachmentManager
 import com.cargenome.app.data.db.entity.AttachmentOwner
 import com.cargenome.app.data.db.entity.MaintenanceScheduleEntity
@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 data class ServiceEditorUiState(
@@ -54,6 +55,7 @@ data class ServiceEditorUiState(
     val lastOdometerKm: Double? = null,
     val isSaving: Boolean = false,
     val isSaved: Boolean = false,
+    val saveFailed: Boolean = false,
 ) {
     val isEditing: Boolean get() = recordId != null
 
@@ -72,6 +74,8 @@ data class ServiceEditorUiState(
     val canSave: Boolean
         get() = !isSaving && title.isNotBlank()
 }
+
+private const val TAG = "ServiceEditorViewModel"
 
 @HiltViewModel
 class ServiceEditorViewModel @Inject constructor(
@@ -198,60 +202,47 @@ class ServiceEditorViewModel @Inject constructor(
         _state.update { it.copy(isSaving = true) }
 
         viewModelScope.launch {
-            val scale = Format.minorScale(vehicle.currencyCode)
-            val labourMinor = (current.labourCostValue * scale).roundToLong().coerceAtLeast(0L)
-            val partsMinor = (current.partsCostValue * scale).roundToLong().coerceAtLeast(0L)
-            val odoKm = current.odometerValue?.coerceAtLeast(0.0)?.let { vehicle.distanceUnit.toKilometres(it) }
+            try {
+                val scale = Format.minorScale(vehicle.currencyCode)
+                val labourMinor = (current.labourCostValue * scale).roundToLong().coerceAtLeast(0L)
+                val partsMinor = (current.partsCostValue * scale).roundToLong().coerceAtLeast(0L)
+                val odoKm = current.odometerValue?.coerceAtLeast(0.0)?.let { vehicle.distanceUnit.toKilometres(it) }
 
-            val record = ServiceRecordEntity(
-                id = current.recordId ?: 0,
-                vehicleId = vehicle.id,
-                performedAt = current.date.atTime(LocalTime.NOON).atZone(ZoneId.systemDefault()).toInstant(),
-                odometerKm = odoKm,
-                category = current.category,
-                title = current.title.trim(),
-                labourCostMinor = labourMinor,
-                partsCostMinor = partsMinor,
-                shop = current.shop.trim().ifBlank { null },
-                scheduleId = current.selectedScheduleId,
-                notes = current.notes.trim().ifBlank { null },
-            )
+                val record = ServiceRecordEntity(
+                    id = current.recordId ?: 0,
+                    vehicleId = vehicle.id,
+                    performedAt = current.date.atTime(LocalTime.NOON).atZone(ZoneId.systemDefault()).toInstant(),
+                    odometerKm = odoKm,
+                    category = current.category,
+                    title = current.title.trim(),
+                    labourCostMinor = labourMinor,
+                    partsCostMinor = partsMinor,
+                    shop = current.shop.trim().ifBlank { null },
+                    scheduleId = current.selectedScheduleId,
+                    notes = current.notes.trim().ifBlank { null },
+                )
 
-            val recordId = if (current.recordId != null) {
-                service.updateRecord(record)
-                current.recordId
-            } else {
-                service.addRecord(record)
-            }
-
-            val existing = if (current.recordId != null) {
-                attachments.listForOwner(AttachmentOwner.ServiceRecord, current.recordId)
-            } else {
-                emptyList()
-            }
-            val existingUris = existing.map { it.uri }.toSet()
-            for (att in existing) {
-                if (att.uri !in current.attachmentUris) {
-                    attachments.delete(att)
+                val recordId = if (current.recordId != null) {
+                    service.updateRecord(record)
+                    current.recordId
+                } else {
+                    service.addRecord(record)
                 }
-            }
 
-            for (uriStr in current.attachmentUris) {
-                if (uriStr !in existingUris) {
-                    runCatching {
-                        val att = attachmentManager.saveAttachment(
-                            sourceUri = uriStr.toUri(),
-                            ownerType = AttachmentOwner.ServiceRecord,
-                            ownerId = recordId,
-                        )
-                        attachments.add(att)
-                    }
-                }
+                // If the attachments fail, a retry must update this service record, not add another.
+                _state.update { it.copy(recordId = recordId) }
+                attachments.syncForOwner(AttachmentOwner.ServiceRecord, recordId, current.attachmentUris)
+                _state.update { it.copy(isSaving = false, isSaved = true) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not save the service record", e)
+                _state.update { it.copy(isSaving = false, saveFailed = true) }
             }
-
-            _state.update { it.copy(isSaving = false, isSaved = true) }
         }
     }
+
+    fun onSaveErrorShown() = _state.update { it.copy(saveFailed = false) }
 
     fun delete() {
         val id = _state.value.recordId ?: return

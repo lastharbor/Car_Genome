@@ -1,6 +1,7 @@
 package com.cargenome.app.ui.vehicle
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import androidx.compose.runtime.Immutable
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -83,6 +85,13 @@ class VehicleDetailViewModel @Inject constructor(
     private val _deleted = MutableStateFlow(false)
     val deleted: StateFlow<Boolean> = _deleted.asStateFlow()
 
+    private val _attachFailed = MutableStateFlow(false)
+    val attachFailed: StateFlow<Boolean> = _attachFailed.asStateFlow()
+
+    fun onAttachErrorShown() {
+        _attachFailed.value = false
+    }
+
     fun delete() {
         viewModelScope.launch {
             if (settingsRepo.settings.first().selectedVehicleId == vehicleId) {
@@ -104,17 +113,26 @@ class VehicleDetailViewModel @Inject constructor(
     fun attachInsurancePdf(uri: Uri, displayName: String?) {
         viewModelScope.launch {
             val currentVehicle = state.value.vehicle ?: return@launch
+            val attachment = try {
+                attachmentManager.savePdfAttachment(
+                    sourceUri = uri,
+                    ownerType = AttachmentOwner.Vehicle,
+                    ownerId = currentVehicle.id,
+                    displayName = displayName,
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Nothing was replaced, so the current policy stays attached.
+                Log.w(TAG, "Could not attach insurance PDF", e)
+                _attachFailed.value = true
+                return@launch
+            }
+            vehicles.update(currentVehicle.copy(insurancePdfUri = attachment.uri))
+            // The old file goes only once the new one is linked in its place.
             currentVehicle.insurancePdfUri?.let { oldUri ->
                 attachmentManager.deleteAttachmentFile(oldUri)
             }
-            val attachment = attachmentManager.savePdfAttachment(
-                sourceUri = uri,
-                ownerType = AttachmentOwner.Vehicle,
-                ownerId = currentVehicle.id,
-                displayName = displayName,
-            )
-            val updated = currentVehicle.copy(insurancePdfUri = attachment.uri)
-            vehicles.update(updated)
         }
     }
 
@@ -154,5 +172,6 @@ class VehicleDetailViewModel @Inject constructor(
 
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L
+        const val TAG = "VehicleDetailViewModel"
     }
 }
