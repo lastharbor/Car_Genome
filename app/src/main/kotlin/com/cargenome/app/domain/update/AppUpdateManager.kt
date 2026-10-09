@@ -10,14 +10,16 @@ import com.cargenome.app.BuildConfig
 import com.cargenome.app.data.update.AppUpdateManifestDto
 import com.cargenome.app.data.update.GitHubAssetDto
 import com.cargenome.app.data.update.GitHubReleaseDto
+import com.cargenome.app.di.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
 import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
@@ -41,6 +43,7 @@ class AppUpdateManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val okHttpClient: OkHttpClient,
     private val json: Json,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val owner: String = BuildConfig.GITHUB_REPO_OWNER
     private val repo: String = BuildConfig.GITHUB_REPO_NAME
@@ -54,7 +57,7 @@ class AppUpdateManager @Inject constructor(
      * 2. REST API fallback: `https://api.github.com/repos/$owner/$repo/releases/latest` or `/releases`
      *    - Used if `update.json` is missing or on older releases.
      */
-    suspend fun checkForUpdate(): Result<AppUpdateInfo?> = withContext(Dispatchers.IO) {
+    suspend fun checkForUpdate(): Result<AppUpdateInfo?> = withContext(ioDispatcher) {
         runCatching {
             android.util.Log.d("AppUpdateManager", "Starting check for update...")
             val currentVersion = AppVersion.parse(BuildConfig.VERSION_NAME)
@@ -249,45 +252,46 @@ class AppUpdateManager @Inject constructor(
             requestBuilder.header("Authorization", "Bearer $token")
         }
 
+        var stored = false
         try {
-            val response = okHttpClient.newCall(requestBuilder.build()).execute()
-            if (!response.isSuccessful) {
-                emit(UpdateDownloadState.Error("HTTP error: ${response.code}"))
-                return@flow
-            }
+            okHttpClient.newCall(requestBuilder.build()).execute().use { response ->
+                if (!response.isSuccessful) {
+                    emit(UpdateDownloadState.Error("HTTP error: ${response.code}"))
+                    return@flow
+                }
 
-            val body = response.body
-            val totalBytes = if (info.assetSize > 0L) info.assetSize else body.contentLength()
-            var downloadedBytes = 0L
+                val body = response.body
+                val totalBytes = if (info.assetSize > 0L) info.assetSize else body.contentLength()
+                var downloadedBytes = 0L
 
-            body.byteStream().use { input ->
-                FileOutputStream(tempFile).use { output ->
-                    val buffer = ByteArray(8 * 1024)
-                    var read: Int
-                    var lastEmittedPercent = -1
+                body.byteStream().use { input ->
+                    FileOutputStream(tempFile).use { output ->
+                        val buffer = ByteArray(8 * 1024)
+                        var read: Int
+                        var lastEmittedPercent = -1
 
-                    while (input.read(buffer).also { read = it } != -1) {
-                        output.write(buffer, 0, read)
-                        downloadedBytes += read
+                        while (input.read(buffer).also { read = it } != -1) {
+                            output.write(buffer, 0, read)
+                            downloadedBytes += read
 
-                        val percent = if (totalBytes > 0L) {
-                            ((downloadedBytes * 100) / totalBytes).toInt().coerceIn(0, 100)
-                        } else {
-                            0
+                            val percent = if (totalBytes > 0L) {
+                                ((downloadedBytes * 100) / totalBytes).toInt().coerceIn(0, 100)
+                            } else {
+                                0
+                            }
+
+                            if (percent != lastEmittedPercent || downloadedBytes == totalBytes) {
+                                lastEmittedPercent = percent
+                                emit(UpdateDownloadState.Downloading(downloadedBytes, totalBytes, percent))
+                            }
                         }
-
-                        if (percent != lastEmittedPercent || downloadedBytes == totalBytes) {
-                            lastEmittedPercent = percent
-                            emit(UpdateDownloadState.Downloading(downloadedBytes, totalBytes, percent))
-                        }
+                        output.flush()
                     }
-                    output.flush()
                 }
             }
 
             val actualSha256 = sha256Of(tempFile)
             if (!actualSha256.equals(info.sha256, ignoreCase = true)) {
-                tempFile.delete()
                 emit(UpdateDownloadState.Error("Checksum mismatch, the download was discarded"))
                 return@flow
             }
@@ -296,19 +300,23 @@ class AppUpdateManager @Inject constructor(
                 apkFile.delete()
             }
             if (!tempFile.renameTo(apkFile)) {
-                tempFile.delete()
                 emit(UpdateDownloadState.Error("Could not store the verified download"))
                 return@flow
             }
-
-            emit(UpdateDownloadState.Completed(apkFile))
-        } catch (e: Exception) {
-            if (tempFile.exists()) {
-                tempFile.delete()
-            }
-            emit(UpdateDownloadState.Error(e.localizedMessage ?: "Download failed"))
+            stored = true
+        } finally {
+            // Whatever ended the download early, including the dialog being closed,
+            // a partial file must not be mistaken for an update later.
+            if (!stored) tempFile.delete()
         }
-    }.flowOn(Dispatchers.IO)
+
+        emit(UpdateDownloadState.Completed(apkFile))
+    }
+        // Only failures of the download itself become an Error state. Unlike a
+        // try/catch around emit(), this lets the collector's own exceptions and
+        // its cancellation pass through.
+        .catch { e -> emit(UpdateDownloadState.Error(e.localizedMessage ?: "Download failed")) }
+        .flowOn(ioDispatcher)
 
     fun canInstallPackages(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

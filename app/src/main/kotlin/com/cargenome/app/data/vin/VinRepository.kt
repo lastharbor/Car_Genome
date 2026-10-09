@@ -7,6 +7,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 
 /** Where the details on screen came from, so the UI can be honest about it. */
@@ -64,21 +66,18 @@ class VinRepository @Inject constructor(
                 }
 
                 emit(VinLookupState.Ready(base, VinSource.Offline, isEnriching = true))
-                try {
-                    val enriched = withTimeout(7_000L) {
-                        enrich(base)
-                    }
-                    emit(enriched)
+                // Only the lookup is guarded: an emit inside the try would turn a
+                // collector's own failure or cancellation into a second emission.
+                val enriched = try {
+                    withTimeout(7_000L) { enrich(base) }
+                } catch (e: TimeoutCancellationException) {
+                    offlineFallback(base, e)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
-                    emit(
-                        VinLookupState.Ready(
-                            profile = base,
-                            source = VinSource.Offline,
-                            isEnriching = false,
-                            onlineFailure = e,
-                        ),
-                    )
+                    offlineFallback(base, e)
                 }
+                emit(enriched)
             }
         }
     }
@@ -99,6 +98,13 @@ class VinRepository @Inject constructor(
             if (models.isNotEmpty()) models else null
         }.orEmpty()
     }
+
+    private fun offlineFallback(base: VehicleProfile, failure: Throwable) = VinLookupState.Ready(
+        profile = base,
+        source = VinSource.Offline,
+        isEnriching = false,
+        onlineFailure = failure,
+    )
 
     private suspend fun enrich(base: VehicleProfile): VinLookupState.Ready {
         var currentProfile = base

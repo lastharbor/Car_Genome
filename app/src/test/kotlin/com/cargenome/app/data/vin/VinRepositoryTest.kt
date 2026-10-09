@@ -9,11 +9,14 @@ import com.cargenome.vin.WmiEntry
 import java.io.IOException
 import java.time.Instant
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -155,6 +158,36 @@ class VinRepositoryTest {
         assertEquals(VinSource.Cached, ready.source)
         assertEquals(FuelType.Petrol, ready.profile.fuelType)
         assertEquals("2.0 L 4-cyl", ready.profile.engine)
+    }
+
+    @Test
+    fun `a lookup that times out falls back to the offline reading`() = runTest {
+        val hanging = VinRepository(offline = offline, decoders = setOf(HangingOnlineDecoder()))
+
+        val ready = hanging.lookup("WVWZZZ1JZ3W386752").toList().last() as VinLookupState.Ready
+
+        assertEquals(VinSource.Offline, ready.source)
+        assertFalse(ready.isEnriching)
+        assertTrue(ready.onlineFailure is TimeoutCancellationException)
+    }
+
+    @Test
+    fun `a collector's own failure reaches it unchanged`() = runTest {
+        val boom = IllegalStateException("collector failed")
+
+        val thrown = runCatching {
+            repository(OnlineVinLookup.Hit(golf, fromCache = false)).lookup("WVWZZZ1JZ3W386752").collect { state ->
+                if (state is VinLookupState.Ready && !state.isEnriching) throw boom
+            }
+        }.exceptionOrNull()
+
+        assertSame(boom, thrown)
+    }
+
+    private class HangingOnlineDecoder : OnlineVinDecoder {
+        override suspend fun lookup(vin: String, now: Instant): OnlineVinLookup = awaitCancellation()
+
+        override suspend fun modelsFor(make: String, year: Int): List<String> = emptyList()
     }
 
     private class FakeOnlineDecoder(private val result: OnlineVinLookup) : OnlineVinDecoder {
