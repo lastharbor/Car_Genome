@@ -40,15 +40,24 @@ data class AppSettings(
     val lastSyncTimestamp: Long? = null,
     val autoSyncEnabled: Boolean = false,
     val isPremiumPurchased: Boolean = false,
+    /** When the redeemed code stops working; null for a lifetime code. */
+    val premiumExpiresAtSeconds: Long? = null,
     val autoCheckUpdates: Boolean = true,
     val lastUpdateCheckTimestamp: Long? = null,
 ) {
     val isPremiumActive: Boolean
-        get() {
-            if (com.cargenome.app.BuildConfig.IS_PREMIUM) return true
-            if (isPremiumPurchased) return true
-            return false
-        }
+        get() = isPremiumActiveAt(System.currentTimeMillis() / 1000)
+
+    /**
+     * A code stays valid through its expiry second, as at redemption. Purchases
+     * made before expiries were stored have none and remain lifetime.
+     */
+    fun isPremiumActiveAt(nowSeconds: Long): Boolean {
+        if (com.cargenome.app.BuildConfig.IS_PREMIUM) return true
+        if (!isPremiumPurchased) return false
+        val expiresAt = premiumExpiresAtSeconds ?: return true
+        return nowSeconds <= expiresAt
+    }
 }
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "cargenome_settings")
@@ -74,6 +83,7 @@ class AppSettingsRepository @Inject constructor(
         val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
         val AUTO_SYNC_ENABLED = booleanPreferencesKey("auto_sync_enabled")
         val IS_PREMIUM_PURCHASED = booleanPreferencesKey("is_premium_purchased")
+        val PREMIUM_EXPIRES_AT = longPreferencesKey("premium_expires_at_seconds")
         val AUTO_CHECK_UPDATES = booleanPreferencesKey("auto_check_updates")
         val LAST_UPDATE_CHECK_TIMESTAMP = longPreferencesKey("last_update_check_timestamp")
     }
@@ -102,6 +112,7 @@ class AppSettingsRepository @Inject constructor(
         val lastSyncTimestamp = preferences[Keys.LAST_SYNC_TIMESTAMP]
         val autoSyncEnabled = preferences[Keys.AUTO_SYNC_ENABLED] ?: false
         val isPurchased = preferences[Keys.IS_PREMIUM_PURCHASED] ?: false
+        val premiumExpiresAt = preferences[Keys.PREMIUM_EXPIRES_AT]
         val autoCheckUpdates = preferences[Keys.AUTO_CHECK_UPDATES] ?: true
         val lastUpdateCheck = preferences[Keys.LAST_UPDATE_CHECK_TIMESTAMP]
 
@@ -122,6 +133,7 @@ class AppSettingsRepository @Inject constructor(
             lastSyncTimestamp = lastSyncTimestamp,
             autoSyncEnabled = autoSyncEnabled,
             isPremiumPurchased = isPurchased,
+            premiumExpiresAtSeconds = premiumExpiresAt,
             autoCheckUpdates = autoCheckUpdates,
             lastUpdateCheckTimestamp = lastUpdateCheck,
         )
@@ -194,8 +206,16 @@ class AppSettingsRepository @Inject constructor(
         context.dataStore.edit { it[Keys.AUTO_SYNC_ENABLED] = enabled }
     }
 
-    suspend fun setPremiumPurchased(purchased: Boolean) {
-        context.dataStore.edit { it[Keys.IS_PREMIUM_PURCHASED] = purchased }
+    /** [expiresAtSeconds] is null for a lifetime code. */
+    suspend fun setPremiumPurchased(purchased: Boolean, expiresAtSeconds: Long? = null) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.IS_PREMIUM_PURCHASED] = purchased
+            if (purchased && expiresAtSeconds != null) {
+                prefs[Keys.PREMIUM_EXPIRES_AT] = expiresAtSeconds
+            } else {
+                prefs.remove(Keys.PREMIUM_EXPIRES_AT)
+            }
+        }
     }
 
     suspend fun setAutoCheckUpdates(enabled: Boolean) {

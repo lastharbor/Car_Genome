@@ -51,9 +51,13 @@ sealed interface RedeemResult {
 }
 
 @Singleton
-class PremiumManager @Inject constructor(
+class PremiumManager internal constructor(
     private val settingsRepo: AppSettingsRepository,
+    private val publicKey: PublicKey,
 ) {
+    @Inject
+    constructor(settingsRepo: AppSettingsRepository) : this(settingsRepo, decodePublicKey(CARGENOME_PUBLIC_KEY_BASE64))
+
     companion object {
         // CarGenome Master ECC Public Key (NIST P-256 / SECP256R1, X.509 DER in Base64)
         // Verified cryptographically via ECDSA SHA-256. Private key is strictly offline with the developer.
@@ -63,13 +67,9 @@ class PremiumManager @Inject constructor(
         private const val MAGIC_HEADER: Byte = 0x43 // 'C'
         private const val CURRENT_VERSION: Byte = 0x01
         const val PAYLOAD_SIZE = 27 // 1 (magic) + 1 (ver) + 1 (tier) + 8 (issuedAt) + 8 (expiresAt) + 8 (nonce)
-    }
 
-    private val publicKey: PublicKey by lazy {
-        val keyBytes = java.util.Base64.getDecoder().decode(CARGENOME_PUBLIC_KEY_BASE64)
-        val keySpec = X509EncodedKeySpec(keyBytes)
-        val kf = KeyFactory.getInstance("EC")
-        kf.generatePublic(keySpec)
+        private fun decodePublicKey(base64: String): PublicKey =
+            KeyFactory.getInstance("EC").generatePublic(X509EncodedKeySpec(java.util.Base64.getDecoder().decode(base64)))
     }
 
     val isPremium: Boolean
@@ -170,7 +170,8 @@ class PremiumManager @Inject constructor(
     suspend fun redeemCode(code: String): RedeemResult {
         val result = verifyCode(code)
         if (result is RedeemResult.Success) {
-            settingsRepo.setPremiumPurchased(true)
+            // An expiry of 0 marks a lifetime code.
+            settingsRepo.setPremiumPurchased(true, result.expiresAtSeconds.takeIf { it > 0 })
         }
         return result
     }
